@@ -48,6 +48,20 @@ namespace Recetario
 
             app.UseEndpoints(endpoints =>
             {
+                //Agregar Endpoint para la parte de los administradores
+                endpoints.MapAreaControllerRoute(
+                    name: "Administradores",
+                    areaName: "Administradores",
+                    pattern: "Administradores/{controller=Home}/{action=Index}/{id?}"
+                    );
+
+                //Agregar Endpoint para la parte de los usuarios
+                endpoints.MapAreaControllerRoute(
+                    name: "Usuarios",
+                    areaName: "Usuarios",
+                    pattern: "Usuarios/{controller=Home}/{action=Index}/{id?}"
+                    );
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

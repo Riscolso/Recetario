@@ -4,6 +4,17 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Administradores\Models\" />
+    <Folder Include="Areas\Usuarios\Controllers\" />
+    <Folder Include="Areas\Usuarios\Models\" />
+    <Folder Include="Areas\Usuarios\Views\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+  </ItemGroup>
+
 
 
 </Project>
