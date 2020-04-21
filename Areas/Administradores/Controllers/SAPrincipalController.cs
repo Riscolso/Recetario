@@ -12,5 +12,10 @@ namespace Recetario.Areas.Administradores.Controllers
         {
             return View();
         }
+
+        public IActionResult Registrar()
+        {
+            return View();
+        }
     }
 }
