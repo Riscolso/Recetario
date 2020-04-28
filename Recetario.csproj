@@ -9,6 +9,7 @@
     <Folder Include="Areas\Usuarios\Controllers\" />
     <Folder Include="Areas\Usuarios\Models\" />
     <Folder Include="Areas\Usuarios\Views\" />
+    <Folder Include="BaseDatos\" />
   </ItemGroup>
 
   <ItemGroup>

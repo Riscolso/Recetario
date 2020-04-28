@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Recetario.BaseDatos;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace Recetario
 {
@@ -26,6 +28,9 @@ namespace Recetario
         {
             //Agregar todos los servicios relacionados con MVC
             services.AddMvc();
+            //Agregar la Conexión con la BD
+            services.AddDbContext<ContextoBD>(options =>
+            options.UseMySql(Configuration.GetConnectionString("StringMySQL"), x => x.ServerVersion("5.7.19-mysql")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

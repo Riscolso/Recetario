@@ -73,24 +73,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Recetario`.`Paso`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Recetario`.`Paso` (
-  `NoPaso` INT NOT NULL,
-  `Texto` VARCHAR(600) NOT NULL,
-  `TiempoTemporizador` INT NOT NULL,
-  `Receta_idReceta` INT NOT NULL,
-  PRIMARY KEY (`NoPaso`),
-  INDEX `fk_Paso_Receta1_idx` (`Receta_idReceta` ASC),
-  CONSTRAINT `fk_Paso_Receta1`
-    FOREIGN KEY (`Receta_idReceta`)
-    REFERENCES `Recetario`.`Receta` (`idReceta`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `Recetario`.`Ingrediente`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Recetario`.`Ingrediente` (
@@ -166,6 +148,25 @@ CREATE TABLE IF NOT EXISTS `Recetario`.`Usa` (
   CONSTRAINT `fk_Receta_has_Etiqueta_Etiqueta1`
     FOREIGN KEY (`Etiqueta_idEtiqueta`)
     REFERENCES `Recetario`.`Etiqueta` (`idEtiqueta`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Recetario`.`Paso`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Recetario`.`Paso` (
+  `NoPaso` INT NOT NULL,
+  `Texto` VARCHAR(600) NULL,
+  `TiempoTemporizador` INT NULL,
+  `Receta_idReceta` INT NOT NULL,
+  `Receta_Actor_idActor` INT NOT NULL,
+  PRIMARY KEY (`NoPaso`),
+  INDEX `fk_Paso_Receta1_idx` (`Receta_idReceta` ASC, `Receta_Actor_idActor` ASC),
+  CONSTRAINT `fk_Paso_Receta1`
+    FOREIGN KEY (`Receta_idReceta` , `Receta_Actor_idActor`)
+    REFERENCES `Recetario`.`Receta` (`idReceta` , `Actor_idActor`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
