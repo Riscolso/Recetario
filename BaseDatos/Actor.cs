@@ -16,6 +16,8 @@ namespace Recetario.BaseDatos
         public string NombreActor { get; set; }
         public DateTime FechaNac { get; set; }
         public bool Tipo { get; set; }
+        public string Usuario { get; set; }
+        public byte[] Contrasena { get; set; }
 
         public virtual ICollection<Correo> Correo { get; set; }
         public virtual ICollection<Receta> Receta { get; set; }

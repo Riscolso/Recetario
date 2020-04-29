@@ -29,6 +29,7 @@ namespace Recetario.BaseDatos
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseMySql("server=localhost;user id=root;password=root;database=recetario;persistsecurityinfo=True", x => x.ServerVersion("5.7.19-mysql"));
             }
         }
@@ -46,11 +47,21 @@ namespace Recetario.BaseDatos
                     .HasColumnName("idActor")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.Contrasena)
+                    .IsRequired()
+                    .HasColumnType("blob");
+
                 entity.Property(e => e.FechaNac).HasColumnType("date");
 
                 entity.Property(e => e.NombreActor)
                     .IsRequired()
                     .HasColumnType("varchar(55)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+
+                entity.Property(e => e.Usuario)
+                    .IsRequired()
+                    .HasColumnType("varchar(45)")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
             });

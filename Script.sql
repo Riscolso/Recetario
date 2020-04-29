@@ -22,6 +22,8 @@ CREATE TABLE IF NOT EXISTS `Recetario`.`Actor` (
   `NombreActor` VARCHAR(55) NOT NULL,
   `FechaNac` DATE NOT NULL,
   `Tipo` TINYINT(1) NOT NULL,
+  `Usuario` VARCHAR(45) NOT NULL,
+  `Contrasena` BLOB NOT NULL,
   PRIMARY KEY (`idActor`))
 ENGINE = InnoDB;
 
