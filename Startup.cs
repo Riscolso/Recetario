@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Recetario.BaseDatos;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using Recetario.Areas.Administradores.Servicios;
 using Microsoft.EntityFrameworkCore;
 
 namespace Recetario
@@ -29,8 +29,13 @@ namespace Recetario
             //Agregar todos los servicios relacionados con MVC
             services.AddMvc();
             //Agregar la Conexión con la BD
+            //para hacer Scaffolding de la BD
+            //Scaffold-DbContext "server=localhost;user id=root;password=root;database=recetario;persistsecurityinfo=True" Pomelo.EntityFrameworkCore.MySql -OutputDir BaseDatos -ContextDir BaseDatos -Context ContextoBD -Force
             services.AddDbContext<ContextoBD>(options =>
             options.UseMySql(Configuration.GetConnectionString("StringMySQL"), x => x.ServerVersion("5.7.19-mysql")));
+
+            //Ligar la clase ServiciosActor a la dependecia
+            services.AddScoped<IActor, ServiciosActor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
