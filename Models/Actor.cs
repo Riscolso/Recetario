@@ -19,6 +19,7 @@ namespace Recetario.Models
         public string NombreActor { get; set; }
         [Display(Name = "Fecha de Nacimiento")]
         [Required]
+        [DataType(DataType.Date)]
         public DateTime FechaNac { get; set; }
         public bool Tipo { get; set; }
         [Required]
