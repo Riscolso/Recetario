@@ -21,7 +21,7 @@ namespace Recetario.Models
         [Required]
         [DataType(DataType.Date)]
         public DateTime FechaNac { get; set; }
-        public bool Tipo { get; set; }
+        public int Tipo { get; set; }
         [Required]
         public string Usuario { get; set; }
         [Display(Name = "Contraseña")]

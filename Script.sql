@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `Recetario`.`Actor` (
   `idActor` INT NOT NULL AUTO_INCREMENT,
   `NombreActor` VARCHAR(55) NOT NULL,
   `FechaNac` DATE NOT NULL,
-  `Tipo` TINYINT(1) NOT NULL,
+  `Tipo` INT NOT NULL,
   `Usuario` VARCHAR(45) NOT NULL,
   `Contrasena` BLOB NOT NULL,
   PRIMARY KEY (`idActor`))
