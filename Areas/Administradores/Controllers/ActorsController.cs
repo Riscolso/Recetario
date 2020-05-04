@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Recetario.BaseDatos;
+using Recetario.Models;
 using Recetario.Areas.Administradores.Servicios;
+using Recetario.BaseDatos;
 
 namespace Recetario.Areas.Administradores.Models
 {
@@ -26,6 +27,7 @@ namespace Recetario.Areas.Administradores.Models
         public async Task<IActionResult> Index()
         {
             return View(await _context.Actor.ToListAsync());
+            //return View();
         }
 
         // GET: Administradores/Actors/Details/5
