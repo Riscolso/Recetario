@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Recetario.BaseDatos;
+using Recetario.Models;
 
 namespace Recetario.Areas.Administradores.Servicios
 {

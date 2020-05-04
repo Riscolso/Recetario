@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Recetario.BaseDatos
+namespace Recetario.Models
 {
     public partial class Ingrediente
     {

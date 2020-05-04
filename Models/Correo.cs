@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Recetario.BaseDatos
+namespace Recetario.Models
 {
     public partial class Correo
     {
         public int IdEmail { get; set; }
         [Display(Name = "Email")]
+        [EmailAddress]
         public string Correo1 { get; set; }
         public int ActorIdActor { get; set; }
 
