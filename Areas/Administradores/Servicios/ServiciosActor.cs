@@ -12,6 +12,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Recetario.Areas.Administradores.Servicios
 {
+    /// <summary>
+    /// Clase que hereda de la clase IActor, maneja los métodos abstractos con un contexto de Base de Datos de MySQL.
+    /// </summary>
     public class ServiciosActor : IActor
     {
         private readonly ContextoBD _contextoBD;
@@ -20,6 +23,7 @@ namespace Recetario.Areas.Administradores.Servicios
             _contextoBD = contextoBD;
         }
 
+        /// <inheritdoc/>
         public int Actualizar(VActor vactor) 
         {
             var actor = new Actor
@@ -44,6 +48,7 @@ namespace Recetario.Areas.Administradores.Servicios
             return actor.IdActor;
         }
 
+        /// <inheritdoc/>
         public VActor Obtener(int? Id)
         {
             var actor = _contextoBD.Actor.Find(Id);
@@ -60,6 +65,7 @@ namespace Recetario.Areas.Administradores.Servicios
             };
         }
 
+        /// <inheritdoc/>
         public ICollection<VActor> Obtener()
         {
             var actores =  _contextoBD.Actor.ToList();
@@ -78,7 +84,7 @@ namespace Recetario.Areas.Administradores.Servicios
             }
             return vactores;
         }
-
+        /// <inheritdoc/>
         public int Registrar(VActor vactor)
         {
             var actor = new Actor

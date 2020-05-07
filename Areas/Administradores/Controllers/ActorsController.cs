@@ -64,8 +64,11 @@ namespace Recetario.Areas.Administradores.Controllers
             if (ModelState.IsValid)
             {
                 //Establecer que es un administrador
+                //0.-root, 1.-Administrador, 2.-Usuario
                 actor.Tipo = 1;
                 _serviciosActor.Registrar(actor);
+                //Regresar al menú principal
+                // TODO: En cuanto haya sesión, tendrá que redireccionar a una acción.
                 return View("../Menus/MenuSA");
             }
             return View(actor);
@@ -74,12 +77,13 @@ namespace Recetario.Areas.Administradores.Controllers
         // GET: Administradores/Actors/Edit/5
         public IActionResult Editar(int? id)
         {
+            //Comprobar que en la URL se pase un ID
             if (id == null)
             {
                 return NotFound();
             }
             var actor = _serviciosActor.Obtener(id);
-            //var actor = await _context.Actor.FindAsync(id);
+            //En caso de que el Actor no exista en la BD
             if (actor == null)
             {
                 return NotFound();

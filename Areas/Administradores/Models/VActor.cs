@@ -4,8 +4,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Recetario.Areas.Administradores.Models
 {
-    //El nombre es V de Vista
-    //Para diferenciar la clase de vista con el modelo Actor
+    /// <summary>
+    /// Clase que define el modelo de las vistas para la tabla Actor
+    /// </summary>
+    /// <remarks>El nombre es V de Vista
+    /// <para>Para diferenciar la clase de vista con el modelo Actor</para></remarks>
+
     public partial class VActor
     {
         public int IdActor { get; set; }
