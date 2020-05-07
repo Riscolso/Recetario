@@ -1,35 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Recetario.Areas.Administradores.Servicios;
-using Recetario.BaseDatos;
 using Recetario.Areas.Administradores.Models;
+
+// TODO: Cambiar los nombres de las páginas a español xD
+// TODO: Agregar input para confirma contraseña
 
 namespace Recetario.Areas.Administradores.Controllers
 {
     [Area("Administradores")]
     public class ActorsController : Controller
     {
-        private readonly ContextoBD _context;
         private readonly IActor _serviciosActor;
 
-        public ActorsController(ContextoBD context, IActor serviciosActor)
+        public ActorsController(IActor serviciosActor)
         {
-            _context = context;
             _serviciosActor = serviciosActor;
         }
 
         // GET: Administradores/Actors
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Actor.ToListAsync());
+            ICollection<VActor> actores = _serviciosActor.Obtener();
+            return View(actores);
+            //return View(await _context.Actor.ToListAsync());
         }
 
         // GET: Administradores/Actors/Details/5
+        /*
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,6 +46,7 @@ namespace Recetario.Areas.Administradores.Controllers
 
             return View(actor);
         }
+        */
 
         // GET: Administradores/Actors/Create
         public IActionResult Create()
@@ -64,21 +65,21 @@ namespace Recetario.Areas.Administradores.Controllers
             {
                 //Establecer que es un administrador
                 actor.Tipo = 1;
-                _serviciosActor.RegistrarActor(actor);
+                _serviciosActor.Registrar(actor);
                 return View("../Menus/MenuSA");
             }
             return View(actor);
         }
 
         // GET: Administradores/Actors/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Editar(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
-            var actor = await _context.Actor.FindAsync(id);
+            var actor = _serviciosActor.Obtener(id);
+            //var actor = await _context.Actor.FindAsync(id);
             if (actor == null)
             {
                 return NotFound();
@@ -91,7 +92,7 @@ namespace Recetario.Areas.Administradores.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdActor,NombreActor,FechaNac,Tipo,Usuario,Contrasena,Email")] Actor actor)
+        public IActionResult Editar(int id, VActor actor)
         {
             if (id != actor.IdActor)
             {
@@ -102,9 +103,14 @@ namespace Recetario.Areas.Administradores.Controllers
             {
                 try
                 {
-                    _context.Update(actor);
-                    await _context.SaveChangesAsync();
+                    _serviciosActor.Actualizar(actor);
                 }
+                catch (Exception)
+                {
+                    return NotFound();
+                }
+                // TODO: Arreglar lo de las excepciones xD
+                /*
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ActorExists(actor.IdActor))
@@ -116,12 +122,14 @@ namespace Recetario.Areas.Administradores.Controllers
                         throw;
                     }
                 }
+                */
                 return RedirectToAction(nameof(Index));
             }
             return View(actor);
         }
 
         // GET: Administradores/Actors/Delete/5
+        /*
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -138,7 +146,7 @@ namespace Recetario.Areas.Administradores.Controllers
 
             return View(actor);
         }
-
+        
         // POST: Administradores/Actors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -149,10 +157,12 @@ namespace Recetario.Areas.Administradores.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        
 
         private bool ActorExists(int id)
         {
             return _context.Actor.Any(e => e.IdActor == id);
         }
+        */
     }
 }

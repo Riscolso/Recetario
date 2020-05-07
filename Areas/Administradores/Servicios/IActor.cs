@@ -9,6 +9,9 @@ namespace Recetario.Areas.Administradores.Servicios
     public interface IActor
     {
         //Regresa el ID del actor
-        int RegistrarActor(VActor actor);
+        int Registrar(VActor vactor);
+        VActor Obtener(int? Id);
+        int Actualizar(VActor vactor);
+        ICollection<VActor> Obtener();
     }
 }
