@@ -1,4 +1,4 @@
-﻿@model Recetario.Models.Actor
+﻿@model Recetario.BaseDatos.Actor
 
 @{
     ViewData["Title"] = "Details";
@@ -40,6 +40,12 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Contrasena)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Email)
         </dd>
     </dl>
 </div>

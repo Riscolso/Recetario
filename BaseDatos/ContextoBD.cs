@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Recetario.Models;
 
 namespace Recetario.BaseDatos
 {
@@ -17,7 +16,6 @@ namespace Recetario.BaseDatos
         }
 
         public virtual DbSet<Actor> Actor { get; set; }
-        public virtual DbSet<Correo> Correo { get; set; }
         public virtual DbSet<Etiqueta> Etiqueta { get; set; }
         public virtual DbSet<Ingrediente> Ingrediente { get; set; }
         public virtual DbSet<Lleva> Lleva { get; set; }
@@ -30,7 +28,7 @@ namespace Recetario.BaseDatos
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseMySql("server=localhost;user id=root;password=root;database=recetario;persistsecurityinfo=True", x => x.ServerVersion("5.7.19-mysql"));
+
             }
         }
 
@@ -51,6 +49,12 @@ namespace Recetario.BaseDatos
                     .IsRequired()
                     .HasColumnType("blob");
 
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasColumnType("varchar(60)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+
                 entity.Property(e => e.FechaNac).HasColumnType("date");
 
                 entity.Property(e => e.NombreActor)
@@ -59,41 +63,13 @@ namespace Recetario.BaseDatos
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
+                entity.Property(e => e.Tipo).HasColumnType("int(11)");
+
                 entity.Property(e => e.Usuario)
                     .IsRequired()
                     .HasColumnType("varchar(45)")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
-            });
-
-            modelBuilder.Entity<Correo>(entity =>
-            {
-                entity.HasKey(e => e.IdEmail)
-                    .HasName("PRIMARY");
-
-                entity.ToTable("correo");
-
-                entity.HasIndex(e => e.ActorIdActor)
-                    .HasName("fk_Correo_Actor1_idx");
-
-                entity.Property(e => e.IdEmail).HasColumnType("int(11)");
-
-                entity.Property(e => e.ActorIdActor)
-                    .HasColumnName("Actor_idActor")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.Correo1)
-                    .IsRequired()
-                    .HasColumnName("Correo")
-                    .HasColumnType("varchar(60)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-
-                entity.HasOne(d => d.ActorIdActorNavigation)
-                    .WithMany(p => p.Correo)
-                    .HasForeignKey(d => d.ActorIdActor)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_Correo_Actor1");
             });
 
             modelBuilder.Entity<Etiqueta>(entity =>

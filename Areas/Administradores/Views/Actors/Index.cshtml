@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Recetario.Models.Actor>
+﻿@model IEnumerable<Recetario.BaseDatos.Actor>
 
 @{
     ViewData["Title"] = "Index";
@@ -28,6 +28,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Contrasena)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -50,7 +53,10 @@
                 @Html.DisplayFor(modelItem => item.Contrasena)
             </td>
             <td>
-                <a asp-area="Administradores" asp-controller="Actors" asp-action="Edit" asp-route-id="@item.IdActor">Edit</a> |
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdActor">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.IdActor">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.IdActor">Delete</a>
             </td>

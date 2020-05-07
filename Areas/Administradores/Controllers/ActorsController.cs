@@ -5,29 +5,28 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Recetario.Models;
 using Recetario.Areas.Administradores.Servicios;
 using Recetario.BaseDatos;
+using Recetario.Areas.Administradores.Models;
 
-namespace Recetario.Areas.Administradores.Models
+namespace Recetario.Areas.Administradores.Controllers
 {
     [Area("Administradores")]
     public class ActorsController : Controller
     {
         private readonly ContextoBD _context;
-        private readonly IActor _contextoActor;
+        private readonly IActor _serviciosActor;
 
-        public ActorsController(ContextoBD context, IActor contextoActor)
+        public ActorsController(ContextoBD context, IActor serviciosActor)
         {
             _context = context;
-            _contextoActor = contextoActor;
+            _serviciosActor = serviciosActor;
         }
 
         // GET: Administradores/Actors
         public async Task<IActionResult> Index()
         {
             return View(await _context.Actor.ToListAsync());
-            //return View();
         }
 
         // GET: Administradores/Actors/Details/5
@@ -59,13 +58,14 @@ namespace Recetario.Areas.Administradores.Models
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdActor,NombreActor,FechaNac,Tipo,Usuario,Contrasena")] Actor actor)
+        public IActionResult Create(VActor actor)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(actor);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //Establecer que es un administrador
+                actor.Tipo = 1;
+                _serviciosActor.RegistrarActor(actor);
+                return View("../Menus/MenuSA");
             }
             return View(actor);
         }
@@ -91,7 +91,7 @@ namespace Recetario.Areas.Administradores.Models
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdActor,NombreActor,FechaNac,Tipo,Usuario,Contrasena")] Actor actor)
+        public async Task<IActionResult> Edit(int id, [Bind("IdActor,NombreActor,FechaNac,Tipo,Usuario,Contrasena,Email")] Actor actor)
         {
             if (id != actor.IdActor)
             {

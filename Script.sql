@@ -24,24 +24,8 @@ CREATE TABLE IF NOT EXISTS `Recetario`.`Actor` (
   `Tipo` INT NOT NULL,
   `Usuario` VARCHAR(45) NOT NULL,
   `Contrasena` BLOB NOT NULL,
+  `Email` VARCHAR(60) NOT NULL,
   PRIMARY KEY (`idActor`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `Recetario`.`Correo`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Recetario`.`Correo` (
-  `IdEmail` INT NOT NULL,
-  `Correo` VARCHAR(60) NOT NULL,
-  `Actor_idActor` INT NOT NULL,
-  PRIMARY KEY (`IdEmail`),
-  INDEX `fk_Correo_Actor1_idx` (`Actor_idActor` ASC),
-  CONSTRAINT `fk_Correo_Actor1`
-    FOREIGN KEY (`Actor_idActor`)
-    REFERENCES `Recetario`.`Actor` (`idActor`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
