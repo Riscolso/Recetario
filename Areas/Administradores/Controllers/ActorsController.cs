@@ -36,17 +36,16 @@ namespace Recetario.Areas.Administradores.Controllers
             //return View(await _context.Actor.ToListAsync());
         }
 
-        // GET: Administradores/Actors/Details/5
-        /*
-        public async Task<IActionResult> Details(int? id)
+        
+        public IActionResult Detalles(int? id)
         {
             if (id == null)
             {
+                // TODO: En sí qué hace NotFound? 
                 return NotFound();
             }
 
-            var actor = await _context.Actor
-                .FirstOrDefaultAsync(m => m.IdActor == id);
+            var actor = _serviciosActor.Obtener(id);
             if (actor == null)
             {
                 return NotFound();
@@ -54,7 +53,6 @@ namespace Recetario.Areas.Administradores.Controllers
 
             return View(actor);
         }
-        */
 
         // GET: Administradores/Actors/Create
         public IActionResult Create()
