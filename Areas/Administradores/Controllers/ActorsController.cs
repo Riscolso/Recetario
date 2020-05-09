@@ -4,16 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Recetario.Areas.Administradores.Servicios;
 using Recetario.Areas.Administradores.Models;
+using Recetario.Models;
 
-// TODO: Cambiar los nombres de las páginas a español xD
 // TODO: Agregar input para confirma contraseña
+// TODO: Agregar agrupación de resultados mostrados en Index
 /*
  1/2   Pantalla principal de Super Administrador
--    Modificar Administrador
-1/2    Mostrar Información de Administradores  (Tabla)
--    Registro de Administradores
--    Ver información de Administrador
-- Eliminar
  */
 
 namespace Recetario.Areas.Administradores.Controllers
@@ -29,21 +25,33 @@ namespace Recetario.Areas.Administradores.Controllers
         }
 
         // GET: Administradores/Actors
-        public IActionResult Index(string cadenaBusqueda)
+        public IActionResult Index(string cadenaBusqueda, int? noPagina, String filtroActual)
         {
             //Se mete el filtro a ViewData para que permanezca aunque se cambie de páginas
             ViewData["FiltroActual"] = cadenaBusqueda;
-            //Si hay cadena de búsqueda
-            if (!String.IsNullOrEmpty(cadenaBusqueda)){
-                return View(_serviciosActor.BuscarFiltro(cadenaBusqueda));
+
+            if (cadenaBusqueda != null)
+            {
+                noPagina = 1;
             }
-            //En caso de que no haber ninguna búsqueda, muestro todo, TODO
             else
             {
-                ICollection<VActor> actores = _serviciosActor.Obtener();
-                return View(actores);
-                //return View(await _context.Actor.ToListAsync());
+                cadenaBusqueda = filtroActual;
             }
+            ICollection<VActor> actores;
+            //Si hay cadena de búsqueda
+            //En caso de que no haber ninguna búsqueda, muestro todo, TODO
+            if (!String.IsNullOrEmpty(cadenaBusqueda))
+            {
+                 actores = _serviciosActor.BuscarFiltro(cadenaBusqueda);
+            }
+            else
+            {
+                actores = _serviciosActor.Obtener();
+            }
+            //Cantidad de Elementos a mostrar por página
+            int pageSize = 4;
+            return View(Paginacion<VActor>.CreateAsync(actores, noPagina ?? 1, pageSize));
         }
 
         
