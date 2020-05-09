@@ -7,6 +7,14 @@ using Recetario.Areas.Administradores.Models;
 
 // TODO: Cambiar los nombres de las páginas a español xD
 // TODO: Agregar input para confirma contraseña
+/*
+ 1/2   Pantalla principal de Super Administrador
+-    Modificar Administrador
+1/2    Mostrar Información de Administradores  (Tabla)
+-    Registro de Administradores
+-    Ver información de Administrador
+Eliminar
+ */
 
 namespace Recetario.Areas.Administradores.Controllers
 {
@@ -132,17 +140,14 @@ namespace Recetario.Areas.Administradores.Controllers
             return View(actor);
         }
 
-        // GET: Administradores/Actors/Delete/5
-        /*
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Eliminar(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
-            var actor = await _context.Actor
-                .FirstOrDefaultAsync(m => m.IdActor == id);
+            VActor actor = _serviciosActor.Obtener(id);
+            // TODO: Confrimar que se puede regresar el null
             if (actor == null)
             {
                 return NotFound();
@@ -151,18 +156,19 @@ namespace Recetario.Areas.Administradores.Controllers
             return View(actor);
         }
         
-        // POST: Administradores/Actors/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // Se debe especificar el nombre de la acción por que el nombre la firma del anterior método es el mismo
+        [HttpPost, ActionName("Eliminar")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult EliminarConfirmado(int id)
         {
-            var actor = await _context.Actor.FindAsync(id);
-            _context.Actor.Remove(actor);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            _serviciosActor.Eliminar(id);
+            //Regresar al menú principal
+            // TODO: En cuanto haya sesión, tendrá que redireccionar a una acción x2.
+            return View("../Menus/MenuSA");
+            //return RedirectToAction(nameof(Index));
         }
         
-
+        /*
         private bool ActorExists(int id)
         {
             return _context.Actor.Any(e => e.IdActor == id);

@@ -49,6 +49,17 @@ namespace Recetario.Areas.Administradores.Servicios
         }
 
         /// <inheritdoc/>
+        public void Eliminar(int Id)
+        {
+            //Traer a el actor de la BD
+            var actor = _contextoBD.Actor.Find(Id);
+            //Sacarlo del contexto
+            _contextoBD.Actor.Remove(actor);
+            //Aplicar los cambios a la BD
+            _contextoBD.SaveChanges();
+        }
+
+        /// <inheritdoc/>
         public VActor Obtener(int? Id)
         {
             var actor = _contextoBD.Actor.Find(Id);
@@ -101,5 +112,6 @@ namespace Recetario.Areas.Administradores.Servicios
             _contextoBD.SaveChanges();
             return actor.IdActor;
         }
+
     }
 }

@@ -35,5 +35,11 @@ namespace Recetario.Areas.Administradores.Servicios
         /// </summary>
         /// <returns>Lista de VActor</returns>
         ICollection<VActor> Obtener();
+
+        /// <summary>
+        /// Eliminar un actor del repositorio mediante su ID
+        /// </summary>
+        /// <param name="vactor"></param>
+        void Eliminar(int Id);
     }
 }
