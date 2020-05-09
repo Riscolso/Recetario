@@ -13,7 +13,7 @@ using Recetario.Areas.Administradores.Models;
 1/2    Mostrar Información de Administradores  (Tabla)
 -    Registro de Administradores
 -    Ver información de Administrador
-Eliminar
+- Eliminar
  */
 
 namespace Recetario.Areas.Administradores.Controllers
@@ -29,11 +29,21 @@ namespace Recetario.Areas.Administradores.Controllers
         }
 
         // GET: Administradores/Actors
-        public IActionResult Index()
+        public IActionResult Index(string cadenaBusqueda)
         {
-            ICollection<VActor> actores = _serviciosActor.Obtener();
-            return View(actores);
-            //return View(await _context.Actor.ToListAsync());
+            //Se mete el filtro a ViewData para que permanezca aunque se cambie de páginas
+            ViewData["FiltroActual"] = cadenaBusqueda;
+            //Si hay cadena de búsqueda
+            if (!String.IsNullOrEmpty(cadenaBusqueda)){
+                return View(_serviciosActor.BuscarFiltro(cadenaBusqueda));
+            }
+            //En caso de que no haber ninguna búsqueda, muestro todo, TODO
+            else
+            {
+                ICollection<VActor> actores = _serviciosActor.Obtener();
+                return View(actores);
+                //return View(await _context.Actor.ToListAsync());
+            }
         }
 
         

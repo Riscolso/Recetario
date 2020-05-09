@@ -10,6 +10,11 @@
 <p>
     <a asp-action="Agregar">Nuevo</a>
 </p>
+<form asp-action="index" method="get">
+    Buscar: <input type="text" value="@ViewData["FiltroActual"]" name="cadenaBusqueda"  />&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="submit" value="Buscar" class="btn btn-primary" />
+</form>
+
 <table class="table">
     <thead>
         <tr>

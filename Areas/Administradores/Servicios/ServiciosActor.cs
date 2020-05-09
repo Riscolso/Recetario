@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Text;
 using Recetario.BaseDatos;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 // TODO: Agregar más TryCatch en caso de que muera la wea
 // TODO: Crear y usar funciones para convertir las clases Actor -> Vactor y viceversa
@@ -46,6 +47,24 @@ namespace Recetario.Areas.Administradores.Servicios
                 throw;
             }
             return actor.IdActor;
+        }
+
+        /// <inheritdoc/>
+        public ICollection<VActor> BuscarFiltro(string Filtro)
+        {
+            //Buscar en la base de datos los actores que conincidan con el filtro
+            var actores = _contextoBD.Actor.Where(a =>
+            a.NombreActor.Contains(Filtro) ||
+            a.Usuario.Contains(Filtro) ||
+            a.Email.Contains(Filtro));
+            //Una lista para guardar las vista que se van a regresar
+            List<VActor> vactores = new List<VActor>();
+            //Convertir el modelo de datos a modelo de vista
+            foreach (Actor actor in actores)
+            {
+                vactores.Add(CasteoActor(actor));
+            }
+            return vactores;
         }
 
         /// <inheritdoc/>
@@ -113,5 +132,24 @@ namespace Recetario.Areas.Administradores.Servicios
             return actor.IdActor;
         }
 
+        /// <summary>
+        /// Con base a una case de tipo Actor del modelo de BD
+        /// Se crea una clase de tipo VActor de las vistas
+        /// </summary>
+        /// <param name="actor">Clase Actor de la cual se obtendrán los valores</param>
+        /// <returns>Una clase VActor para usarse como vista</returns>
+        VActor CasteoActor(Actor actor)
+        {
+            return new VActor
+            {
+                IdActor = actor.IdActor,
+                NombreActor = actor.NombreActor,
+                FechaNac = actor.FechaNac,
+                Tipo = actor.Tipo,
+                Usuario = actor.Usuario,
+                Contrasena = Convert.ToString(actor.Contrasena),
+                Email = actor.Email
+            };
+        }
     }
 }
