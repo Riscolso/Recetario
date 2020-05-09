@@ -55,7 +55,7 @@ namespace Recetario.Areas.Administradores.Controllers
         }
 
         // GET: Administradores/Actors/Create
-        public IActionResult Create()
+        public IActionResult Agregar()
         {
             return View();
         }
@@ -65,7 +65,7 @@ namespace Recetario.Areas.Administradores.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(VActor actor)
+        public IActionResult Agregar(VActor actor)
         {
             if (ModelState.IsValid)
             {
@@ -73,9 +73,8 @@ namespace Recetario.Areas.Administradores.Controllers
                 //0.-root, 1.-Administrador, 2.-Usuario
                 actor.Tipo = 1;
                 _serviciosActor.Registrar(actor);
-                //Regresar al menú principal
-                // TODO: En cuanto haya sesión, tendrá que redireccionar a una acción.
-                return View("../Menus/MenuSA");
+                return RedirectToAction("MenuSA", "Menus");
+                //return View("../Menus/MenuSA");
             }
             return View(actor);
         }
@@ -160,9 +159,7 @@ namespace Recetario.Areas.Administradores.Controllers
         public IActionResult EliminarConfirmado(int id)
         {
             _serviciosActor.Eliminar(id);
-            //Regresar al menú principal
-            // TODO: En cuanto haya sesión, tendrá que redireccionar a una acción x2.
-            return View("../Menus/MenuSA");
+            return RedirectToAction("MenuSA", "Menus");
             //return RedirectToAction(nameof(Index));
         }
         

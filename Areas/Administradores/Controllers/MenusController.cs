@@ -18,7 +18,13 @@ namespace Recetario.Areas.Administradores.Controllers
         //Lo puedes modificar como quieras xD
         public IActionResult IniciarSesion()
         {
-            return View("MenuSA");
+            return View();
+            //return View("MenuSA");
+        }
+
+        public IActionResult MenuSA()
+        {
+            return View();
         }
     }
 }
