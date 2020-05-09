@@ -27,16 +27,7 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <inheritdoc/>
         public int Actualizar(VActor vactor) 
         {
-            var actor = new Actor
-            {
-                NombreActor = vactor.NombreActor,
-                FechaNac = vactor.FechaNac,
-                Tipo = vactor.Tipo,
-                Usuario = vactor.Usuario,
-                // TODO : Agregar Encriptación por AES
-                Contrasena = Encoding.ASCII.GetBytes(vactor.Contrasena),
-                Email = vactor.Email
-            };
+            var actor = CasteoActor(vactor);
             try
             {
                 _contextoBD.Update(actor);
@@ -64,7 +55,7 @@ namespace Recetario.Areas.Administradores.Servicios
             //Convertir el modelo de datos a modelo de vista
             foreach (Actor actor in actores)
             {
-                vactores.Add(CasteoActor(actor));
+                vactores.Add(CasteoVActor(actor));
             }
             return vactores;
         }
@@ -83,18 +74,7 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <inheritdoc/>
         public VActor Obtener(int? Id)
         {
-            var actor = _contextoBD.Actor.Find(Id);
-            return new VActor
-            {
-                IdActor = actor.IdActor,
-                NombreActor = actor.NombreActor,
-                FechaNac = actor.FechaNac,
-                Tipo = actor.Tipo,
-                Usuario = actor.Usuario,
-                Contrasena = Convert.ToString(actor.Contrasena),
-                Email = actor.Email
-
-            };
+            return CasteoVActor(_contextoBD.Actor.Find(Id));
         }
 
         /// <inheritdoc/>
@@ -102,33 +82,13 @@ namespace Recetario.Areas.Administradores.Servicios
         {
             var actores =  _contextoBD.Actor.ToList();
             List<VActor> vactores = new List<VActor>();
-            foreach(Actor actor in actores){
-                vactores.Add(new VActor
-                {
-                    IdActor = actor.IdActor,
-                    NombreActor = actor.NombreActor,
-                    FechaNac = actor.FechaNac,
-                    Tipo = actor.Tipo,
-                    Usuario = actor.Usuario,
-                    Contrasena = Convert.ToString(actor.Contrasena),
-                    Email = actor.Email
-                });
-            }
+            foreach(Actor actor in actores) vactores.Add(CasteoVActor(actor));
             return vactores;
         }
         /// <inheritdoc/>
         public int Registrar(VActor vactor)
         {
-            var actor = new Actor
-            {
-                NombreActor = vactor.NombreActor,
-                FechaNac = vactor.FechaNac,
-                Tipo = vactor.Tipo,
-                Usuario = vactor.Usuario,
-                // TODO : Agregar Encriptación por AES
-                Contrasena = Encoding.ASCII.GetBytes(vactor.Contrasena),
-                Email = vactor.Email
-            };
+            Actor actor = CasteoActor(vactor);
             _contextoBD.Add(actor);
             _contextoBD.SaveChanges();
             return actor.IdActor;
@@ -140,7 +100,7 @@ namespace Recetario.Areas.Administradores.Servicios
         /// </summary>
         /// <param name="actor">Clase Actor de la cual se obtendrán los valores</param>
         /// <returns>Una clase VActor para usarse como vista</returns>
-        VActor CasteoActor(Actor actor)
+        VActor CasteoVActor(Actor actor)
         {
             return new VActor
             {
@@ -151,6 +111,21 @@ namespace Recetario.Areas.Administradores.Servicios
                 Usuario = actor.Usuario,
                 Contrasena = Convert.ToString(actor.Contrasena),
                 Email = actor.Email
+            };
+        }
+
+        Actor CasteoActor(VActor vactor)
+        {
+            return new Actor
+            {
+                IdActor = vactor.IdActor,
+                NombreActor = vactor.NombreActor,
+                FechaNac = vactor.FechaNac,
+                Tipo = vactor.Tipo,
+                Usuario = vactor.Usuario,
+                // TODO : Agregar Encriptación por AES
+                Contrasena = Encoding.ASCII.GetBytes(vactor.Contrasena),
+                Email = vactor.Email
             };
         }
     }

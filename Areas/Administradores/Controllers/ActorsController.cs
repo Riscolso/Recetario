@@ -83,13 +83,12 @@ namespace Recetario.Areas.Administradores.Controllers
                 //0.-root, 1.-Administrador, 2.-Usuario
                 actor.Tipo = 1;
                 _serviciosActor.Registrar(actor);
-                return RedirectToAction("MenuSA", "Menus");
+                return RedirectToAction(nameof(Index));
                 //return View("../Menus/MenuSA");
             }
             return View(actor);
         }
 
-        // GET: Administradores/Actors/Edit/5
         public IActionResult Editar(int? id)
         {
             //Comprobar que en la URL se pase un ID
@@ -169,7 +168,7 @@ namespace Recetario.Areas.Administradores.Controllers
         public IActionResult EliminarConfirmado(int id)
         {
             _serviciosActor.Eliminar(id);
-            return RedirectToAction("MenuSA", "Menus");
+            return RedirectToAction(nameof(Index));
             //return RedirectToAction(nameof(Index));
         }
         
