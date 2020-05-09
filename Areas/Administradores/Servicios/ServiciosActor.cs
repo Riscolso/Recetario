@@ -52,11 +52,13 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <inheritdoc/>
         public ICollection<VActor> BuscarFiltro(string Filtro)
         {
+            //Hacer la búsqueda insensible a mayúscular o minúsculas
+            Filtro = Filtro.ToLower();
             //Buscar en la base de datos los actores que conincidan con el filtro
             var actores = _contextoBD.Actor.Where(a =>
-            a.NombreActor.Contains(Filtro) ||
-            a.Usuario.Contains(Filtro) ||
-            a.Email.Contains(Filtro));
+            a.NombreActor.ToLower().Contains(Filtro) ||
+            a.Usuario.ToLower().Contains(Filtro) ||
+            a.Email.ToLower().Contains(Filtro));
             //Una lista para guardar las vista que se van a regresar
             List<VActor> vactores = new List<VActor>();
             //Convertir el modelo de datos a modelo de vista
