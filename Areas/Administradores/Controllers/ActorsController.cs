@@ -51,7 +51,7 @@ namespace Recetario.Areas.Administradores.Controllers
             }
             //Cantidad de Elementos a mostrar por página
             int pageSize = 4;
-            return View(Paginacion<VActor>.CreateAsync(actores, noPagina ?? 1, pageSize));
+            return View(Paginacion<VActor>.Create(actores, noPagina ?? 1, pageSize));
         }
 
         
