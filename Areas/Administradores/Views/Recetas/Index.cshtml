@@ -1,0 +1,73 @@
+﻿@model Paginacion<Recetario.Areas.Administradores.Models.VReceta>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Recetas</h1>
+
+<form asp-action="index" method="get">
+    Buscar: <input type="text" value="@ViewData["FiltroActual"]" name="cadenaBusqueda" />&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="submit" value="Buscar" class="btn btn-primary" />&nbsp;&nbsp;&nbsp;&nbsp;
+    <a asp-action="Index">Ver todas</a>
+    |
+    <a asp-controller="Menus" asp-action="MenuSA"> Menú principal</a>
+    <br />
+    <br />
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ToList()[0].IdReceta)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ToList()[0].Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ToList()[0].ActorNombreActor)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdReceta)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ActorNombreActor)
+                </td>
+                <td>
+                    <a asp-action="Detalles" asp-route-id="@item.IdReceta">Ver Receta</a> |
+                    <a asp-action="Eliminar" asp-route-id="@item.IdReceta">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-noPagina="@(Model.PageIndex - 1)"
+   asp-route-filtroActual="@ViewData["FiltroActual"]"
+   class="btn btn-default @prevDisabled">
+    Anterior
+</a>
+<a asp-action="Index"
+   asp-route-noPagina="@(Model.PageIndex + 1)"
+   asp-route-filtroActual="@ViewData["FiltroActual"]"
+   class="btn btn-default @nextDisabled">
+    Siguiente
+</a>

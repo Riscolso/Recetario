@@ -36,6 +36,7 @@ namespace Recetario
 
             //Ligar la clase ServiciosActor a la dependecia
             services.AddScoped<IActor, ServiciosActor>();
+            services.AddScoped<IReceta, ServiciosReceta>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
