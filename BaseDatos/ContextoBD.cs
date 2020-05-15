@@ -1,10 +1,11 @@
 ﻿using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Recetario.BaseDatos
 {
-    public partial class ContextoBD : DbContext
+    public partial class ContextoBD : IdentityDbContext<AppUser, AppRole, int>
     {
         public ContextoBD()
         {
@@ -34,6 +35,7 @@ namespace Recetario.BaseDatos
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Actor>(entity =>
             {
                 entity.HasKey(e => e.IdActor)

@@ -28,6 +28,12 @@ namespace Recetario
         {
             //Agregar todos los servicios relacionados con MVC
             services.AddMvc();
+            //Agregar Identity para el login (Identificación)
+            services.AddIdentity<AppUser, AppRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<ContextoBD>();
+
             //Agregar la Conexión con la BD
             //para hacer Scaffolding de la BD
             //Scaffold-DbContext "server=localhost;user id=root;password=root;database=recetario;persistsecurityinfo=True" Pomelo.EntityFrameworkCore.MySql -OutputDir BaseDatos -ContextDir BaseDatos -Context ContextoBD -Force
@@ -54,7 +60,10 @@ namespace Recetario
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseCookiePolicy();
+            //Agregar autenticación
+            app.UseAuthentication();
+            
             app.UseRouting();
 
             app.UseAuthorization();
@@ -73,6 +82,13 @@ namespace Recetario
                     name: "Usuarios",
                     areaName: "Usuarios",
                     pattern: "Usuarios/{controller=Home}/{action=Index}/{id?}"
+                    );
+
+                //Agregar Endpoint para la el login
+                endpoints.MapAreaControllerRoute(
+                    name: "Cuentas",
+                    areaName: "Cuentas",
+                    pattern: "Cuentas/{controller=Home}/{action=Index}/{id?}"
                     );
 
                 endpoints.MapControllerRoute(
