@@ -16,10 +16,14 @@ namespace Recetario.Areas.Administradores.Controllers
 
         //No sé como se impplemente, pero solo lo pongo aquí para usarlo temporalmente
         //Lo puedes modificar como quieras xD
-        public IActionResult IniciarSesion()
+        public IActionResult MenuA()
         {
             return View();
-            //return View("MenuSA");
+        }
+
+        public IActionResult MenuU()
+        {
+            return View();
         }
 
         public IActionResult MenuSA()

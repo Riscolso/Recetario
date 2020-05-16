@@ -140,7 +140,7 @@ namespace Recetario.Areas.Administradores.Servicios
                 FechaNac = actor.FechaNac,
                 Tipo = actor.Tipo,
                 Usuario = actor.Usuario,
-                Contrasena = Convert.ToString(actor.Contrasena),
+                //Contrasena = Convert.ToString(actor.Contrasena),
                 Email = actor.Email
             };
         }
@@ -158,6 +158,17 @@ namespace Recetario.Areas.Administradores.Servicios
                 Contrasena = Encoding.ASCII.GetBytes(vactor.Contrasena),
                 Email = vactor.Email
             };
+        }
+        public VActor AppUserToVActor(AppUser user)
+        {
+            return CasteoVActor(_contextoBD.Actor.Find(user.Id));
+        }
+
+        public VActor FindVActor(string user)
+        {
+            var actor = _contextoBD.Actor.FirstOrDefault(a =>
+            a.Usuario.Contains(user)); ;
+            return CasteoVActor(actor) ;
         }
     }
 }

@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Recetario.Areas.Administradores.Models;
+using Recetario.Areas.Administradores.Servicios;
 using Recetario.BaseDatos;
 
 namespace Recetario.Controllers
@@ -12,13 +14,15 @@ namespace Recetario.Controllers
     public class CuentasController : Controller
     {
         private UserManager<AppUser> UserMgr { get; }
-        private SignInManager<AppUser> SignInMgr { get; } 
+        private SignInManager<AppUser> SignInMgr { get; }
+        private readonly IActor _serviciosActor;
 
         public CuentasController(UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager)
+            SignInManager<AppUser> signInManager, IActor serviciosActor)
         {
                 UserMgr = userManager;
                 SignInMgr = signInManager;
+                _serviciosActor = serviciosActor;
         }
 
         // POST: Administradores/Actors/Create
@@ -26,10 +30,11 @@ namespace Recetario.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Registrar(Actor actor) //string userName, string email, string password)
+        public async Task<IActionResult> Registrar(VActor actor) //string userName, string email, string password)
         {
             try
             {
+                actor.Tipo = 2;
                 AppUser user = await UserMgr.FindByNameAsync(actor.Usuario);// userName);
                 if(user == null)
                 {
@@ -37,8 +42,9 @@ namespace Recetario.Controllers
                     user.UserName = actor.Usuario;// userName;
                     user.Email = actor.Email;// email;
 
-                    IdentityResult result = await UserMgr.CreateAsync(user, Convert.ToString(actor.Contrasena));// password);
-                    return View(user);
+                    _serviciosActor.Registrar(actor);
+                    IdentityResult result = await UserMgr.CreateAsync(user, actor.Contrasena);
+                    return View(actor);
                 }
                 else
                 {
@@ -48,12 +54,25 @@ namespace Recetario.Controllers
             catch(Exception) { return View("Home/Index.cshtml"); }
         }
 
-        public async Task<IActionResult> IniciarSesion(Actor actor)
+        public async Task<IActionResult> IniciarSesion(VActor actor)
         {
-            var result = await SignInMgr.PasswordSignInAsync(actor.Usuario, Convert.ToString(actor.Contrasena), false, false);
+            var result = await SignInMgr.PasswordSignInAsync(actor.Usuario, actor.Contrasena, false, false);
             if (result.Succeeded)
             {
-                return RedirectToAction("MenuSA", "Administradores/Menus");
+                actor = _serviciosActor.FindVActor(actor.Usuario);
+                if(actor.Tipo == 0)
+                {
+                    return RedirectToAction("MenuSA", "Menus", new { area = "Administradores" });
+                }
+                if(actor.Tipo == 1)
+                {
+                    return RedirectToAction("MenuA", "Menus", new { area = "Administradores" });
+                }
+                else
+                {
+                    return RedirectToAction("MenuU", "Menus", new { area = "Administradores" });
+                }
+                
             }
             else
             {

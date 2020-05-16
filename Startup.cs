@@ -84,13 +84,6 @@ namespace Recetario
                     pattern: "Usuarios/{controller=Home}/{action=Index}/{id?}"
                     );
 
-                //Agregar Endpoint para la el login
-                endpoints.MapAreaControllerRoute(
-                    name: "Cuentas",
-                    areaName: "Cuentas",
-                    pattern: "Cuentas/{controller=Home}/{action=Index}/{id?}"
-                    );
-
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

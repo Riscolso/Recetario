@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Recetario.Areas.Administradores.Servicios;
 using Recetario.Areas.Administradores.Models;
 using Recetario.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
+using Recetario.BaseDatos;
 
 // TODO: Agregar input para confirma contraseña
 // TODO: Agregar agrupación de resultados mostrados en Index
@@ -17,10 +20,15 @@ namespace Recetario.Areas.Administradores.Controllers
     [Area("Administradores")]
     public class ActorsController : Controller
     {
+        private UserManager<AppUser> UserMgr { get; }
+        private SignInManager<AppUser> SignInMgr { get; }
         private readonly IActor _serviciosActor;
 
-        public ActorsController(IActor serviciosActor)
+        public ActorsController(UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager, IActor serviciosActor)
         {
+            UserMgr = userManager;
+            SignInMgr = signInManager;
             _serviciosActor = serviciosActor;
         }
 
@@ -83,7 +91,7 @@ namespace Recetario.Areas.Administradores.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Agregar(VActor actor)
+        public async Task<IActionResult> Agregar(VActor actor)
         {
             if (ModelState.IsValid)
             {
@@ -91,6 +99,12 @@ namespace Recetario.Areas.Administradores.Controllers
                 //0.-root, 1.-Administrador, 2.-Usuario
                 actor.Tipo = 1;
                 _serviciosActor.Registrar(actor);
+
+                var user = new AppUser();
+                user.UserName = actor.Usuario;// userName;
+                user.Email = actor.Email;
+
+                IdentityResult result = await UserMgr.CreateAsync(user, actor.Contrasena);
                 return RedirectToAction(nameof(Index));
                 //return View("../Menus/MenuSA");
             }

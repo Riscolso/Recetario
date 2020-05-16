@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Recetario.Areas.Administradores.Models;
+using Recetario.BaseDatos;
 
 namespace Recetario.Areas.Administradores.Servicios
 {
@@ -64,5 +65,12 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <param name="Filtro">Filtro de búsqueda</param>
         /// <returns>Una lista de actores que coinciden con el filtro</returns>
         ICollection<VActor> BuscarFiltroUsuarios(String Filtro);
+        public VActor AppUserToVActor(AppUser user);
+        /// <summary>
+        /// Regresa un VActor dado un id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public VActor FindVActor(string user);
     }
 }

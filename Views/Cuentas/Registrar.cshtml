@@ -1,17 +1,11 @@
-﻿@model Recetario.BaseDatos.AppUser
+﻿@model Recetario.Areas.Administradores.Models.VActor
+
 
 @{
     ViewData["Title"] = "Registrado";
 }
-@if (User.Identity.IsAuthenticated)
-{
     <h1>Registrado</h1>
     <br />
-    <h3>Bienvenido, @User.Identity.Name</h3>
-}
-else
-{
-    <h1>Error al tratar de hacer el registro</h1>
-}
+    <h4>Registro correcto, por favor inicia sesión</h4>
 
 <a asp-area="Administradores" asp-controller="Menus" asp-action="MenuSA">Regresa al menú principal</a>
