@@ -111,7 +111,7 @@ namespace Recetario.Areas.Administradores.Servicios
             var actores = _contextoBD.Actor.ToList();
             List<VActor> vactores = new List<VActor>();
             foreach (Actor actor in actores)
-                if(actor.Tipo == 3)
+                if(actor.Tipo == 2)
                     vactores.Add(CasteoVActor(actor));
             return vactores;
         }

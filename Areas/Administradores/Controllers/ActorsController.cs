@@ -103,7 +103,7 @@ namespace Recetario.Areas.Administradores.Controllers
                 var user = new AppUser();
                 user.UserName = actor.Usuario;// userName;
                 user.Email = actor.Email;
-
+                //Se agrega el usuario a la tabla aspnetusers (AppUser) usada para el login
                 IdentityResult result = await UserMgr.CreateAsync(user, actor.Contrasena);
                 return RedirectToAction(nameof(Index));
                 //return View("../Menus/MenuSA");

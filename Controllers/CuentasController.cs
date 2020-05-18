@@ -30,21 +30,32 @@ namespace Recetario.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Registrar(VActor actor) //string userName, string email, string password)
+        public async Task<IActionResult> Registrar(VActor actor)
         {
             try
             {
+                //Se especifica como tipo usuario
                 actor.Tipo = 2;
-                AppUser user = await UserMgr.FindByNameAsync(actor.Usuario);// userName);
+                //Se verifica que no se repita el nombre de usuario
+                AppUser user = await UserMgr.FindByNameAsync(actor.Usuario);
                 if(user == null)
                 {
                     user = new AppUser();
                     user.UserName = actor.Usuario;// userName;
                     user.Email = actor.Email;// email;
-
+                    //Se registra como en la tabla actor (Actor)
                     _serviciosActor.Registrar(actor);
+                    //Se registra en la tabla aspnetusers (AppUser)
                     IdentityResult result = await UserMgr.CreateAsync(user, actor.Contrasena);
-                    return View(actor);
+                    //Si se registró correctamente, iniciar sesión
+                    if (result.Succeeded)
+                    {
+                       return await IniciarSesion(actor);
+                    }
+                    else
+                    {
+                        return View("Home/Index.cshtml");
+                    }
                 }
                 else
                 {

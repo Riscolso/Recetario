@@ -28,7 +28,7 @@ namespace Recetario
         {
             //Agregar todos los servicios relacionados con MVC
             services.AddMvc();
-            //Agregar Identity para el login (Identificación)
+            //registra los servicios de Identity para el login (Identificación)
             services.AddIdentity<AppUser, AppRole>(options =>
             {
                 options.User.RequireUniqueEmail = true;
@@ -43,6 +43,18 @@ namespace Recetario
             //Ligar la clase ServiciosActor a la dependecia
             services.AddScoped<IActor, ServiciosActor>();
             services.AddScoped<IReceta, ServiciosReceta>();
+
+            //Servicios para autorización con políticas
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireSuperAdministradorRole",
+                     policy => policy.RequireRole("SuperAdministrador"));
+                options.AddPolicy("RequireAdministradorRole",
+                     policy => policy.RequireRole("Administrador"));
+                options.AddPolicy("RequireSuperUsuarioRole",
+                     policy => policy.RequireRole("Usuario"));
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
