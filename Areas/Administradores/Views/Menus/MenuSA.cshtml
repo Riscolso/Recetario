@@ -4,14 +4,32 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<center> <h1>Menu Super Administrador</h1></center>
-Administradores: <br />
-<a asp-controller="Actors" asp-action="Agregar">Registrar un Administrador</a><br />
-<a asp-controller="Actors" asp-action="Index">Mostrar Administradores</a>
-<br />
-<br />
-Usuarios:<br />
-Mostrar información<br />
+@if (User.Identity.IsAuthenticated)
+{
+    <div>
+        <center> <h1>Menu Super Administrador</h1></center>
+        Administradores:
+        <br />
+        <a asp-controller="Actors" asp-action="Agregar">Registrar un Administrador</a>
+        <br />
+        <a asp-controller="Actors" asp-action="Index">Mostrar Administradores</a>
+        <br />
+        <br />
+        Usuarios:
+        <br />
+        <a asp-controller="Usuarios" asp-action="Index">Mostrar Usuarios</a>
+        <br />
 
-Recetas:<br />
-Eliminar recetas<br />
+        Recetas:
+        <br />
+        <a asp-controller="Recetas" asp-action="Index">Mostrar Recetas</a>
+        <br />
+    </div>
+}
+
+else
+{
+    <h4>Área restringida para administradores. Inicia sesión como administrador para hacer uso de ella</h4>
+}
+
+

@@ -5,9 +5,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Recetario.Areas.Administradores.Servicios;
 using Recetario.Areas.Administradores.Models;
 using Recetario.Models;
-using Microsoft.AspNetCore.Identity;
-using System.Threading.Tasks;
-using Recetario.BaseDatos;
 
 // TODO: Agregar input para confirma contraseña
 // TODO: Agregar agrupación de resultados mostrados en Index
@@ -18,21 +15,16 @@ using Recetario.BaseDatos;
 namespace Recetario.Areas.Administradores.Controllers
 {
     [Area("Administradores")]
-    public class ActorsController : Controller
+    public class UsuariosController : Controller
     {
-        private UserManager<AppUser> UserMgr { get; }
-        private SignInManager<AppUser> SignInMgr { get; }
         private readonly IActor _serviciosActor;
 
-        public ActorsController(UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager, IActor serviciosActor)
+        public UsuariosController(IActor serviciosActor)
         {
-            UserMgr = userManager;
-            SignInMgr = signInManager;
             _serviciosActor = serviciosActor;
         }
 
-        // GET: Administradores/Actors
+        // GET: Administradores/Usuarios
         public IActionResult Index(string cadenaBusqueda, int? noPagina, String filtroActual)
         {
             //Se mete el filtro a ViewData para que permanezca aunque se cambie de páginas
@@ -46,23 +38,23 @@ namespace Recetario.Areas.Administradores.Controllers
             {
                 cadenaBusqueda = filtroActual;
             }
-            ICollection<VActor> actores;
+            ICollection<VActor> usuarios;
             //Si hay cadena de búsqueda
             //En caso de que no haber ninguna búsqueda, muestro todo, TODO
             if (!String.IsNullOrEmpty(cadenaBusqueda))
             {
-                 actores = _serviciosActor.BuscarFiltro(cadenaBusqueda);
+                usuarios = _serviciosActor.BuscarFiltroUsuarios(cadenaBusqueda);
             }
             else
             {
-                actores = _serviciosActor.Obtener();
+                usuarios = _serviciosActor.ObtenerUsuarios();
             }
             //Cantidad de Elementos a mostrar por página
             int pageSize = 4;
-            return View(Paginacion<VActor>.Create(actores, noPagina ?? 1, pageSize));
+            return View(Paginacion<VActor>.Create(usuarios, noPagina ?? 1, pageSize));
         }
 
-        
+
         public IActionResult Detalles(int? id)
         {
             if (id == null)
@@ -91,7 +83,7 @@ namespace Recetario.Areas.Administradores.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Agregar(VActor actor)
+        public IActionResult Agregar(VActor actor)
         {
             if (ModelState.IsValid)
             {
@@ -99,12 +91,6 @@ namespace Recetario.Areas.Administradores.Controllers
                 //0.-root, 1.-Administrador, 2.-Usuario
                 actor.Tipo = 1;
                 _serviciosActor.Registrar(actor);
-
-                var user = new AppUser();
-                user.UserName = actor.Usuario;// userName;
-                user.Email = actor.Email;
-                //Se agrega el usuario a la tabla aspnetusers (AppUser) usada para el login
-                IdentityResult result = await UserMgr.CreateAsync(user, actor.Contrasena);
                 return RedirectToAction(nameof(Index));
                 //return View("../Menus/MenuSA");
             }
@@ -183,7 +169,7 @@ namespace Recetario.Areas.Administradores.Controllers
 
             return View(actor);
         }
-        
+
         // Se debe especificar el nombre de la acción por que el nombre la firma del anterior método es el mismo
         [HttpPost, ActionName("Eliminar")]
         [ValidateAntiForgeryToken]
@@ -193,7 +179,7 @@ namespace Recetario.Areas.Administradores.Controllers
             return RedirectToAction(nameof(Index));
             //return RedirectToAction(nameof(Index));
         }
-        
+
         /*
         private bool ActorExists(int id)
         {
