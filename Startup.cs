@@ -31,7 +31,13 @@ namespace Recetario
             //registra los servicios de Identity para el login (Identificación)
             services.AddIdentity<AppUser, AppRole>(options =>
             {
+                //Eliminar restricciones de contraseña
                 options.User.RequireUniqueEmail = true;
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 1;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
             }).AddEntityFrameworkStores<ContextoBD>();
 
             //Agregar la Conexión con la BD
