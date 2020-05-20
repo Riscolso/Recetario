@@ -173,8 +173,10 @@ namespace Recetario.Areas.Administradores.Controllers
         // Se debe especificar el nombre de la acción por que el nombre la firma del anterior método es el mismo
         [HttpPost, ActionName("Eliminar")]
         [ValidateAntiForgeryToken]
-        public IActionResult EliminarConfirmado(int id)
+        public async Task<IActionResult> EliminarConfirmado(int id)
         {
+            AppUser toElim = await UserMgr.FindByIdAsync(id.ToString());
+            await UserMgr.DeleteAsync(toElim);
             _serviciosActor.Eliminar(id);
             return RedirectToAction(nameof(Index));
             //return RedirectToAction(nameof(Index));
