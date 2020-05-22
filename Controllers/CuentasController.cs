@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Recetario.Areas.Administradores.Models;
@@ -30,6 +31,7 @@ namespace Recetario.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> Registrar(VActor actor)
         {
             try
@@ -38,7 +40,7 @@ namespace Recetario.Controllers
                 actor.Tipo = 2;
                 //Se verifica que no se repita el nombre de usuario
                 AppUser user = await UserMgr.FindByNameAsync(actor.Usuario);
-                if(user == null)
+                if (user == null)
                 {
                     user = new AppUser();
                     user.UserName = actor.Usuario;// userName;
@@ -50,19 +52,24 @@ namespace Recetario.Controllers
                     //Si se registró correctamente, iniciar sesión
                     if (result.Succeeded)
                     {
-                       return await IniciarSesion(actor);
+                        return await IniciarSesion(actor);
                     }
                     else
                     {
-                        return View("Home/Index.cshtml");
+                        foreach (IdentityError error in result.Errors)
+                        {
+                            ModelState.AddModelError("", error.Description);
+                        }
+                        return View(actor);
                     }
                 }
                 else
                 {
-                    return View("Home/Index.cshtml");
+                    this.ModelState.AddModelError("Usuario", "El nombre de usuario ya existe");
+                    return View(actor);
                 }
             }
-            catch(Exception) { return View("Home/Index.cshtml"); }
+            catch (Exception) { return RedirectToAction("Home", "Index"); } //View("Home/Index.cshtml"); }
         }
 
         public async Task<IActionResult> IniciarSesion(VActor actor)

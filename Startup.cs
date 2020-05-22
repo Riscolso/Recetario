@@ -11,6 +11,9 @@ using Microsoft.Extensions.Hosting;
 using Recetario.BaseDatos;
 using Recetario.Areas.Administradores.Servicios;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Recetario.Models;
 
 namespace Recetario
 {
@@ -27,18 +30,24 @@ namespace Recetario
         public void ConfigureServices(IServiceCollection services)
         {
             //Agregar todos los servicios relacionados con MVC
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                //Aplica un Filtro general para requerir un usuario autenticado
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            }
+                );
             //registra los servicios de Identity para el login (Identificación)
             services.AddIdentity<AppUser, AppRole>(options =>
             {
                 //Eliminar restricciones de contraseña
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequireDigit = false;
-                options.Password.RequiredLength = 1;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-            }).AddEntityFrameworkStores<ContextoBD>();
+                options.Password.RequiredLength = 6;
+                //options.Password.RequireLowercase = false;
+                //options.Password.RequireNonAlphanumeric = false;
+                //options.Password.RequireUppercase = false;
+            }).AddEntityFrameworkStores<ContextoBD>().AddErrorDescriber<CustomIdentityErrorDescriber>();
 
             //Agregar la Conexión con la BD
             //para hacer Scaffolding de la BD
@@ -56,9 +65,9 @@ namespace Recetario
                 options.AddPolicy("RequireSuperAdministradorRole",
                      policy => policy.RequireRole("SuperAdministrador"));
                 options.AddPolicy("RequireAdministradorRole",
-                     policy => policy.RequireRole("Administrador"));
-                options.AddPolicy("RequireSuperUsuarioRole",
-                     policy => policy.RequireRole("Usuario"));
+                     policy => policy.RequireRole("Administrador", "SuperAdministrador"));
+                options.AddPolicy("RequireUsuarioRole",
+                     policy => policy.RequireRole("Usuario", "Administrador", "SuperAdministrador"));
             });
 
         }
