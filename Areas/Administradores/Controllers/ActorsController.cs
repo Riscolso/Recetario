@@ -98,16 +98,23 @@ namespace Recetario.Areas.Administradores.Controllers
                 //Establecer que es un administrador
                 //0.-root, 1.-Administrador, 2.-Usuario
                 actor.Tipo = 1;
-                _serviciosActor.Registrar(actor);
+                 _serviciosActor.Registrar(actor);
 
                 var user = new AppUser();
                 user.UserName = actor.Usuario;// userName;
                 user.Email = actor.Email;
                 //Se agrega el usuario a la tabla aspnetusers (AppUser) usada para el login
                 IdentityResult result = await UserMgr.CreateAsync(user, actor.Contrasena);
-                return RedirectToAction(nameof(Index));
-                //return View("../Menus/MenuSA");
+                if(result.Succeeded)
+                    return RedirectToAction(nameof(Index));
+                foreach(IdentityError error in result.Errors)
+                {
+                    ModelState.AddModelError("",error.Description);
+                }
+                return View(actor);
+
             }
+
             return View(actor);
         }
 

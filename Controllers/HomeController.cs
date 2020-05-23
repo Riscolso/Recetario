@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Recetario.Models;
@@ -17,22 +18,19 @@ namespace Recetario.Controllers
         {
             _logger = logger;
         }
-
+        //Permite que pueda ser llamado por
+        //un usuario sin autenticar
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View();
         }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
+        [AllowAnonymous]
         public IActionResult InicioSesion()
         {
             return View();
         }
-
+        [AllowAnonymous]
         public IActionResult Registro()
         {
             return View();
