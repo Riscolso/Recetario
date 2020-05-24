@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Recetario.Areas.Administradores.Controllers
@@ -13,15 +14,20 @@ namespace Recetario.Areas.Administradores.Controllers
         {
             return View();
         }
-
-        //No sé como se impplemente, pero solo lo pongo aquí para usarlo temporalmente
-        //Lo puedes modificar como quieras xD
-        public IActionResult IniciarSesion()
+        //Autorización para Admin
+        [Authorize(Roles = "Administrador,SuperAdministrador")]
+        public IActionResult MenuA()
         {
             return View();
-            //return View("MenuSA");
         }
-
+        //Autorización para Usuario
+        [Authorize(Roles = "Usuario, Administrador,SuperAdministrador")]
+        public IActionResult MenuU()
+        {
+            return View();
+        }
+        //Autorización para SuperAdmin
+        [Authorize(Roles = "SuperAdministrador")]
         public IActionResult MenuSA()
         {
             return View();

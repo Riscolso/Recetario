@@ -1,20 +1,24 @@
 ﻿@model Recetario.Areas.Administradores.Models.VActor
 
 @{
-    ViewData["Title"] = "Editar Admin";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Registrar";
 }
 
 @if (User.Identity.IsAuthenticated)
 {
-    <h1>Editar Administrador</h1>
+    <h3>Bienvenido, @User.Identity.Name</h3>
+    <p>Para cambiar de usuario, cierra la sesión</p>
+}
+else
+{
+
+    <h1>Registro de usuario</h1>
+
     <hr />
     <div class="row">
         <div class="col-md-4">
-            <form asp-action="Editar">
+            <form asp-controller="Cuentas" asp-action="Registrar">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="IdActor" />
-                <input type="hidden" asp-for="Tipo" />
                 <div class="form-group">
                     <label asp-for="NombreActor" class="control-label"></label>
                     <input asp-for="NombreActor" class="form-control" />
@@ -41,17 +45,13 @@
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Confirmar" class="btn btn-primary" />
+                    <input type="submit" value="Crear" class="btn btn-primary" />
                 </div>
             </form>
         </div>
     </div>
 
     <div>
-        <a asp-action="Index">Regresar a la lista</a>
+        <a asp-action="Index">Regresar</a>
     </div>
-}
-else
-{
-    <h4>Área restringida para administradores. Inicia sesión como administrador para hacer uso de ella</h4>
 }

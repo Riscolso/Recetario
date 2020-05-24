@@ -59,6 +59,26 @@ namespace Recetario.Areas.Administradores.Servicios
             }
             return vactores;
         }
+        /// <inheritdoc/>
+        public ICollection<VActor> BuscarFiltroUsuarios(string Filtro)
+        {
+            //Hacer la búsqueda insensible a mayúscular o minúsculas
+            Filtro = Filtro.ToLower();
+            //Buscar en la base de datos los actores que conincidan con el filtro
+            var actores = _contextoBD.Actor.Where(a =>
+            a.Tipo == 3 &&
+            (a.NombreActor.ToLower().Contains(Filtro) ||
+            a.Usuario.ToLower().Contains(Filtro) ||
+            a.Email.ToLower().Contains(Filtro)));
+            //Una lista para guardar las vista que se van a regresar
+            List<VActor> vactores = new List<VActor>();
+            //Convertir el modelo de datos a modelo de vista
+            foreach (Actor actor in actores)
+            {
+                vactores.Add(CasteoVActor(actor));
+            }
+            return vactores;
+        }
 
         /// <inheritdoc/>
         public void Eliminar(int Id)
@@ -86,6 +106,17 @@ namespace Recetario.Areas.Administradores.Servicios
             return vactores;
         }
         /// <inheritdoc/>
+        public ICollection<VActor> ObtenerUsuarios()
+        {
+            var actores = _contextoBD.Actor.ToList();
+            List<VActor> vactores = new List<VActor>();
+            foreach (Actor actor in actores)
+                if(actor.Tipo == 2)
+                    vactores.Add(CasteoVActor(actor));
+            return vactores;
+        }
+
+        /// <inheritdoc/>
         public int Registrar(VActor vactor)
         {
             Actor actor = CasteoActor(vactor);
@@ -109,7 +140,7 @@ namespace Recetario.Areas.Administradores.Servicios
                 FechaNac = actor.FechaNac,
                 Tipo = actor.Tipo,
                 Usuario = actor.Usuario,
-                Contrasena = Convert.ToString(actor.Contrasena),
+                //Contrasena = Convert.ToString(actor.Contrasena),
                 Email = actor.Email
             };
         }
@@ -127,6 +158,17 @@ namespace Recetario.Areas.Administradores.Servicios
                 Contrasena = Encoding.ASCII.GetBytes(vactor.Contrasena),
                 Email = vactor.Email
             };
+        }
+        public VActor AppUserToVActor(AppUser user)
+        {
+            return CasteoVActor(_contextoBD.Actor.Find(user.Id));
+        }
+
+        public VActor FindVActor(string user)
+        {
+            var actor = _contextoBD.Actor.FirstOrDefault(a =>
+            a.Usuario.Contains(user)); ;
+            return CasteoVActor(actor) ;
         }
     }
 }
