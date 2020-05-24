@@ -27,10 +27,21 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <returns>Clase VActor</returns>
         VActor Obtener(int? Id);
         /// <summary>
+        /// Obtiene una lista de VActor disponibles en un repositorio.
+        /// </summary>
+        /// <returns>Lista de VActor</returns>
+        ICollection<VActor> ObtenerLista();
+        /// <summary>
+        /// Obtiene una lista de VActor disponibles en un repositorio.
+        /// </summary>
+        /// <param name="Tipo">Filtro con base al tipo de actor en la BD</param>
+        /// <returns>Lista de VActor</returns>
+        ICollection<VActor> ObtenerLista(int Tipo);
+        /// <summary>
         /// Regresa una lista de todos los usuarios VActor
         /// </summary>
-        /// <param name="Id">ID de usuario VActor</param>
         /// <returns>Lista de VActor</returns>
+        /// 
         ICollection<VActor> ObtenerUsuarios();
 
         /// <summary>
@@ -39,11 +50,7 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <param name="vactor">Clase a actualizar</param>
         /// <returns>ID Asocioado a la clase actualizada</returns>
         int Actualizar(VActor vactor);
-        /// <summary>
-        /// Obtiene una lista de VActor disponibles en un repositorio.
-        /// </summary>
-        /// <returns>Lista de VActor</returns>
-        ICollection<VActor> Obtener();
+        
 
         /// <summary>
         /// Eliminar un actor del repositorio mediante su ID
@@ -58,6 +65,14 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <param name="Filtro">Filtro de búsqueda</param>
         /// <returns>Una lista de actores que coinciden con el filtro</returns>
         ICollection<VActor> BuscarFiltro(String Filtro);
+        /// <summary>
+        /// Realiza una búsqueda con base a un filtro dato
+        /// La busqueda se da entre Nombre, correo o usuario
+        /// </summary>
+        /// <param name="Filtro">Filtro de búsqueda</param>
+        /// <param name="Tipo">Realiza Filtro de con base al tipo de actor </param>
+        /// <returns>Una lista de actores que coinciden con el filtro</returns>
+        ICollection<VActor> BuscarFiltro(String Filtro, int Tipo);
         /// <summary>
         /// Realiza una búsqueda de usuario con base en un filtro dado
         /// La busqueda se da entre Nombre, correo o usuario
