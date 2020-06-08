@@ -25,6 +25,7 @@ namespace Recetario.Areas.Administradores.Controllers
         private UserManager<AppUser> UserMgr { get; }
         private SignInManager<AppUser> SignInMgr { get; }
         private readonly IActor _serviciosActor;
+        private static int TIPO = 1;
 
         public ActorsController(UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager, IActor serviciosActor)
@@ -54,11 +55,11 @@ namespace Recetario.Areas.Administradores.Controllers
             //En caso de que no haber ninguna búsqueda, muestro todo, TODO
             if (!String.IsNullOrEmpty(cadenaBusqueda))
             {
-                 actores = _serviciosActor.BuscarFiltro(cadenaBusqueda);
+                 actores = _serviciosActor.BuscarFiltro(cadenaBusqueda, 1);
             }
             else
             {
-                actores = _serviciosActor.Obtener();
+                actores = _serviciosActor.ObtenerLista(TIPO);
             }
             //Cantidad de Elementos a mostrar por página
             int pageSize = 4;

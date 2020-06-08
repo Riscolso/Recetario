@@ -37,10 +37,10 @@ namespace Recetario
                 options.Filters.Add(new AuthorizeFilter(policy));
             }
                 );
-            //registra los servicios de Identity para el login (Identificaci髇)
+            //registra los servicios de Identity para el login (Identificaci贸n)
             services.AddIdentity<AppUser, AppRole>(options =>
             {
-                //Eliminar restricciones de contrase馻
+                //Eliminar restricciones de contrase帽a
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 6;
@@ -49,9 +49,13 @@ namespace Recetario
                 //options.Password.RequireUppercase = false;
             }).AddEntityFrameworkStores<ContextoBD>().AddErrorDescriber<CustomIdentityErrorDescriber>();
 
-            //Agregar la Conexi髇 con la BD
+            //Agregar la Conexi贸n con la BD
             //para hacer Scaffolding de la BD
             //Scaffold-DbContext "server=localhost;user id=root;password=root;database=recetario;persistsecurityinfo=True" Pomelo.EntityFrameworkCore.MySql -OutputDir BaseDatos -ContextDir BaseDatos -Context ContextoBD -Force
+            
+            
+            //services.AddDbContext<ContextoBD>(options =>
+            //options.UseMySql(Configuration.GetConnectionString("ConexionAzure"), x => x.ServerVersion("5.7.19-mysql")));
             services.AddDbContext<ContextoBD>(options =>
             options.UseMySql(Configuration.GetConnectionString("StringMySQL"), x => x.ServerVersion("5.7.19-mysql")));
 
@@ -59,7 +63,7 @@ namespace Recetario
             services.AddScoped<IActor, ServiciosActor>();
             services.AddScoped<IReceta, ServiciosReceta>();
 
-            //Servicios para autorizaci髇 con pol韙icas
+            //Servicios para autorizaci贸n con pol铆ticas
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("RequireSuperAdministradorRole",
@@ -88,7 +92,7 @@ namespace Recetario
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            //Agregar autenticaci髇
+            //Agregar autenticaci贸n
             app.UseAuthentication();
             
             app.UseRouting();
