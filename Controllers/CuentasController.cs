@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -45,13 +46,15 @@ namespace Recetario.Controllers
                     user = new AppUser();
                     user.UserName = actor.Usuario;// userName;
                     user.Email = actor.Email;// email;
-                    //Se registra como en la tabla actor (Actor)
-                    _serviciosActor.Registrar(actor);
                     //Se registra en la tabla aspnetusers (AppUser)
                     IdentityResult result = await UserMgr.CreateAsync(user, actor.Contrasena);
                     //Si se registró correctamente, iniciar sesión
                     if (result.Succeeded)
                     {
+                        //Se registra como en la tabla actor (Actor)
+                        _serviciosActor.Registrar(actor);
+                        //Se agrega el claim usuario para la autorización
+                        await UserMgr.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Usuario"));
                         return await IniciarSesion(actor);
                     }
                     else
@@ -71,7 +74,7 @@ namespace Recetario.Controllers
             }
             catch (Exception) { return RedirectToAction("Home", "Index"); } //View("Home/Index.cshtml"); }
         }
-
+        [AllowAnonymous]
         public async Task<IActionResult> IniciarSesion(VActor actor)
         {
             var result = await SignInMgr.PasswordSignInAsync(actor.Usuario, actor.Contrasena, false, false);

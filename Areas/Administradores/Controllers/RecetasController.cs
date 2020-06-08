@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Recetario.Areas.Administradores.Servicios;
 using Recetario.Areas.Administradores.Models;
 using Recetario.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Recetario.Areas.Administradores.Controllers
 {
@@ -17,6 +18,8 @@ namespace Recetario.Areas.Administradores.Controllers
         {
             _serviciosReceta = serviciosReceta;
         }
+        //Autorización para Admin
+        [Authorize(Roles = "Administrador,SuperAdministrador")]
         public IActionResult Index(string cadenaBusqueda, int? noPagina, String filtroActual)
         {
             //Se mete el filtro a ViewData para que permanezca aunque se cambie de páginas

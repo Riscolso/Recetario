@@ -65,6 +65,7 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <param name="Filtro">Filtro de búsqueda</param>
         /// <returns>Una lista de actores que coinciden con el filtro</returns>
         ICollection<VActor> BuscarFiltro(String Filtro);
+
         /// <summary>
         /// Realiza una búsqueda con base a un filtro dato
         /// La busqueda se da entre Nombre, correo o usuario
