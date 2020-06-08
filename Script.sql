@@ -57,7 +57,7 @@ CREATE TABLE `actor` (
   `Contrasena` blob NOT NULL,
   `Email` varchar(60) NOT NULL,
   PRIMARY KEY (`idActor`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,6 +66,7 @@ CREATE TABLE `actor` (
 
 LOCK TABLES `actor` WRITE;
 /*!40000 ALTER TABLE `actor` DISABLE KEYS */;
+INSERT INTO `actor` VALUES (1,'admin','1966-09-04',0,'root','Contra123!','root@gmail.com');
 /*!40000 ALTER TABLE `actor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -137,7 +138,7 @@ CREATE TABLE `aspnetuserclaims` (
   PRIMARY KEY (`Id`),
   KEY `IX_AspNetUserClaims_UserId` (`UserId`),
   CONSTRAINT `FK_AspNetUserClaims_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -146,6 +147,7 @@ CREATE TABLE `aspnetuserclaims` (
 
 LOCK TABLES `aspnetuserclaims` WRITE;
 /*!40000 ALTER TABLE `aspnetuserclaims` DISABLE KEYS */;
+INSERT INTO `aspnetuserclaims` VALUES (1,1,'http://schemas.microsoft.com/ws/2008/06/identity/claims/role','SuperAdministrador');
 /*!40000 ALTER TABLE `aspnetuserclaims` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -228,7 +230,7 @@ CREATE TABLE `aspnetusers` (
   PRIMARY KEY (`Id`),
   UNIQUE KEY `UserNameIndex` (`NormalizedUserName`),
   KEY `EmailIndex` (`NormalizedEmail`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -237,6 +239,7 @@ CREATE TABLE `aspnetusers` (
 
 LOCK TABLES `aspnetusers` WRITE;
 /*!40000 ALTER TABLE `aspnetusers` DISABLE KEYS */;
+INSERT INTO `aspnetusers` VALUES (1,'root','ROOT','root@gmail.com','ROOT@GMAIL.COM',0,'AQAAAAEAACcQAAAAECIzqzm9F7hWW3LiO0iRmMsVph/x1Jke3RO5UzqVLGTpfUZUvNeRtQnb3lPVQcuZwQ==','BTTH6EVKRN7GUZPP6POUUJWDSWKYZSI3','96d8a2eb-9b77-43b2-a87d-f6350edfbf53',NULL,0,0,NULL,1,0);
 /*!40000 ALTER TABLE `aspnetusers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -463,4 +466,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-05-18 20:12:56
+-- Dump completed on 2020-06-07 22:47:59
