@@ -15,15 +15,15 @@ namespace Recetario.Controllers
 {
     public class CuentasController : Controller
     {
-        private UserManager<AppUser> UserMgr { get; }
-        private SignInManager<AppUser> SignInMgr { get; }
+        private UserManager<AppUser> _userMgr { get; }
+        private SignInManager<AppUser> _signInMgr { get; }
         private readonly IActor _serviciosActor;
 
         public CuentasController(UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager, IActor serviciosActor)
         {
-                UserMgr = userManager;
-                SignInMgr = signInManager;
+                _userMgr = userManager;
+                _signInMgr = signInManager;
                 _serviciosActor = serviciosActor;
         }
 
@@ -40,21 +40,21 @@ namespace Recetario.Controllers
                 //Se especifica como tipo usuario
                 actor.Tipo = 2;
                 //Se verifica que no se repita el nombre de usuario
-                AppUser user = await UserMgr.FindByNameAsync(actor.Usuario);
+                AppUser user = await _userMgr.FindByNameAsync(actor.Usuario);
                 if (user == null)
                 {
                     user = new AppUser();
                     user.UserName = actor.Usuario;// userName;
                     user.Email = actor.Email;// email;
                     //Se registra en la tabla aspnetusers (AppUser)
-                    IdentityResult result = await UserMgr.CreateAsync(user, actor.Contrasena);
+                    IdentityResult result = await _userMgr.CreateAsync(user, actor.Contrasena);
                     //Si se registró correctamente, iniciar sesión
                     if (result.Succeeded)
                     {
                         //Se registra como en la tabla actor (Actor)
                         _serviciosActor.Registrar(actor);
                         //Se agrega el claim usuario para la autorización
-                        await UserMgr.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Usuario"));
+                        await _userMgr.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Usuario"));
                         return await IniciarSesion(actor);
                     }
                     else
@@ -77,7 +77,7 @@ namespace Recetario.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> IniciarSesion(VActor actor)
         {
-            var result = await SignInMgr.PasswordSignInAsync(actor.Usuario, actor.Contrasena, false, false);
+            var result = await _signInMgr.PasswordSignInAsync(actor.Usuario, actor.Contrasena, false, false);
             if (result.Succeeded)
             {
                 actor = _serviciosActor.FindVActor(actor.Usuario);
@@ -103,7 +103,7 @@ namespace Recetario.Controllers
 
         public async Task<IActionResult> CerrarSesion()
         {
-            await SignInMgr.SignOutAsync();
+            await _signInMgr.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
     }
