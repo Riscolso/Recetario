@@ -70,6 +70,7 @@ namespace Recetario.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
+        //Como se trata de info sensible se usa Post
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
@@ -84,11 +85,13 @@ namespace Recetario.Areas.Identity.Pages.Account
                     NombreActor = Input.NombreActor,
                     FechaNac = Input.FechaNac
                 };
+                //Crear el usuario
                 var result = await _userManager.CreateAsync(user, Input.Contrasena);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    _logger.LogInformation("Se creó un nuevo usuario.");
 
+                    //En caso de querer usar verificación de email
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(

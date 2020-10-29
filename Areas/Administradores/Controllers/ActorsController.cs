@@ -22,13 +22,13 @@ namespace Recetario.Areas.Administradores.Controllers
     [Area("Administradores")]
     public class ActorsController : Controller
     {
-        private UserManager<AppUser> UserMgr { get; }
-        private SignInManager<AppUser> SignInMgr { get; }
+        private UserManager<Actor> UserMgr { get; }
+        private SignInManager<Actor> SignInMgr { get; }
         private readonly IActor _serviciosActor;
         private static int TIPO = 1;
 
-        public ActorsController(UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager, IActor serviciosActor)
+        public ActorsController(UserManager<Actor> userManager,
+            SignInManager<Actor> signInManager, IActor serviciosActor)
         {
             UserMgr = userManager;
             SignInMgr = signInManager;
@@ -50,7 +50,7 @@ namespace Recetario.Areas.Administradores.Controllers
             {
                 cadenaBusqueda = filtroActual;
             }
-            ICollection<VActor> actores;
+            ICollection<ActorDTO> actores;
             //Si hay cadena de búsqueda
             //En caso de que no haber ninguna búsqueda, muestro todo, TODO
             if (!String.IsNullOrEmpty(cadenaBusqueda))
@@ -63,7 +63,7 @@ namespace Recetario.Areas.Administradores.Controllers
             }
             //Cantidad de Elementos a mostrar por página
             int pageSize = 4;
-            return View(Paginacion<VActor>.Create(actores, noPagina ?? 1, pageSize));
+            return View(Paginacion<ActorDTO>.Create(actores, noPagina ?? 1, pageSize));
         }
 
         //Autorización para Admin
@@ -98,13 +98,16 @@ namespace Recetario.Areas.Administradores.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Agregar(VActor actor)
+        public async Task<IActionResult> Agregar(ActorDTO actor)
         {
             if (ModelState.IsValid)
             {
-                var user = new AppUser();
-                user.UserName = actor.Usuario;// userName;
-                user.Email = actor.Email;
+                
+                var user = new Actor()
+                {
+                    UserName = actor.Usuario,
+                    Email = actor.Email
+                };
                 //Se agrega el usuario a la tabla aspnetusers (AppUser) usada para el login
                 IdentityResult result = await UserMgr.CreateAsync(user, actor.Contrasena);
                 if (result.Succeeded)
@@ -113,7 +116,8 @@ namespace Recetario.Areas.Administradores.Controllers
                     //0.-root, 1.-Administrador, 2.-Usuario
                     actor.Tipo = 1;
                     //Se registra en la tabla actor
-                    _serviciosActor.Registrar(actor);
+                    //TODO: Checar esto, ya que Ahora Actor esta fucionado con AppUser
+                    //_serviciosActor.Registrar(actor);
 
                     await UserMgr.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Administrador"));
                     return RedirectToAction(nameof(Index));
@@ -153,7 +157,7 @@ namespace Recetario.Areas.Administradores.Controllers
         [Authorize(Roles = "Administrador,SuperAdministrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Editar(int id, VActor actor)
+        public IActionResult Editar(int id, ActorDTO actor)
         {
             if (id != actor.IdActor)
             {
@@ -197,7 +201,7 @@ namespace Recetario.Areas.Administradores.Controllers
             {
                 return NotFound();
             }
-            VActor actor = _serviciosActor.Obtener(id);
+            ActorDTO actor = _serviciosActor.Obtener(id);
             // TODO: Confrimar que se puede regresar el null
             if (actor == null)
             {
@@ -214,9 +218,10 @@ namespace Recetario.Areas.Administradores.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EliminarConfirmado(int id)
         {
-            AppUser toElim = await UserMgr.FindByIdAsync(id.ToString());
+            Actor toElim = await UserMgr.FindByIdAsync(id.ToString());
             await UserMgr.DeleteAsync(toElim);
-            _serviciosActor.Eliminar(id);
+            //TODO: Checar esto, ya que Ahora Actor esta fucionado con AppUser
+            //_serviciosActor.Eliminar(id);
             return RedirectToAction(nameof(Index));
             //return RedirectToAction(nameof(Index));
         }
