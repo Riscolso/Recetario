@@ -18,7 +18,7 @@ namespace Recetario.Areas.Administradores.Servicios
             _contextoBD = contextoBD;
         }
         /// <inheritdoc/>
-        public ICollection<VReceta> BuscarFiltro(string Filtro)
+        public ICollection<RecetaDTO> BuscarFiltro(string Filtro)
         {
             int idCreador = 0;
             //Hacer la búsqueda insensible a mayúscular o minúsculas
@@ -29,7 +29,7 @@ namespace Recetario.Areas.Administradores.Servicios
             a.NombreActor.ToLower().Contains(Filtro));
             //Obtener Ids del usuario creador
             if(creador != null)
-                idCreador = creador.IdActor;
+                idCreador = creador.Id;
 
             //Buscar en la base de datos las recetas que conincidan con el filtro
             var recetas = _contextoBD.Receta.Where(r =>
@@ -38,7 +38,7 @@ namespace Recetario.Areas.Administradores.Servicios
             //Se convierte el IQueryable en lista de recetas
             List<Receta> listaRecetas = recetas.ToList();
             //Una lista para guardar las vistas que se van a regresar
-            List<VReceta> vrecetas = new List<VReceta>();
+            List<RecetaDTO> vrecetas = new List<RecetaDTO>();
             //Convertir el modelo de datos a modelo de vista
             foreach (Receta receta in listaRecetas)
             {
@@ -59,23 +59,23 @@ namespace Recetario.Areas.Administradores.Servicios
         }
 
         /// <inheritdoc/>
-        public VReceta Obtener(int? Id)
+        public RecetaDTO Obtener(int? Id)
         {
             return CasteoVReceta(_contextoBD.Receta.Find(Id));
         }
 
         /// <inheritdoc/>
-        public ICollection<VReceta> Obtener()
+        public ICollection<RecetaDTO> Obtener()
         {
             var recetas = _contextoBD.Receta.ToList();
-            List<VReceta> vrecetas = new List<VReceta>();
+            List<RecetaDTO> vrecetas = new List<RecetaDTO>();
             foreach (Receta receta in recetas) vrecetas.Add(CasteoVReceta(receta));
             return vrecetas;
         }
         
-        public VReceta CasteoVReceta(Receta receta)
+        public RecetaDTO CasteoVReceta(Receta receta)
         {
-            return new VReceta
+            return new RecetaDTO
             {
                 IdReceta = receta.IdReceta,
                 Nombre = receta.Nombre,

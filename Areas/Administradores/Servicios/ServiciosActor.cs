@@ -25,7 +25,7 @@ namespace Recetario.Areas.Administradores.Servicios
         }
 
         /// <inheritdoc/>
-        public int Actualizar(VActor vactor) 
+        public Actor Actualizar(ActorDTO vactor) 
         {
             var actor = CasteoActor(vactor);
             try
@@ -37,21 +37,21 @@ namespace Recetario.Areas.Administradores.Servicios
             {
                 throw;
             }
-            return actor.IdActor;
+            return actor;
         }
 
         /// <inheritdoc/>
-        public ICollection<VActor> BuscarFiltro(string Filtro)
+        public ICollection<ActorDTO> BuscarFiltro(string Filtro)
         {
             //Hacer la búsqueda insensible a mayúscular o minúsculas
             Filtro = Filtro.ToLower();
             //Buscar en la base de datos los actores que conincidan con el filtro
             var actores = _contextoBD.Actor.Where(a =>
             a.NombreActor.ToLower().Contains(Filtro) ||
-            a.Usuario.ToLower().Contains(Filtro) ||
+            a.UserName.ToLower().Contains(Filtro) ||
             a.Email.ToLower().Contains(Filtro));
             //Una lista para guardar las vista que se van a regresar
-            List<VActor> vactores = new List<VActor>();
+            List<ActorDTO> vactores = new List<ActorDTO>();
             //Convertir el modelo de datos a modelo de vista
             foreach (Actor actor in actores)
             {
@@ -60,7 +60,7 @@ namespace Recetario.Areas.Administradores.Servicios
             return vactores;
         }
         /// <inheritdoc/>
-        public ICollection<VActor> BuscarFiltro(string Filtro, int Tipo)
+        public ICollection<ActorDTO> BuscarFiltro(string Filtro, int Tipo)
         {
             //Hacer la búsqueda insensible a mayúscular o minúsculas
             Filtro = Filtro.ToLower();
@@ -68,10 +68,10 @@ namespace Recetario.Areas.Administradores.Servicios
             var actores = _contextoBD.Actor.Where(a =>
             a.Tipo==Tipo && (
             a.NombreActor.ToLower().Contains(Filtro) ||
-            a.Usuario.ToLower().Contains(Filtro) ||
+            a.UserName.ToLower().Contains(Filtro) ||
             a.Email.ToLower().Contains(Filtro)));
             //Una lista para guardar las vista que se van a regresar
-            List<VActor> vactores = new List<VActor>();
+            List<ActorDTO> vactores = new List<ActorDTO>();
             //Convertir el modelo de datos a modelo de vista
             foreach (Actor actor in actores)
             {
@@ -80,7 +80,7 @@ namespace Recetario.Areas.Administradores.Servicios
             return vactores;
         }
         /// <inheritdoc/>
-        public ICollection<VActor> BuscarFiltroUsuarios(string Filtro)
+        public ICollection<ActorDTO> BuscarFiltroUsuarios(string Filtro)
         {
             //Hacer la búsqueda insensible a mayúscular o minúsculas
             Filtro = Filtro.ToLower();
@@ -88,10 +88,10 @@ namespace Recetario.Areas.Administradores.Servicios
             var actores = _contextoBD.Actor.Where(a =>
             a.Tipo == 3 &&
             (a.NombreActor.ToLower().Contains(Filtro) ||
-            a.Usuario.ToLower().Contains(Filtro) ||
+            a.UserName.ToLower().Contains(Filtro) ||
             a.Email.ToLower().Contains(Filtro)));
             //Una lista para guardar las vista que se van a regresar
-            List<VActor> vactores = new List<VActor>();
+            List<ActorDTO> vactores = new List<ActorDTO>();
             //Convertir el modelo de datos a modelo de vista
             foreach (Actor actor in actores)
             {
@@ -112,32 +112,32 @@ namespace Recetario.Areas.Administradores.Servicios
         }
 
         /// <inheritdoc/>
-        public VActor Obtener(int? Id)
+        public ActorDTO Obtener(int? Id)
         {
             return CasteoVActor(_contextoBD.Actor.Find(Id));
         }
 
         /// <inheritdoc/>
-        public ICollection<VActor> ObtenerLista()
+        public ICollection<ActorDTO> ObtenerLista()
         {
             var actores =  _contextoBD.Actor.ToList();
-            List<VActor> vactores = new List<VActor>();
+            List<ActorDTO> vactores = new List<ActorDTO>();
             foreach(Actor actor in actores) vactores.Add(CasteoVActor(actor));
             return vactores;
         }
         /// <inheritdoc/>
-        public ICollection<VActor> ObtenerLista(int Tipo)
+        public ICollection<ActorDTO> ObtenerLista(int Tipo)
         {
             var actores = _contextoBD.Actor.Where(a=> a.Tipo==Tipo).ToList();
-            List<VActor> vactores = new List<VActor>();
+            List<ActorDTO> vactores = new List<ActorDTO>();
             foreach (Actor actor in actores) vactores.Add(CasteoVActor(actor));
             return vactores;
         }
         /// <inheritdoc/>
-        public ICollection<VActor> ObtenerUsuarios()
+        public ICollection<ActorDTO> ObtenerUsuarios()
         {
             var actores = _contextoBD.Actor.ToList();
-            List<VActor> vactores = new List<VActor>();
+            List<ActorDTO> vactores = new List<ActorDTO>();
             foreach (Actor actor in actores)
                 if(actor.Tipo == 2)
                     vactores.Add(CasteoVActor(actor));
@@ -145,12 +145,12 @@ namespace Recetario.Areas.Administradores.Servicios
         }
 
         /// <inheritdoc/>
-        public int Registrar(VActor vactor)
+        public Actor Registrar(ActorDTO vactor)
         {
             Actor actor = CasteoActor(vactor);
             _contextoBD.Add(actor);
             _contextoBD.SaveChanges();
-            return actor.IdActor;
+            return actor;
         }
 
         /// <summary>
@@ -159,46 +159,49 @@ namespace Recetario.Areas.Administradores.Servicios
         /// </summary>
         /// <param name="actor">Clase Actor de la cual se obtendrán los valores</param>
         /// <returns>Una clase VActor para usarse como vista</returns>
-        VActor CasteoVActor(Actor actor)
+        ActorDTO CasteoVActor(Actor actor)
         {
-            return new VActor
+            return new ActorDTO
             {
-                IdActor = actor.IdActor,
+                IdActor = actor.Id,
                 NombreActor = actor.NombreActor,
                 FechaNac = actor.FechaNac,
                 Tipo = actor.Tipo,
-                Usuario = actor.Usuario,
+                Usuario = actor.UserName,
                 //Contrasena = Convert.ToString(actor.Contrasena),
                 Email = actor.Email
             };
         }
 
-        Actor CasteoActor(VActor vactor)
+        Actor CasteoActor(ActorDTO vactor)
         {
             return new Actor
             {
-                IdActor = vactor.IdActor,
                 NombreActor = vactor.NombreActor,
                 FechaNac = vactor.FechaNac,
                 Tipo = vactor.Tipo,
-                Usuario = vactor.Usuario,
+                UserName = vactor.Usuario,
                 // TODO : Agregar Encriptación por AES
-                Contrasena = Encoding.ASCII.GetBytes(vactor.Contrasena),
+                PasswordHash = vactor.Contrasena,
                 Email = vactor.Email
             };
         }
-        public VActor AppUserToVActor(AppUser user)
-        {
-            return CasteoVActor(_contextoBD.Actor.Find(user.Id));
-        }
 
-        public VActor FindVActor(string user)
+        public ActorDTO FindVActor(string user)
         {
             var actor = _contextoBD.Actor.FirstOrDefault(a =>
-            a.Usuario.Contains(user)); ;
+            a.UserName.Contains(user)); ;
             return CasteoVActor(actor) ;
         }
 
-        
+        int IActor.Registrar(ActorDTO vactor)
+        {
+            throw new NotImplementedException();
+        }
+
+        int IActor.Actualizar(ActorDTO vactor)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

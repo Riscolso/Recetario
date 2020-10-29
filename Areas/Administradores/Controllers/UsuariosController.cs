@@ -38,7 +38,7 @@ namespace Recetario.Areas.Administradores.Controllers
             {
                 cadenaBusqueda = filtroActual;
             }
-            ICollection<VActor> usuarios;
+            ICollection<ActorDTO> usuarios;
             //Si hay cadena de búsqueda
             //En caso de que no haber ninguna búsqueda, muestro todo, TODO
             if (!String.IsNullOrEmpty(cadenaBusqueda))
@@ -51,7 +51,7 @@ namespace Recetario.Areas.Administradores.Controllers
             }
             //Cantidad de Elementos a mostrar por página
             int pageSize = 4;
-            return View(Paginacion<VActor>.Create(usuarios, noPagina ?? 1, pageSize));
+            return View(Paginacion<ActorDTO>.Create(usuarios, noPagina ?? 1, pageSize));
         }
 
 
@@ -83,7 +83,7 @@ namespace Recetario.Areas.Administradores.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Agregar(VActor actor)
+        public IActionResult Agregar(ActorDTO actor)
         {
             if (ModelState.IsValid)
             {
@@ -118,7 +118,7 @@ namespace Recetario.Areas.Administradores.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Editar(int id, VActor actor)
+        public IActionResult Editar(int id, ActorDTO actor)
         {
             if (id != actor.IdActor)
             {
@@ -160,7 +160,7 @@ namespace Recetario.Areas.Administradores.Controllers
             {
                 return NotFound();
             }
-            VActor actor = _serviciosActor.Obtener(id);
+            ActorDTO actor = _serviciosActor.Obtener(id);
             // TODO: Confrimar que se puede regresar el null
             if (actor == null)
             {

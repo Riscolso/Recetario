@@ -9,8 +9,8 @@ using Recetario.BaseDatos;
 namespace Recetario.Migrations
 {
     [DbContext(typeof(ContextoBD))]
-    [Migration("20200515103909_CreateIdentitySchema")]
-    partial class CreateIdentitySchema
+    [Migration("20201028072236_EsquemaIdentity")]
+    partial class EsquemaIdentity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -18,6 +18,33 @@ namespace Recetario.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedName")
+                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
@@ -54,7 +81,7 @@ namespace Recetario.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("int(11)");
 
                     b.HasKey("Id");
 
@@ -75,7 +102,7 @@ namespace Recetario.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("int(11)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -87,7 +114,7 @@ namespace Recetario.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("int(11)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
@@ -102,7 +129,7 @@ namespace Recetario.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("int(11)");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
@@ -120,77 +147,10 @@ namespace Recetario.Migrations
 
             modelBuilder.Entity("Recetario.BaseDatos.Actor", b =>
                 {
-                    b.Property<int>("IdActor")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("idActor")
                         .HasColumnType("int(11)");
-
-                    b.Property<byte[]>("Contrasena")
-                        .IsRequired()
-                        .HasColumnType("blob");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("varchar(60)")
-                        .HasAnnotation("MySql:CharSet", "utf8")
-                        .HasAnnotation("MySql:Collation", "utf8_general_ci");
-
-                    b.Property<DateTime>("FechaNac")
-                        .HasColumnType("date");
-
-                    b.Property<string>("NombreActor")
-                        .IsRequired()
-                        .HasColumnType("varchar(55)")
-                        .HasAnnotation("MySql:CharSet", "utf8")
-                        .HasAnnotation("MySql:Collation", "utf8_general_ci");
-
-                    b.Property<int>("Tipo")
-                        .HasColumnType("int(11)");
-
-                    b.Property<string>("Usuario")
-                        .IsRequired()
-                        .HasColumnType("varchar(45)")
-                        .HasAnnotation("MySql:CharSet", "utf8")
-                        .HasAnnotation("MySql:Collation", "utf8_general_ci");
-
-                    b.HasKey("IdActor")
-                        .HasName("PRIMARY");
-
-                    b.ToTable("actor");
-                });
-
-            modelBuilder.Entity("Recetario.BaseDatos.AppRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedName")
-                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
-                        .HasMaxLength(256);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasName("RoleNameIndex");
-
-                    b.ToTable("AspNetRoles");
-                });
-
-            modelBuilder.Entity("Recetario.BaseDatos.AppUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -206,11 +166,20 @@ namespace Recetario.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<DateTime>("FechaNac")
+                        .HasColumnType("date");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("NombreActor")
+                        .IsRequired()
+                        .HasColumnType("varchar(55)")
+                        .HasAnnotation("MySql:CharSet", "utf8")
+                        .HasAnnotation("MySql:Collation", "utf8_general_ci");
 
                     b.Property<string>("NormalizedEmail")
                         .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
@@ -232,6 +201,9 @@ namespace Recetario.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<int>("Tipo")
+                        .HasColumnType("int(11)");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
 
@@ -239,7 +211,8 @@ namespace Recetario.Migrations
                         .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
                         .HasMaxLength(256);
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PRIMARY");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -248,7 +221,7 @@ namespace Recetario.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers");
+                    b.ToTable("actor");
                 });
 
             modelBuilder.Entity("Recetario.BaseDatos.Etiqueta", b =>
@@ -442,7 +415,7 @@ namespace Recetario.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
-                    b.HasOne("Recetario.BaseDatos.AppRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -451,7 +424,7 @@ namespace Recetario.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
-                    b.HasOne("Recetario.BaseDatos.AppUser", null)
+                    b.HasOne("Recetario.BaseDatos.Actor", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -460,7 +433,7 @@ namespace Recetario.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
-                    b.HasOne("Recetario.BaseDatos.AppUser", null)
+                    b.HasOne("Recetario.BaseDatos.Actor", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -469,13 +442,13 @@ namespace Recetario.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.HasOne("Recetario.BaseDatos.AppRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Recetario.BaseDatos.AppUser", null)
+                    b.HasOne("Recetario.BaseDatos.Actor", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -484,7 +457,7 @@ namespace Recetario.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.HasOne("Recetario.BaseDatos.AppUser", null)
+                    b.HasOne("Recetario.BaseDatos.Actor", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

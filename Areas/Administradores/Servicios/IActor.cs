@@ -10,7 +10,7 @@ namespace Recetario.Areas.Administradores.Servicios
     /// <summary>
     /// Interfaz encargada de todas las posibles acciones que se pueden realizar con una clase VActor
     /// </summary>
-    /// <see cref="VActor"/>
+    /// <see cref="ActorDTO"/>
     public interface IActor
     {
         /// <summary>
@@ -18,38 +18,38 @@ namespace Recetario.Areas.Administradores.Servicios
         /// </summary>
         /// <param name="vactor">Clase VActor que se va a guardar</param>
         /// <returns>ID con el que se registró el actor dado</returns>
-        int Registrar(VActor vactor);
+        int Registrar(ActorDTO vactor);
 
         /// <summary>
         /// Con base a un ID dado, regresa un Vactor
         /// </summary>
         /// <param name="Id">ID de VActor</param>
         /// <returns>Clase VActor</returns>
-        VActor Obtener(int? Id);
+        ActorDTO Obtener(int? Id);
         /// <summary>
         /// Obtiene una lista de VActor disponibles en un repositorio.
         /// </summary>
         /// <returns>Lista de VActor</returns>
-        ICollection<VActor> ObtenerLista();
+        ICollection<ActorDTO> ObtenerLista();
         /// <summary>
         /// Obtiene una lista de VActor disponibles en un repositorio.
         /// </summary>
         /// <param name="Tipo">Filtro con base al tipo de actor en la BD</param>
         /// <returns>Lista de VActor</returns>
-        ICollection<VActor> ObtenerLista(int Tipo);
+        ICollection<ActorDTO> ObtenerLista(int Tipo);
         /// <summary>
         /// Regresa una lista de todos los usuarios VActor
         /// </summary>
         /// <returns>Lista de VActor</returns>
         /// 
-        ICollection<VActor> ObtenerUsuarios();
+        ICollection<ActorDTO> ObtenerUsuarios();
 
         /// <summary>
         /// Realiza una actualización de un VActor
         /// </summary>
         /// <param name="vactor">Clase a actualizar</param>
         /// <returns>ID Asocioado a la clase actualizada</returns>
-        int Actualizar(VActor vactor);
+        int Actualizar(ActorDTO vactor);
         
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Recetario.Areas.Administradores.Servicios
         /// </summary>
         /// <param name="Filtro">Filtro de búsqueda</param>
         /// <returns>Una lista de actores que coinciden con el filtro</returns>
-        ICollection<VActor> BuscarFiltro(String Filtro);
+        ICollection<ActorDTO> BuscarFiltro(String Filtro);
 
         /// <summary>
         /// Realiza una búsqueda con base a un filtro dato
@@ -73,20 +73,19 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <param name="Filtro">Filtro de búsqueda</param>
         /// <param name="Tipo">Realiza Filtro de con base al tipo de actor </param>
         /// <returns>Una lista de actores que coinciden con el filtro</returns>
-        ICollection<VActor> BuscarFiltro(String Filtro, int Tipo);
+        ICollection<ActorDTO> BuscarFiltro(String Filtro, int Tipo);
         /// <summary>
         /// Realiza una búsqueda de usuario con base en un filtro dado
         /// La busqueda se da entre Nombre, correo o usuario
         /// </summary>
         /// <param name="Filtro">Filtro de búsqueda</param>
         /// <returns>Una lista de actores que coinciden con el filtro</returns>
-        ICollection<VActor> BuscarFiltroUsuarios(String Filtro);
-        public VActor AppUserToVActor(AppUser user);
+        ICollection<ActorDTO> BuscarFiltroUsuarios(String Filtro);
         /// <summary>
         /// Regresa un VActor dado un id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public VActor FindVActor(string user);
+        public ActorDTO FindVActor(string user);
     }
 }

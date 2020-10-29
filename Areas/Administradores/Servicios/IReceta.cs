@@ -9,7 +9,7 @@ namespace Recetario.Areas.Administradores.Servicios
     /// <summary>
     /// Interfaz encargada de todas las posibles acciones que se pueden realizar con una clase VReceta
     /// </summary>
-    /// <see cref="VReceta"/>
+    /// <see cref="RecetaDTO"/>
     public interface IReceta
     {
         /// <summary>
@@ -17,13 +17,13 @@ namespace Recetario.Areas.Administradores.Servicios
         /// </summary>
         /// <param name="Id">ID de VReceta</param>
         /// <returns>Clase VReceta</returns>
-        VReceta Obtener(int? Id);
+        RecetaDTO Obtener(int? Id);
 
         /// <summary>
         /// Obtiene la lista de VReceta disponibles en un repositorio.
         /// </summary>
         /// <returns>Lista de VReceta</returns>
-        ICollection<VReceta> Obtener();
+        ICollection<RecetaDTO> Obtener();
 
         /// <summary>
         /// Eliminar una receta del repositorio mediante su ID
@@ -37,6 +37,6 @@ namespace Recetario.Areas.Administradores.Servicios
         /// </summary>
         /// <param name="Filtro">Filtro de búsqueda</param>
         /// <returns>Una lista de recetas que coinciden con el filtro</returns>
-        ICollection<VReceta> BuscarFiltro(String Filtro);
+        ICollection<RecetaDTO> BuscarFiltro(String Filtro);
     }
 }
