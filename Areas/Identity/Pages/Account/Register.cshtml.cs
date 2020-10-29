@@ -24,18 +24,19 @@ namespace Recetario.Areas.Identity.Pages.Account
         private readonly SignInManager<Actor> _signInManager;
         private readonly UserManager<Actor> _userManager;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
+        //private readonly IEmailSender _emailSender;
 
         public RegisterModel(
             UserManager<Actor> userManager,
             SignInManager<Actor> signInManager,
-            ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            ILogger<RegisterModel> logger
+            //IEmailSender emailSender
+            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
-            _emailSender = emailSender;
+            //_emailSender = emailSender;
         }
 
         [BindProperty]
@@ -44,7 +45,7 @@ namespace Recetario.Areas.Identity.Pages.Account
         public string ReturnUrl { get; set; }
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
-
+        /*
         public class InputModel
         {
             [Required]
@@ -63,6 +64,7 @@ namespace Recetario.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
         }
+        */
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -80,7 +82,7 @@ namespace Recetario.Areas.Identity.Pages.Account
                 //Transferir la información de los formularios
                 //a una clase Actor que interactua con la BD e identity
                 var user = new Actor { 
-                    UserName = Input.Email, 
+                    UserName = Input.Usuario, 
                     Email = Input.Email,
                     NombreActor = Input.NombreActor,
                     FechaNac = Input.FechaNac
@@ -92,7 +94,7 @@ namespace Recetario.Areas.Identity.Pages.Account
                     _logger.LogInformation("Se creó un nuevo usuario.");
 
                     //En caso de querer usar verificación de email
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    /*var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
@@ -102,7 +104,7 @@ namespace Recetario.Areas.Identity.Pages.Account
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
+                    */
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });

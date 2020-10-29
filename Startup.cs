@@ -30,6 +30,8 @@ namespace Recetario
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Para controlar Las Razor page de Identity
+            services.AddRazorPages();
             //Agregar todos los servicios relacionados con MVC
             services.AddMvc(options =>
             {
@@ -121,6 +123,9 @@ namespace Recetario
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                //Agregar EndPoints para Razor Pages
+                endpoints.MapRazorPages();
             });
         }
     }
