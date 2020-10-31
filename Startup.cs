@@ -47,6 +47,9 @@ namespace Recetario
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 6;
+                //TODO: Checa sí funca, Ricardo del futuro jajajaja
+                options.User.RequireUniqueEmail = true;
+                
                 //options.Password.RequireLowercase = false;
                 //options.Password.RequireNonAlphanumeric = false;
                 //options.Password.RequireUppercase = false;

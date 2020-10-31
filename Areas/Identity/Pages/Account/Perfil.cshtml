@@ -1,0 +1,52 @@
+﻿@page
+@model EditarUsuarioModel
+@{
+    ViewData["Title"] = "Editar";
+}
+
+<script type="text/javascript">
+    function mostrar(par) {
+        par.forEach(elemento => document.getElementById(elemento).style.display = 'block');
+    }
+    function ocultar(par) {
+        par.forEach(elemento => document.getElementById(elemento).style.display = 'none');
+    }
+</script>
+
+<h1>@ViewData["Title"]</h1>
+<div style="margin:auto">
+    <form method="post">
+        <h4>Perfil</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group">
+            <label asp-for="Input.Usuario" class="control-label"></label>
+            <label class="control-label">@Model.Input.Usuario</label>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.Email" class="control-label"></label>
+            <label class="control-label">@Model.Input.Email</label>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.Nombre" class="control-label"></label>
+            <label class="control-label">@Model.Input.Nombre</label>
+            <input id="InNombre" style="display:none" asp-for="Input.Nombre" class="form-control" />
+            <span asp-validation-for="Input.Nombre" class="text-danger"></span>
+            <button type="button" onclick="mostrar(['InNombre', 'InGuardar'])">Editar</button>
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.FechaNac" class="control-label"></label>
+            <label class="control-label">@Model.Input.FechaNac.ToShortDateString()</label>
+            <input id="InFecha" style="display:none" asp-for="Input.FechaNac" class="form-control" />
+            <span asp-validation-for="Input.FechaNac" class="text-danger"></span>
+            <button type="button" onclick="mostrar(['InFecha', 'InGuardar'])">Editar</button>
+        </div>
+        <div class="form-group">
+            <input style="display:none" type="submit" value="Crear" class="btn btn-primary" />
+        </div>
+        <input id="InGuardar" style="display:none" type="submit" value="Guardar" class="btn btn-primary" />
+    </form>
+</div>
