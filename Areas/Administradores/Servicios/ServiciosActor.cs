@@ -70,14 +70,22 @@ namespace Recetario.Areas.Administradores.Servicios
             //Hacer la búsqueda insensible a mayúscular o minúsculas
             Filtro = Filtro.ToLower();
             //Obtener la lista de Actores que coinciden con el rol
-            var usuRol = ObtenerLista(rol);
-            //Buscar en la base de datos los actores que conincidan con el filtro
+            var actores = _userManager.GetUsersForClaimAsync(new Claim(ClaimTypes.Role, rol))
+                .Result
+                //Aplicando filtro
+                .Where(a =>
+                    a.NombreActor.ToLower().Contains(Filtro) ||
+                    a.UserName.ToLower().Contains(Filtro) ||
+                    a.Email.ToLower().Contains(Filtro));
 
+            //Buscar en la base de datos los actores que conincidan con el filtro
+            /*
             var actores = _contextoBD.Actor.Where(a =>
             a.Tipo==2 && (
             a.NombreActor.ToLower().Contains(Filtro) ||
             a.UserName.ToLower().Contains(Filtro) ||
             a.Email.ToLower().Contains(Filtro)));
+            */
             //Una lista para guardar las vista que se van a regresar
             List<ActorDTO> vactores = new List<ActorDTO>();
             //Convertir el modelo de datos a modelo de vista
