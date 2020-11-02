@@ -27,7 +27,6 @@ namespace Recetario.Areas.Administradores.Controllers
         private UserManager<Actor> UserMgr { get; }
         private SignInManager<Actor> SignInMgr { get; }
         private readonly IActor _serviciosActor;
-        private static int TIPO = 1;
 
         public ActorsController(UserManager<Actor> userManager,
             SignInManager<Actor> signInManager, IActor serviciosActor)
@@ -59,7 +58,7 @@ namespace Recetario.Areas.Administradores.Controllers
             }
             else
             {
-                actores = _serviciosActor.ObtenerLista(TIPO);
+                actores = _serviciosActor.ObtenerLista("Administrador");
             }
             //Cantidad de Elementos a mostrar por página
             int pageSize = 4;
@@ -93,7 +92,6 @@ namespace Recetario.Areas.Administradores.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Roles = "Administrador,SuperAdministrador")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Agregar(ActorDTO actor)
         {

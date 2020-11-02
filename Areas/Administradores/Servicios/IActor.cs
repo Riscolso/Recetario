@@ -34,9 +34,10 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <summary>
         /// Obtiene una lista de VActor disponibles en un repositorio.
         /// </summary>
-        /// <param name="Tipo">Filtro con base al tipo de actor en la BD</param>
+        /// <param name="Tipo">Filtro con base al tipo de actor en la BD
+        /// Usuario, Administrador o SuperAdministrador</param>
         /// <returns>Lista de VActor</returns>
-        ICollection<ActorDTO> ObtenerLista(int Tipo);
+        ICollection<ActorDTO> ObtenerLista(string rol);
         /// <summary>
         /// Regresa una lista de todos los usuarios VActor
         /// </summary>

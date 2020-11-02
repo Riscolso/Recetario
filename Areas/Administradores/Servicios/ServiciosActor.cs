@@ -7,6 +7,8 @@ using System.Text;
 using Recetario.BaseDatos;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 // TODO: Agregar más TryCatch en caso de que muera la wea
 // TODO: Crear y usar funciones para convertir las clases Actor -> Vactor y viceversa
@@ -19,7 +21,9 @@ namespace Recetario.Areas.Administradores.Servicios
     public class ServiciosActor : IActor
     {
         private readonly ContextoBD _contextoBD;
-        public ServiciosActor(ContextoBD contextoBD)
+        private readonly UserManager<Actor> _userManager;
+        public ServiciosActor(ContextoBD contextoBD,
+            UserManager<Actor> userManager)
         {
             _contextoBD = contextoBD;
         }
@@ -126,9 +130,16 @@ namespace Recetario.Areas.Administradores.Servicios
             return vactores;
         }
         /// <inheritdoc/>
-        public ICollection<ActorDTO> ObtenerLista(int Tipo)
+        public ICollection<ActorDTO> ObtenerLista(string rol)
         {
-            var actores = _contextoBD.Actor.Where(a=> a.Tipo==Tipo).ToList();
+            //Obtener una lista de id's que pertenezcan al rol
+            List<int> usuariosXRol = _contextoBD.UserClaims
+                .Where(c => c.ClaimType == ClaimTypes.Role && c.ClaimValue == rol)
+                .Select(p => p.UserId).ToList();
+            List<Actor> actores = new List<Actor>();
+            //Iterar para obtener todos los usuarios
+            foreach(int ide in usuariosXRol) actores.Add(_contextoBD.Actor.Find(ide));
+            //Castear a clase de vista
             List<ActorDTO> vactores = new List<ActorDTO>();
             foreach (Actor actor in actores) vactores.Add(CasteoVActor(actor));
             return vactores;
