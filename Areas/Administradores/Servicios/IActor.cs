@@ -74,7 +74,7 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <param name="Filtro">Filtro de búsqueda</param>
         /// <param name="Tipo">Realiza Filtro de con base al tipo de actor </param>
         /// <returns>Una lista de actores que coinciden con el filtro</returns>
-        ICollection<ActorDTO> BuscarFiltro(String Filtro, int Tipo);
+        ICollection<ActorDTO> BuscarFiltro(String Filtro, string rol);
         /// <summary>
         /// Realiza una búsqueda de usuario con base en un filtro dado
         /// La busqueda se da entre Nombre, correo o usuario

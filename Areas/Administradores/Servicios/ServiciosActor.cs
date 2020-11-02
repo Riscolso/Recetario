@@ -25,6 +25,7 @@ namespace Recetario.Areas.Administradores.Servicios
         public ServiciosActor(ContextoBD contextoBD,
             UserManager<Actor> userManager)
         {
+            _userManager = userManager;
             _contextoBD = contextoBD;
         }
 
@@ -64,13 +65,16 @@ namespace Recetario.Areas.Administradores.Servicios
             return vactores;
         }
         /// <inheritdoc/>
-        public ICollection<ActorDTO> BuscarFiltro(string Filtro, int Tipo)
+        public ICollection<ActorDTO> BuscarFiltro(string Filtro, string rol)
         {
             //Hacer la búsqueda insensible a mayúscular o minúsculas
             Filtro = Filtro.ToLower();
+            //Obtener la lista de Actores que coinciden con el rol
+            var usuRol = ObtenerLista(rol);
             //Buscar en la base de datos los actores que conincidan con el filtro
+
             var actores = _contextoBD.Actor.Where(a =>
-            a.Tipo==Tipo && (
+            a.Tipo==2 && (
             a.NombreActor.ToLower().Contains(Filtro) ||
             a.UserName.ToLower().Contains(Filtro) ||
             a.Email.ToLower().Contains(Filtro)));
@@ -132,13 +136,9 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <inheritdoc/>
         public ICollection<ActorDTO> ObtenerLista(string rol)
         {
-            //Obtener una lista de id's que pertenezcan al rol
-            List<int> usuariosXRol = _contextoBD.UserClaims
-                .Where(c => c.ClaimType == ClaimTypes.Role && c.ClaimValue == rol)
-                .Select(p => p.UserId).ToList();
-            List<Actor> actores = new List<Actor>();
-            //Iterar para obtener todos los usuarios
-            foreach(int ide in usuariosXRol) actores.Add(_contextoBD.Actor.Find(ide));
+            //Obtener los actores que pertenecen a un rol (Claim)
+            var actores = _userManager.GetUsersForClaimAsync(new Claim(ClaimTypes.Role, rol))
+                .Result;
             //Castear a clase de vista
             List<ActorDTO> vactores = new List<ActorDTO>();
             foreach (Actor actor in actores) vactores.Add(CasteoVActor(actor));

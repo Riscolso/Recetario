@@ -54,7 +54,7 @@ namespace Recetario.Areas.Administradores.Controllers
             //En caso de que no haber ninguna búsqueda, muestro todo, TODO
             if (!String.IsNullOrEmpty(cadenaBusqueda))
             {
-                 actores = _serviciosActor.BuscarFiltro(cadenaBusqueda, 1);
+                 actores = _serviciosActor.BuscarFiltro(cadenaBusqueda, "Administrador");
             }
             else
             {
