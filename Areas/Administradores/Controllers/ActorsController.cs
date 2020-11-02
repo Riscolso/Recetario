@@ -27,22 +27,35 @@ namespace Recetario.Areas.Administradores.Controllers
     public class ActorsController : Controller
     {
         private UserManager<Actor> _userManager { get; }
-        private SignInManager<Actor> SignInMgr { get; }
         private readonly IActor _serviciosActor;
+        //Inyección de dependencia para logar una programación iperativa (manual) en cuanto 
+        //a las autorizaciones
+        private IAuthorizationService _authService;
 
         public ActorsController(UserManager<Actor> userManager,
-            SignInManager<Actor> signInManager, IActor serviciosActor)
+            IActor serviciosActor,
+            IAuthorizationService authService)
         {
             _userManager = userManager;
-            SignInMgr = signInManager;
             _serviciosActor = serviciosActor;
+            _authService = authService;
         }
         // GET: Administradores/Actors
-        public IActionResult Index(string cadenaBusqueda, int? noPagina, String filtroActual, String rol)
+        public async Task<IActionResult> Index(string cadenaBusqueda, int? noPagina, String filtroActual, String rol)
         {
             //Guardar qué roles se están trabajando
             ViewData["Rol"] = rol;
-
+            //Verificar manualmente que se cumpla con la política 
+            //Ya que Administrador y SA comparten los mismo views/Controladores
+            if (rol.Equals("Administrador"))
+            {
+                var authResult = await _authService.AuthorizeAsync(User, "RequireSuperAdministradorRole");
+                if (!authResult.Succeeded)
+                {
+                    return new ForbidResult();
+                }
+            }
+            
             //Se mete el filtro a ViewData para que permanezca aunque se cambie de páginas
             ViewData["FiltroActual"] = cadenaBusqueda;
 
@@ -59,7 +72,7 @@ namespace Recetario.Areas.Administradores.Controllers
             //En caso de que no haber ninguna búsqueda, muestro todo, TODO
             if (!String.IsNullOrEmpty(cadenaBusqueda))
             {
-                 actores = _serviciosActor.BuscarFiltro(cadenaBusqueda, rol);
+                actores = _serviciosActor.BuscarFiltro(cadenaBusqueda, rol);
             }
             else
             {
@@ -70,21 +83,32 @@ namespace Recetario.Areas.Administradores.Controllers
             return View(Paginacion<ActorDTO>.Create(actores, noPagina ?? 1, pageSize));
         }
 
-        public IActionResult Detalles(int? id)
+        public async Task<IActionResult> Detalles(int? id)
         {
             if (id == null)
             {
                 // TODO: En sí qué hace NotFound? 
                 return NotFound();
             }
-
+            //Regresa una tupla, el actorDTO y su rol
             var actor = _serviciosActor.Obtener(id);
-            if (actor == null)
+            //Si el actor que se encontró es un admin
+            if (actor.rol.Equals("Administrador"))
+            {
+                //Se debe checar que el usuario actual tenga permisos
+                var authResult = await _authService.AuthorizeAsync(User, "RequireSuperAdministradorRole");
+                if (!authResult.Succeeded)
+                {
+                    //Si no lo mandamos a la ñonga
+                    return new ForbidResult();
+                }
+            }
+            if (actor.actor == null)
             {
                 return NotFound();
             }
 
-            return View(actor);
+            return View(actor.actor);
         }
 
         // GET: Administradores/Actors/Create
@@ -125,9 +149,9 @@ namespace Recetario.Areas.Administradores.Controllers
                         rol = "Administrador"
                     });
                 }
-                foreach(IdentityError error in result.Errors)
+                foreach (IdentityError error in result.Errors)
                 {
-                    ModelState.AddModelError("",error.Description);
+                    ModelState.AddModelError("", error.Description);
                 }
                 return View(actor);
             }
@@ -143,11 +167,11 @@ namespace Recetario.Areas.Administradores.Controllers
             }
             var actor = _serviciosActor.Obtener(id);
             //En caso de que el Actor no exista en la BD
-            if (actor == null)
+            if (actor.actor == null)
             {
                 return NotFound();
             }
-            return View(actor);
+            return View(actor.actor);
         }
 
         // POST: Administradores/Actors/Edit/5
@@ -182,7 +206,9 @@ namespace Recetario.Areas.Administradores.Controllers
                     {
                         /*Redirecciona al index, el truco está en que regresa como parámetro el
                         rol del usuario que se está editando*/
-                        return RedirectToAction(nameof(Index), new {rol = _userManager
+                        return RedirectToAction(nameof(Index), new
+                        {
+                            rol = _userManager
                             .GetClaimsAsync(actor).Result
                             .FirstOrDefault(c => c.Type == ClaimTypes.Role).Value
                         });
@@ -206,14 +232,14 @@ namespace Recetario.Areas.Administradores.Controllers
             {
                 return NotFound();
             }
-            ActorDTO actor = _serviciosActor.Obtener(id);
+            var actor = _serviciosActor.Obtener(id);
             // TODO: Confrimar que se puede regresar el null
-            if (actor == null)
+            if (actor.actor == null)
             {
                 return NotFound();
             }
 
-            return View(actor);
+            return View(actor.actor);
         }
 
         // Se debe especificar el nombre de la acción por que el nombre la firma del anterior método es el mismo

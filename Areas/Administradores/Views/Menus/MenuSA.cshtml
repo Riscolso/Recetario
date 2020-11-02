@@ -1,4 +1,10 @@
-﻿
+﻿@using System.Security.Claims;
+@using Microsoft.AspNetCore.Identity;
+@using Recetario.BaseDatos;
+
+@inject SignInManager<Actor> SignInManager
+@inject UserManager<Actor> UserManager
+
 @{
     ViewData["Title"] = "MenuSA";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,30 +12,33 @@
 
 @if (User.Identity.IsAuthenticated)
 {
-    <div>
-        <center> <h1>Menu Super Administrador</h1></center>
-        Administradores:
-        <br />
-        <a asp-controller="Actors" asp-action="Agregar">Registrar un Administrador</a>
-        <br />
-        <a asp-controller="Actors" asp-route-rol="Administrador" asp-action="Index">Mostrar Administradores</a>
-        <br />
-        <br />
-        Usuarios:
-        <br />
-        <a asp-controller="Actors" asp-route-rol="Usuario" asp-action="Index">Mostrar Usuarios</a>
-        <br />
+    string rol = (User.Claims.FirstOrDefault(o => o.Type == ClaimTypes.Role).Value == "SuperAdministrador") ? "Super Administrador" : "Administrador";
+        <div>
+            <center> <h1>Menu @rol</h1></center>
+            @if (rol.Equals("Super Administrador")) {
+                @: Administradores:
+                <br />
+                <a asp-controller="Actors" asp-action="Agregar">Registrar un Administrador</a>
+                <br />
+                <a asp-controller="Actors" asp-route-rol="Administrador" asp-action="Index">Mostrar Administradores</a>
+                <br />
+                <br />
+            }
+            Usuarios:
+            <br />
+            <a asp-controller="Actors" asp-route-rol="Usuario" asp-action="Index">Mostrar Usuarios</a>
+            <br />
 
-        Recetas:
-        <br />
-        <a asp-controller="Recetas" asp-action="Index">Mostrar Recetas</a>
-        <br />
-    </div>
-}
+            Recetas:
+            <br />
+            <a asp-controller="Recetas" asp-action="Index">Mostrar Recetas</a>
+            <br />
+        </div>
+    }
 
-else
-{
-    <h4>Área restringida para administradores. Inicia sesión como administrador para hacer uso de ella</h4>
-}
+            else
+            {
+        <h4>Área restringida para administradores. Inicia sesión como administrador para hacer uso de ella</h4>
+    }
 
 

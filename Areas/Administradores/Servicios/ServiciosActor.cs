@@ -129,9 +129,11 @@ namespace Recetario.Areas.Administradores.Servicios
         }
 
         /// <inheritdoc/>
-        public ActorDTO Obtener(int? Id)
+        public (ActorDTO actor, string rol) Obtener(int? Id)
         {
-            return CasteoVActor(_contextoBD.Actor.Find(Id));
+            Actor act = _userManager.FindByIdAsync(Id.ToString()).Result;
+            return (CasteoVActor(_contextoBD.Actor.Find(Id)),_userManager.GetClaimsAsync(act)
+                .Result.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value);
         }
 
         /// <inheritdoc/>

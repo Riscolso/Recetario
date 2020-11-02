@@ -25,8 +25,8 @@ namespace Recetario.Areas.Administradores.Servicios
         /// Con base a un ID dado, regresa un Vactor
         /// </summary>
         /// <param name="Id">ID de VActor</param>
-        /// <returns>Clase VActor</returns>
-        ActorDTO Obtener(int? Id);
+        /// <returns>Tupla con Clase VActor y el rol de dicho usuario</returns>
+        (ActorDTO actor, string rol) Obtener(int? Id);
         /// <summary>
         /// Obtiene una lista de VActor disponibles en un repositorio.
         /// </summary>

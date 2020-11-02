@@ -53,7 +53,7 @@ namespace Recetario.Controllers
             }
             if (rol.Equals("Administrador"))
             {
-                return RedirectToAction("MenuA", "Menus", new { area = "Administradores" });
+                return RedirectToAction("MenuSA", "Menus", new { area = "Administradores" });
             }
             //Si es un usuario lo mandamos a dónde estaba
             else
