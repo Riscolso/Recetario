@@ -20,6 +20,8 @@ using Microsoft.AspNetCore.Authorization;
 namespace Recetario.Areas.Administradores.Controllers
 {
     [Area("Administradores")]
+    //Autorización para Admin
+    [Authorize(Roles = "Administrador,SuperAdministrador")]
     public class ActorsController : Controller
     {
         private UserManager<Actor> UserMgr { get; }
@@ -34,8 +36,6 @@ namespace Recetario.Areas.Administradores.Controllers
             SignInMgr = signInManager;
             _serviciosActor = serviciosActor;
         }
-        //Autorización para Admin
-        [Authorize(Roles = "Administrador,SuperAdministrador")]
         // GET: Administradores/Actors
         public IActionResult Index(string cadenaBusqueda, int? noPagina, String filtroActual)
         {
@@ -66,8 +66,6 @@ namespace Recetario.Areas.Administradores.Controllers
             return View(Paginacion<ActorDTO>.Create(actores, noPagina ?? 1, pageSize));
         }
 
-        //Autorización para Admin
-        [Authorize(Roles = "Administrador,SuperAdministrador")]
         public IActionResult Detalles(int? id)
         {
             if (id == null)
@@ -85,8 +83,6 @@ namespace Recetario.Areas.Administradores.Controllers
             return View(actor);
         }
 
-        //Autorización para Admin
-        [Authorize(Roles = "Administrador,SuperAdministrador")]
         // GET: Administradores/Actors/Create
         public IActionResult Agregar()
         {
@@ -97,28 +93,29 @@ namespace Recetario.Areas.Administradores.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Administrador,SuperAdministrador")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Agregar(ActorDTO actor)
         {
             if (ModelState.IsValid)
             {
-                
-                var user = new Actor()
+                var user = new Actor
                 {
                     UserName = actor.Usuario,
-                    Email = actor.Email
+                    Email = actor.Email,
+                    NombreActor = actor.NombreActor,
+                    FechaNac = actor.FechaNac
                 };
                 //Se agrega el usuario a la tabla aspnetusers (AppUser) usada para el login
-                IdentityResult result = await UserMgr.CreateAsync(user, actor.Contrasena);
+                var result = await UserMgr.CreateAsync(user, actor.Contrasena);
                 if (result.Succeeded)
                 {
                     //Establecer que es un administrador
                     //0.-root, 1.-Administrador, 2.-Usuario
-                    actor.Tipo = 1;
+                    //actor.Tipo = 1;
                     //Se registra en la tabla actor
                     //TODO: Checar esto, ya que Ahora Actor esta fucionado con AppUser
                     //_serviciosActor.Registrar(actor);
-
                     await UserMgr.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Administrador"));
                     return RedirectToAction(nameof(Index));
                 }
@@ -127,9 +124,7 @@ namespace Recetario.Areas.Administradores.Controllers
                     ModelState.AddModelError("",error.Description);
                 }
                 return View(actor);
-
             }
-
             return View(actor);
         }
 
@@ -154,7 +149,6 @@ namespace Recetario.Areas.Administradores.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 
         //Autorización para Admin
-        [Authorize(Roles = "Administrador,SuperAdministrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Editar(int id, ActorDTO actor)
@@ -193,8 +187,6 @@ namespace Recetario.Areas.Administradores.Controllers
             return View(actor);
         }
 
-        //Autorización para Admin
-        [Authorize(Roles = "Administrador,SuperAdministrador")]
         public IActionResult Eliminar(int? id)
         {
             if (id == null)
@@ -211,8 +203,6 @@ namespace Recetario.Areas.Administradores.Controllers
             return View(actor);
         }
 
-        //Autorización para Admin
-        [Authorize(Roles = "Administrador,SuperAdministrador")]
         // Se debe especificar el nombre de la acción por que el nombre la firma del anterior método es el mismo
         [HttpPost, ActionName("Eliminar")]
         [ValidateAntiForgeryToken]
