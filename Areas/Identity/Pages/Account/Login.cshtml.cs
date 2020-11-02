@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Recetario.BaseDatos;
+using System.Security.Claims;
 
 namespace Recetario.Areas.Identity.Pages.Account
 {
@@ -73,6 +74,7 @@ namespace Recetario.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
+
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
@@ -85,7 +87,12 @@ namespace Recetario.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    /*Ya que en esta misma request (POST) se logeó el usuario no es posible obtener su
+                     * claim a partir de User, ya que este trabaja en base a cookies, y como aquí apenas
+                     * se generó, por no hay, hasta la siguiente request, por eso mismo se manda
+                     * a otra acción de otro controlador*/
+                    return RedirectToAction("LoginRoute", new { returnUrl = returnUrl });
+                    
                 }
                 if (result.RequiresTwoFactor)
                 {

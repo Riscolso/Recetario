@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -92,7 +93,9 @@ namespace Recetario.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("Se creó un nuevo usuario.");
-
+                    //Se agrega el claim usuario para la autorización
+                    await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Usuario"));
+                    
                     //En caso de querer usar verificación de email
                     /*var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
