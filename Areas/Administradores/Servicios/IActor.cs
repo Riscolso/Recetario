@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Recetario.Areas.Administradores.Models;
 using Recetario.BaseDatos;
 
@@ -51,13 +52,13 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <param name="vactor">Clase a actualizar</param>
         /// <returns>ID Asocioado a la clase actualizada</returns>
         int Actualizar(ActorDTO vactor);
-        
+
 
         /// <summary>
         /// Eliminar un actor del repositorio mediante su ID
         /// </summary>
         /// <param name="vactor"></param>
-        void Eliminar(int Id);
+        public void Eliminar(int Id);
 
         /// <summary>
         /// Realiza una búsqueda con base a un filtro dato

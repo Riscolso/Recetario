@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 // TODO: Agregar más TryCatch en caso de que muera la wea
 // TODO: Crear y usar funciones para convertir las clases Actor -> Vactor y viceversa
@@ -117,14 +118,14 @@ namespace Recetario.Areas.Administradores.Servicios
         }
 
         /// <inheritdoc/>
-        public void Eliminar(int Id)
+        public async void Eliminar(int Id)
         {
-            //Traer a el actor de la BD
-            var actor = _contextoBD.Actor.Find(Id);
-            //Sacarlo del contexto
-            _contextoBD.Actor.Remove(actor);
-            //Aplicar los cambios a la BD
-            _contextoBD.SaveChanges();
+            /*Chale
+             No funcó y justo ahora no tengo ganas de avenriguar por qué jajajaj
+             Funciona en el mismo controlador, así que no es el fin del mundo 
+             si no se usa este método*/
+            Actor toElim = await _userManager.FindByIdAsync(Id.ToString());
+            await _userManager.DeleteAsync(toElim);
         }
 
         /// <inheritdoc/>
