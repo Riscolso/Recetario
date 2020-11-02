@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Recetario.BaseDatos
+@using System.Security.Claims;
 
 @inject SignInManager<Actor> SignInManager
 @inject UserManager<Actor> UserManager
@@ -7,6 +8,13 @@
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
+    <!--Opción en caso de que sea superadmin-->
+    @if (User.Claims.FirstOrDefault(o => o.Type == ClaimTypes.Role).Value == "SuperAdministrador")
+    {
+    <li class="nav-item">
+        <a id="admin" class="nav-link text-dark" asp-area="Administradores" asp-controller="Menus" asp-action="MenuSA"  title="SU">Menu Super Usuario</a>
+    </li>
+    }
     <li class="nav-item">
         <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Perfil"  title="Manage">Hola @UserManager.GetUserName(User)!</a>
     </li>
