@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Recetario.BaseDatos;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq;
 
 // TODO: Agregar input para confirma contraseña
 // TODO: Agregar agrupación de resultados mostrados en Index
@@ -37,8 +38,11 @@ namespace Recetario.Areas.Administradores.Controllers
             _serviciosActor = serviciosActor;
         }
         // GET: Administradores/Actors
-        public IActionResult Index(string cadenaBusqueda, int? noPagina, String filtroActual)
+        public IActionResult Index(string cadenaBusqueda, int? noPagina, String filtroActual, String rol)
         {
+            //Guardar qué roles se están trabajando
+            ViewData["Rol"] = rol;
+
             //Se mete el filtro a ViewData para que permanezca aunque se cambie de páginas
             ViewData["FiltroActual"] = cadenaBusqueda;
 
@@ -55,11 +59,11 @@ namespace Recetario.Areas.Administradores.Controllers
             //En caso de que no haber ninguna búsqueda, muestro todo, TODO
             if (!String.IsNullOrEmpty(cadenaBusqueda))
             {
-                 actores = _serviciosActor.BuscarFiltro(cadenaBusqueda, "Administrador");
+                 actores = _serviciosActor.BuscarFiltro(cadenaBusqueda, rol);
             }
             else
             {
-                actores = _serviciosActor.ObtenerLista("Administrador");
+                actores = _serviciosActor.ObtenerLista(rol);
             }
             //Cantidad de Elementos a mostrar por página
             int pageSize = 4;
@@ -116,7 +120,10 @@ namespace Recetario.Areas.Administradores.Controllers
                     //TODO: Checar esto, ya que Ahora Actor esta fucionado con AppUser
                     //_serviciosActor.Registrar(actor);
                     await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Administrador"));
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index), new
+                    {
+                        rol = "Administrador"
+                    });
                 }
                 foreach(IdentityError error in result.Errors)
                 {
@@ -173,7 +180,12 @@ namespace Recetario.Areas.Administradores.Controllers
                     //TODO: Poner todo esto a los demás métodos
                     if (result.Succeeded)
                     {
-                        return RedirectToAction(nameof(Index));
+                        /*Redirecciona al index, el truco está en que regresa como parámetro el
+                        rol del usuario que se está editando*/
+                        return RedirectToAction(nameof(Index), new {rol = _userManager
+                            .GetClaimsAsync(actor).Result
+                            .FirstOrDefault(c => c.Type == ClaimTypes.Role).Value
+                        });
                     }
                     foreach (IdentityError err in result.Errors)
                     {
@@ -211,7 +223,12 @@ namespace Recetario.Areas.Administradores.Controllers
         {
             Actor toElim = await _userManager.FindByIdAsync(id.ToString());
             await _userManager.DeleteAsync(toElim);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new
+            {
+                rol = _userManager
+                        .GetClaimsAsync(toElim).Result
+                        .FirstOrDefault(c => c.Type == ClaimTypes.Role).Value
+            });
         }
 
         /*

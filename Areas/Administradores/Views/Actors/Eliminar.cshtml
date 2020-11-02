@@ -1,4 +1,11 @@
 ﻿@model Recetario.Areas.Administradores.Models.ActorDTO
+@using Microsoft.AspNetCore.Identity
+@using Recetario.BaseDatos
+<!--Necesitamos la dependencia de usuarios, por que necesitamos el claim que
+    contiene su Rol
+    Por cierto, los dos using de arriba son con el mismo propósito
+    UserManager se encuentra en la API Identity-->
+@inject UserManager<Actor> UserManager
 
 @{
     ViewData["Title"] = "Eliminar Administrador";
@@ -47,7 +54,7 @@
         <form asp-action="Eliminar">
             <input type="hidden" asp-for="IdActor" />
             <input type="submit" value="Eliminar" class="btn btn-danger" /> |
-            <a asp-action="Index">Regresar a la lista</a>
+            <a asp-action="Index" asp-route-rol="@UserManager.GetClaimsAsync(UserManager.FindByIdAsync(Model.IdActor.ToString()).Result).Result.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role).Value">Regresar a la lista</a>
         </form>
     </div>
 }

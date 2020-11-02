@@ -12,12 +12,12 @@
         <br />
         <a asp-controller="Actors" asp-action="Agregar">Registrar un Administrador</a>
         <br />
-        <a asp-controller="Actors" asp-action="Index">Mostrar Administradores</a>
+        <a asp-controller="Actors" asp-route-rol="Administrador" asp-action="Index">Mostrar Administradores</a>
         <br />
         <br />
         Usuarios:
         <br />
-        <a asp-controller="Usuarios" asp-action="Index">Mostrar Usuarios</a>
+        <a asp-controller="Actors" asp-route-rol="Usuario" asp-action="Index">Mostrar Usuarios</a>
         <br />
 
         Recetas:

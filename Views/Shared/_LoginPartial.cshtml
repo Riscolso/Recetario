@@ -12,7 +12,7 @@
     @if (User.Claims.FirstOrDefault(o => o.Type == ClaimTypes.Role).Value == "SuperAdministrador")
     {
     <li class="nav-item">
-        <a id="admin" class="nav-link text-dark" asp-area="Administradores" asp-controller="Menus" asp-action="MenuSA"  title="SU">Menu Super Usuario</a>
+        <a id="admin" class="nav-link text-dark" asp-area="Administradores" asp-controller="Menus" asp-action="MenuSA"  title="SU">Menu Super Administrador</a>
     </li>
     }
     <li class="nav-item">
