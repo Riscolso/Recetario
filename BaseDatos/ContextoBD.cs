@@ -1,11 +1,12 @@
 ﻿using System;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Recetario.BaseDatos
 {
-    public partial class ContextoBD : IdentityDbContext<AppUser, AppRole, int>
+    public partial class ContextoBD : IdentityDbContext<Actor, IdentityRole<int>, int>
     {
         public ContextoBD()
         {
@@ -38,24 +39,14 @@ namespace Recetario.BaseDatos
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Actor>(entity =>
             {
-                entity.HasKey(e => e.IdActor)
+                entity.HasKey(e => e.Id)
                     .HasName("PRIMARY");
 
                 entity.ToTable("actor");
 
-                entity.Property(e => e.IdActor)
+                entity.Property(e => e.Id)
                     .HasColumnName("idActor")
                     .HasColumnType("int(11)");
-
-                entity.Property(e => e.Contrasena)
-                    .IsRequired()
-                    .HasColumnType("blob");
-
-                entity.Property(e => e.Email)
-                    .IsRequired()
-                    .HasColumnType("varchar(60)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
 
                 entity.Property(e => e.FechaNac).HasColumnType("date");
 
@@ -66,12 +57,6 @@ namespace Recetario.BaseDatos
                     .HasCollation("utf8_general_ci");
 
                 entity.Property(e => e.Tipo).HasColumnType("int(11)");
-
-                entity.Property(e => e.Usuario)
-                    .IsRequired()
-                    .HasColumnType("varchar(45)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
             });
 
             modelBuilder.Entity<Etiqueta>(entity =>

@@ -33,7 +33,7 @@ namespace Recetario.Areas.Administradores.Controllers
             {
                 cadenaBusqueda = filtroActual;
             }
-            ICollection<VReceta> recetas;
+            ICollection<RecetaDTO> recetas;
             //Si hay cadena de búsqueda
             //En caso de que no haber ninguna búsqueda, muestro todo, TODO
             if (!String.IsNullOrEmpty(cadenaBusqueda))
@@ -46,7 +46,7 @@ namespace Recetario.Areas.Administradores.Controllers
             }
             //Cantidad de Elementos a mostrar por página
             int pageSize = 4;
-            return View(Paginacion<VReceta>.Create(recetas, noPagina ?? 1, pageSize));
+            return View(Paginacion<RecetaDTO>.Create(recetas, noPagina ?? 1, pageSize));
         }
     }
 }

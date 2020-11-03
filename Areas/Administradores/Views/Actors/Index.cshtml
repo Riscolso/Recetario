@@ -1,19 +1,23 @@
-﻿@model Paginacion<Recetario.Areas.Administradores.Models.VActor>
+﻿@model Paginacion<Recetario.Areas.Administradores.Models.ActorDTO>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <h1>Administradores</h1>
-
+<h1>@ViewData["rol"]</h1>
+<!--Si se están viendo los usuarios, no se puede agregar uno nuevo... supongo-->
+@if (!ViewData["rol"].ToString().Equals("Usuario"))
+{
     <p>
         <a asp-action="Agregar">Nuevo</a>
     </p>
+}
     <form asp-action="index" method="get">
         Buscar: <input type="text" value="@ViewData["FiltroActual"]" name="cadenaBusqueda" />&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="text" style="display:none" value="@ViewData["rol"]" name="rol"/>
         <input type="submit" value="Buscar" class="btn btn-primary" />&nbsp;&nbsp;&nbsp;&nbsp;
-        <a asp-action="Index">Ver todos</a>
+        <a asp-action="Index" asp-route-rol="@ViewData["rol"]">Ver todos</a>
         |
         <a asp-controller="Menus" asp-action="MenuSA"> Menú principal</a>
         <br />

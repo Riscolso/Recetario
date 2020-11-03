@@ -10,7 +10,7 @@ namespace Recetario.Areas.Administradores.Models
     /// <remarks>El nombre es V de Vista
     /// <para>Para diferenciar la clase de vista con el modelo Receta</para></remarks>
 
-    public partial class VReceta
+    public partial class RecetaDTO
     {
         [Required]
         public int IdReceta { get; set; }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+//TODO: Deshacerse de este controlador, las autorizaciones pueden ir en un razor index
 namespace Recetario.Areas.Administradores.Controllers
 {
     [Area("Administradores")]
@@ -27,7 +27,7 @@ namespace Recetario.Areas.Administradores.Controllers
             return View();
         }
         //Autorización para SuperAdmin
-        [Authorize(Roles = "SuperAdministrador")]
+        [Authorize(Roles = "SuperAdministrador, Administrador")]
         public IActionResult MenuSA()
         {
             return View();

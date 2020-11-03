@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Recetario.BaseDatos
+@using System.Security.Claims;
+
+@inject SignInManager<Actor> SignInManager
+@inject UserManager<Actor> UserManager
+
+<ul class="navbar-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+    <!--Obtener rol-->
+    String rol = User.Claims.FirstOrDefault(o => o.Type == ClaimTypes.Role).Value;
+    <!--Opción en caso de que sea superadmin o admin-->
+    @if (rol.Equals("SuperAdministrador") || rol.Equals("Administrador"))
+    {
+    @:
+        <li class="nav-item">
+            <a id="admin" class="nav-link text-dark" asp-area="Administradores" asp-controller="Menus" asp-action="MenuSA"  title="Administración de cuentas">Menu Administrador</a>
+        </li>
+    }
+    <li class="nav-item">
+        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Perfil"  title="Manage">Hola @UserManager.GetUserName(User)!</a>
+    </li>
+    <li class="nav-item">
+        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Cerrar Sesión</button>
+        </form>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Registrar</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Ingresar</a>
+    </li>
+}
+</ul>

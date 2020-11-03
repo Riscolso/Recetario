@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Recetario.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Recetario
 {
@@ -29,6 +30,8 @@ namespace Recetario
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Para controlar Las Razor page de Identity
+            services.AddRazorPages();
             //Agregar todos los servicios relacionados con MVC
             services.AddMvc(options =>
             {
@@ -38,22 +41,28 @@ namespace Recetario
             }
                 );
             //registra los servicios de Identity para el login (Identificación)
-            services.AddIdentity<AppUser, AppRole>(options =>
+            services.AddIdentity<Actor, IdentityRole<int>>(options =>
             {
                 //Eliminar restricciones de contraseña
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 6;
+                //TODO: Checa sí funca, Ricardo del futuro jajajaja
+                options.User.RequireUniqueEmail = true;
+                
                 //options.Password.RequireLowercase = false;
                 //options.Password.RequireNonAlphanumeric = false;
                 //options.Password.RequireUppercase = false;
-            }).AddEntityFrameworkStores<ContextoBD>().AddErrorDescriber<CustomIdentityErrorDescriber>();
+            })
+                .AddEntityFrameworkStores<ContextoBD>()
+                .AddErrorDescriber<CustomIdentityErrorDescriber>();
+
 
             //Agregar la Conexión con la BD
             //para hacer Scaffolding de la BD
             //Scaffold-DbContext "server=localhost;user id=root;password=root;database=recetario;persistsecurityinfo=True" Pomelo.EntityFrameworkCore.MySql -OutputDir BaseDatos -ContextDir BaseDatos -Context ContextoBD -Force
-            
-            
+
+
             //services.AddDbContext<ContextoBD>(options =>
             //options.UseMySql(Configuration.GetConnectionString("ConexionAzure"), x => x.ServerVersion("5.7.19-mysql")));
             services.AddDbContext<ContextoBD>(options =>
@@ -73,7 +82,6 @@ namespace Recetario
                 options.AddPolicy("RequireUsuarioRole",
                      policy => policy.RequireRole("Usuario", "Administrador", "SuperAdministrador"));
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -92,10 +100,9 @@ namespace Recetario
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseRouting();
             //Agregar autenticación
             app.UseAuthentication();
-            
-            app.UseRouting();
 
             app.UseAuthorization();
 
@@ -118,6 +125,9 @@ namespace Recetario
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                //Agregar EndPoints para Razor Pages
+                endpoints.MapRazorPages();
             });
         }
     }

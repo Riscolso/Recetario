@@ -1,8 +1,16 @@
-﻿@model Recetario.Areas.Administradores.Models.VActor
+﻿@model Recetario.Areas.Administradores.Models.ActorDTO
+@using Microsoft.AspNetCore.Identity
+@using Recetario.BaseDatos
+<!--Necesitamos la dependencia de usuarios, por que necesitamos el claim que
+    contiene su Rol
+    Por cierto, los dos using de arriba son con el mismo propósito
+    UserManager se encuentra en la API Identity-->
+@inject UserManager<Actor> UserManager
 
 @{
     ViewData["Title"] = "Editar Admin";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    //TODO: Los nombres de usuario se debería de modificar??????
 }
 
 @if (User.Identity.IsAuthenticated)
@@ -36,6 +44,11 @@
                     <span asp-validation-for="Contrasena" class="text-danger"></span>
                 </div>
                 <div class="form-group">
+                    <label asp-for="ConfirmPassword" class="control-label"></label>
+                    <input asp-for="ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group">
                     <label asp-for="Email" class="control-label"></label>
                     <input asp-for="Email" class="form-control" />
                     <span asp-validation-for="Email" class="text-danger"></span>
@@ -48,7 +61,7 @@
     </div>
 
     <div>
-        <a asp-action="Index">Regresar a la lista</a>
+        <a asp-action="Index" asp-route-rol="@UserManager.GetClaimsAsync(UserManager.FindByIdAsync(Model.IdActor.ToString()).Result).Result.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role).Value">Regresar a la lista</a>
     </div>
 }
 else
