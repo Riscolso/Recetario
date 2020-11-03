@@ -8,12 +8,15 @@
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
-    <!--Opción en caso de que sea superadmin-->
-    @if (User.Claims.FirstOrDefault(o => o.Type == ClaimTypes.Role).Value == "SuperAdministrador")
+    <!--Obtener rol-->
+    String rol = User.Claims.FirstOrDefault(o => o.Type == ClaimTypes.Role).Value;
+    <!--Opción en caso de que sea superadmin o admin-->
+    @if (rol.Equals("SuperAdministrador") || rol.Equals("Administrador"))
     {
-    <li class="nav-item">
-        <a id="admin" class="nav-link text-dark" asp-area="Administradores" asp-controller="Menus" asp-action="MenuSA"  title="SU">Menu Super Administrador</a>
-    </li>
+    @:
+        <li class="nav-item">
+            <a id="admin" class="nav-link text-dark" asp-area="Administradores" asp-controller="Menus" asp-action="MenuSA"  title="Administración de cuentas">Menu Administrador</a>
+        </li>
     }
     <li class="nav-item">
         <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Perfil"  title="Manage">Hola @UserManager.GetUserName(User)!</a>

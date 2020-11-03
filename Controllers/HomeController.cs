@@ -49,7 +49,7 @@ namespace Recetario.Controllers
             //Bueno, aquí se ve un poco obvio que pasa y así 
             if (rol.Equals("SuperAdministrador"))
             {
-                return RedirectToAction("MenuSA", "Menus", new { area = "Administradores" });
+                return  RedirectToAction("MenuSA", "Menus", new { area = "Administradores" });
             }
             if (rol.Equals("Administrador"))
             {

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Recetario.Areas.Administradores.Models;
 using Recetario.BaseDatos;
-
+//TODO: Agregar autorización a los Admins/Superadmin, para que no puedan modificar su perfil xD
 //TODO: Agregar imagen de pefil junto con su respectiva edición
 
 namespace Recetario.Areas.Identity.Pages.Account
