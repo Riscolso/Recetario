@@ -183,7 +183,8 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <returns>Una clase VActor para usarse como vista</returns>
         ActorDTO CasteoVActor(Actor actor)
         {
-            return new ActorDTO
+            //Si es null, regresa el null
+            return actor == null? null: new ActorDTO
             {
                 IdActor = actor.Id,
                 NombreActor = actor.NombreActor,

@@ -93,7 +93,7 @@ namespace Recetario.Areas.Administradores.Controllers
             //Regresa una tupla, el actorDTO y su rol
             var actor = _serviciosActor.Obtener(id);
             //Si el actor que se encontró es un admin
-            if (actor.rol.Equals("Administrador"))
+            if (actor.rol.Equals("Administrador") || actor.rol.Equals("Administrador"))
             {
                 //Se debe checar que el usuario actual tenga permisos
                 var authResult = await _authService.AuthorizeAsync(User, "RequireSuperAdministradorRole");
@@ -111,16 +111,14 @@ namespace Recetario.Areas.Administradores.Controllers
             return View(actor.actor);
         }
 
-        // GET: Administradores/Actors/Create
+        [Authorize(Roles = "SuperAdministrador")]
         public IActionResult Agregar()
         {
             return View();
         }
 
-        // POST: Administradores/Actors/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "SuperAdministrador")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Agregar(ActorDTO actor)
         {
@@ -137,12 +135,6 @@ namespace Recetario.Areas.Administradores.Controllers
                 var result = await _userManager.CreateAsync(user, actor.Contrasena);
                 if (result.Succeeded)
                 {
-                    //Establecer que es un administrador
-                    //0.-root, 1.-Administrador, 2.-Usuario
-                    //actor.Tipo = 1;
-                    //Se registra en la tabla actor
-                    //TODO: Checar esto, ya que Ahora Actor esta fucionado con AppUser
-                    //_serviciosActor.Registrar(actor);
                     await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Administrador"));
                     return RedirectToAction(nameof(Index), new
                     {
@@ -158,7 +150,8 @@ namespace Recetario.Areas.Administradores.Controllers
             return View(actor);
         }
 
-        public IActionResult Editar(int? id)
+
+        public async Task<IActionResult> Editar(int? id)
         {
             //Comprobar que en la URL se pase un ID
             if (id == null)
@@ -167,9 +160,21 @@ namespace Recetario.Areas.Administradores.Controllers
             }
             var actor = _serviciosActor.Obtener(id);
             //En caso de que el Actor no exista en la BD
+
+            //TODO: Arreglar la onda de que si no hay usuario, regresar null aquí y en los demás métodos
             if (actor.actor == null)
             {
                 return NotFound();
+            }
+            if (actor.rol.Equals("Administrador") || actor.rol.Equals("Administrador"))
+            {
+                //Se debe checar que el usuario actual tenga permisos
+                var authResult = await _authService.AuthorizeAsync(User, "RequireSuperAdministradorRole");
+                if (!authResult.Succeeded)
+                {
+                    //Si no lo mandamos a la ñonga
+                    return new ForbidResult();
+                }
             }
             return View(actor.actor);
         }
@@ -226,7 +231,7 @@ namespace Recetario.Areas.Administradores.Controllers
             return View(actorDTO);
         }
 
-        public IActionResult Eliminar(int? id)
+        public async Task<IActionResult> Eliminar(int? id)
         {
             if (id == null)
             {
@@ -238,6 +243,16 @@ namespace Recetario.Areas.Administradores.Controllers
             {
                 return NotFound();
             }
+            if (actor.rol.Equals("Administrador") || actor.rol.Equals("Administrador"))
+            {
+                //Se debe checar que el usuario actual tenga permisos
+                var authResult = await _authService.AuthorizeAsync(User, "RequireSuperAdministradorRole");
+                if (!authResult.Succeeded)
+                {
+                    //Si no lo mandamos a la ñonga
+                    return new ForbidResult();
+                }
+            }
 
             return View(actor.actor);
         }
@@ -248,20 +263,15 @@ namespace Recetario.Areas.Administradores.Controllers
         public async Task<IActionResult> EliminarConfirmado(int id)
         {
             Actor toElim = await _userManager.FindByIdAsync(id.ToString());
+            //Como se va a eliminar el usuario, guardamos su rol en un auxiliar
+            var aux = _userManager
+                        .GetClaimsAsync(toElim).Result
+                        .FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
             await _userManager.DeleteAsync(toElim);
             return RedirectToAction(nameof(Index), new
             {
-                rol = _userManager
-                        .GetClaimsAsync(toElim).Result
-                        .FirstOrDefault(c => c.Type == ClaimTypes.Role).Value
+                rol = aux
             });
         }
-
-        /*
-        private bool ActorExists(int id)
-        {
-            return _context.Actor.Any(e => e.IdActor == id);
-        }
-        */
     }
 }

@@ -15,6 +15,7 @@
 }
     <form asp-action="index" method="get">
         Buscar: <input type="text" value="@ViewData["FiltroActual"]" name="cadenaBusqueda" />&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="text" style="display:none" value="@ViewData["rol"]" name="rol"/>
         <input type="submit" value="Buscar" class="btn btn-primary" />&nbsp;&nbsp;&nbsp;&nbsp;
         <a asp-action="Index" asp-route-rol="@ViewData["rol"]">Ver todos</a>
         |
