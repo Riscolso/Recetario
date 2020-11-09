@@ -6,19 +6,21 @@ using System.Threading.Tasks;
 
 namespace Recetario.Areas.Usuarios.Models
 {
+    //TODO: Agregar requireds
     public class RecetaDTO
     {
         public int IdReceta { get; set; }
         [Required]
         public string Nombre { get; set; }
-        [Display(Name = "Tiempo de preparación")]
+        [Display(Name = "Tiempo de preparación (minutos:segundos)")]
         [Required]
-        [DataType(DataType.Duration)]
-        public DateTime TiempoPrep { get; set; }
+        [DataType(DataType.Time)]
+        public string TiempoPrep { get; set; }
+        [Display(Name = "Etiquetas (Separados por espacios)")]
         public String Etiquetas { get; set; }
         public String Ingredientes { get; set; }
-        public List<(int, string, bool, int)> Pasos { get; set; }
         [DataType(DataType.ImageUrl)]
         public string Imagen { get; set; }
+        public List<PasoDTO> Pasos { get; set; }
     }
 }
