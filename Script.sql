@@ -37,7 +37,7 @@ CREATE TABLE `__efmigrationshistory` (
 
 LOCK TABLES `__efmigrationshistory` WRITE;
 /*!40000 ALTER TABLE `__efmigrationshistory` DISABLE KEYS */;
-INSERT INTO `__efmigrationshistory` VALUES ('20200515103909_CreateIdentitySchema','3.1.3'),('20200519010508_BDRecetario','3.1.3');
+INSERT INTO `__efmigrationshistory` VALUES ('20201109005253_Paso','3.1.3');
 /*!40000 ALTER TABLE `__efmigrationshistory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -50,14 +50,27 @@ DROP TABLE IF EXISTS `actor`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `actor` (
   `idActor` int(11) NOT NULL AUTO_INCREMENT,
+  `UserName` varchar(256) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `NormalizedUserName` varchar(256) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `Email` varchar(256) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `NormalizedEmail` varchar(256) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `EmailConfirmed` tinyint(1) NOT NULL,
+  `PasswordHash` longtext CHARACTER SET utf8mb4,
+  `SecurityStamp` longtext CHARACTER SET utf8mb4,
+  `ConcurrencyStamp` longtext CHARACTER SET utf8mb4,
+  `PhoneNumber` longtext CHARACTER SET utf8mb4,
+  `PhoneNumberConfirmed` tinyint(1) NOT NULL,
+  `TwoFactorEnabled` tinyint(1) NOT NULL,
+  `LockoutEnd` datetime(6) DEFAULT NULL,
+  `LockoutEnabled` tinyint(1) NOT NULL,
+  `AccessFailedCount` int(11) NOT NULL,
   `NombreActor` varchar(55) NOT NULL,
   `FechaNac` date NOT NULL,
   `Tipo` int(11) NOT NULL,
-  `Usuario` varchar(45) NOT NULL,
-  `Contrasena` blob NOT NULL,
-  `Email` varchar(60) NOT NULL,
-  PRIMARY KEY (`idActor`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`idActor`),
+  UNIQUE KEY `UserNameIndex` (`NormalizedUserName`),
+  KEY `EmailIndex` (`NormalizedEmail`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +79,6 @@ CREATE TABLE `actor` (
 
 LOCK TABLES `actor` WRITE;
 /*!40000 ALTER TABLE `actor` DISABLE KEYS */;
-INSERT INTO `actor` VALUES (1,'admin','1966-09-04',0,'root','Contra123!','root@gmail.com');
 /*!40000 ALTER TABLE `actor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -137,8 +149,8 @@ CREATE TABLE `aspnetuserclaims` (
   `ClaimValue` longtext CHARACTER SET utf8mb4,
   PRIMARY KEY (`Id`),
   KEY `IX_AspNetUserClaims_UserId` (`UserId`),
-  CONSTRAINT `FK_AspNetUserClaims_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  CONSTRAINT `FK_AspNetUserClaims_actor_UserId` FOREIGN KEY (`UserId`) REFERENCES `actor` (`idActor`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -147,7 +159,6 @@ CREATE TABLE `aspnetuserclaims` (
 
 LOCK TABLES `aspnetuserclaims` WRITE;
 /*!40000 ALTER TABLE `aspnetuserclaims` DISABLE KEYS */;
-INSERT INTO `aspnetuserclaims` VALUES (1,1,'http://schemas.microsoft.com/ws/2008/06/identity/claims/role','SuperAdministrador');
 /*!40000 ALTER TABLE `aspnetuserclaims` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -165,7 +176,7 @@ CREATE TABLE `aspnetuserlogins` (
   `UserId` int(11) NOT NULL,
   PRIMARY KEY (`LoginProvider`,`ProviderKey`),
   KEY `IX_AspNetUserLogins_UserId` (`UserId`),
-  CONSTRAINT `FK_AspNetUserLogins_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`) ON DELETE CASCADE
+  CONSTRAINT `FK_AspNetUserLogins_actor_UserId` FOREIGN KEY (`UserId`) REFERENCES `actor` (`idActor`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -191,7 +202,7 @@ CREATE TABLE `aspnetuserroles` (
   PRIMARY KEY (`UserId`,`RoleId`),
   KEY `IX_AspNetUserRoles_RoleId` (`RoleId`),
   CONSTRAINT `FK_AspNetUserRoles_AspNetRoles_RoleId` FOREIGN KEY (`RoleId`) REFERENCES `aspnetroles` (`Id`) ON DELETE CASCADE,
-  CONSTRAINT `FK_AspNetUserRoles_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`) ON DELETE CASCADE
+  CONSTRAINT `FK_AspNetUserRoles_actor_UserId` FOREIGN KEY (`UserId`) REFERENCES `actor` (`idActor`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -202,45 +213,6 @@ CREATE TABLE `aspnetuserroles` (
 LOCK TABLES `aspnetuserroles` WRITE;
 /*!40000 ALTER TABLE `aspnetuserroles` DISABLE KEYS */;
 /*!40000 ALTER TABLE `aspnetuserroles` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `aspnetusers`
---
-
-DROP TABLE IF EXISTS `aspnetusers`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `aspnetusers` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `UserName` varchar(256) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `NormalizedUserName` varchar(256) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `Email` varchar(256) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `NormalizedEmail` varchar(256) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `EmailConfirmed` tinyint(1) NOT NULL,
-  `PasswordHash` longtext CHARACTER SET utf8mb4,
-  `SecurityStamp` longtext CHARACTER SET utf8mb4,
-  `ConcurrencyStamp` longtext CHARACTER SET utf8mb4,
-  `PhoneNumber` longtext CHARACTER SET utf8mb4,
-  `PhoneNumberConfirmed` tinyint(1) NOT NULL,
-  `TwoFactorEnabled` tinyint(1) NOT NULL,
-  `LockoutEnd` datetime(6) DEFAULT NULL,
-  `LockoutEnabled` tinyint(1) NOT NULL,
-  `AccessFailedCount` int(11) NOT NULL,
-  PRIMARY KEY (`Id`),
-  UNIQUE KEY `UserNameIndex` (`NormalizedUserName`),
-  KEY `EmailIndex` (`NormalizedEmail`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `aspnetusers`
---
-
-LOCK TABLES `aspnetusers` WRITE;
-/*!40000 ALTER TABLE `aspnetusers` DISABLE KEYS */;
-INSERT INTO `aspnetusers` VALUES (1,'root','ROOT','root@gmail.com','ROOT@GMAIL.COM',0,'AQAAAAEAACcQAAAAECIzqzm9F7hWW3LiO0iRmMsVph/x1Jke3RO5UzqVLGTpfUZUvNeRtQnb3lPVQcuZwQ==','BTTH6EVKRN7GUZPP6POUUJWDSWKYZSI3','96d8a2eb-9b77-43b2-a87d-f6350edfbf53',NULL,0,0,NULL,1,0);
-/*!40000 ALTER TABLE `aspnetusers` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -256,7 +228,7 @@ CREATE TABLE `aspnetusertokens` (
   `Name` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
   `Value` longtext CHARACTER SET utf8mb4,
   PRIMARY KEY (`UserId`,`LoginProvider`,`Name`),
-  CONSTRAINT `FK_AspNetUserTokens_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`) ON DELETE CASCADE
+  CONSTRAINT `FK_AspNetUserTokens_actor_UserId` FOREIGN KEY (`UserId`) REFERENCES `actor` (`idActor`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -351,12 +323,13 @@ DROP TABLE IF EXISTS `paso`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `paso` (
-  `NoPaso` int(11) NOT NULL AUTO_INCREMENT,
+  `IdPaso` int(11) NOT NULL AUTO_INCREMENT,
+  `NoPaso` int(11) NOT NULL,
   `Texto` varchar(600) DEFAULT NULL,
   `TiempoTemporizador` int(11) DEFAULT NULL,
   `Receta_idReceta` int(11) NOT NULL,
   `Receta_Actor_idActor` int(11) NOT NULL,
-  PRIMARY KEY (`NoPaso`),
+  PRIMARY KEY (`IdPaso`),
   KEY `fk_Paso_Receta1_idx` (`Receta_idReceta`,`Receta_Actor_idActor`),
   CONSTRAINT `fk_Paso_Receta1` FOREIGN KEY (`Receta_idReceta`, `Receta_Actor_idActor`) REFERENCES `receta` (`idReceta`, `Actor_idActor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -466,4 +439,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-06-07 22:47:59
+-- Dump completed on 2020-11-08 18:55:42

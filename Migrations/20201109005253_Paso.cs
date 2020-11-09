@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Recetario.Migrations
 {
-    public partial class EsquemaIdentity : Migration
+    public partial class Paso : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -245,8 +245,9 @@ namespace Recetario.Migrations
                 name: "paso",
                 columns: table => new
                 {
-                    NoPaso = table.Column<int>(type: "int(11)", nullable: false)
+                    IdPaso = table.Column<int>(type: "int(11)", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    NoPaso = table.Column<int>(type: "int(11)", nullable: false),
                     Texto = table.Column<string>(type: "varchar(600)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8")
                         .Annotation("MySql:Collation", "utf8_general_ci"),
@@ -256,7 +257,7 @@ namespace Recetario.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PRIMARY", x => x.NoPaso);
+                    table.PrimaryKey("PRIMARY", x => x.IdPaso);
                     table.ForeignKey(
                         name: "fk_Paso_Receta1",
                         columns: x => new { x.Receta_idReceta, x.Receta_Actor_idActor },

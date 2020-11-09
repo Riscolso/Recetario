@@ -289,8 +289,11 @@ namespace Recetario.Migrations
 
             modelBuilder.Entity("Recetario.BaseDatos.Paso", b =>
                 {
-                    b.Property<int>("NoPaso")
+                    b.Property<int>("IdPaso")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int(11)");
+
+                    b.Property<int>("NoPaso")
                         .HasColumnType("int(11)");
 
                     b.Property<int>("RecetaActorIdActor")
@@ -309,7 +312,7 @@ namespace Recetario.Migrations
                     b.Property<int?>("TiempoTemporizador")
                         .HasColumnType("int(11)");
 
-                    b.HasKey("NoPaso")
+                    b.HasKey("IdPaso")
                         .HasName("PRIMARY");
 
                     b.HasIndex("RecetaIdReceta", "RecetaActorIdActor")
