@@ -52,9 +52,7 @@ namespace Recetario.Areas.Usuarios
             return View();
         }
 
-        // POST: Usuarios/Recetas/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //TODO: Agregar DragAndDrop a los pasos de las recetas para cambiarlas de posición
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Crear(RecetaDTO receta)
@@ -64,7 +62,6 @@ namespace Recetario.Areas.Usuarios
                 
 
             }
-            //ViewData["ActorIdActor"] = new SelectList(_context.Actor, "Id", "NombreActor", receta.ActorIdActor);
             return View(receta);
         }
 

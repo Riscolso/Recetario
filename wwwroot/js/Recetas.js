@@ -2,7 +2,6 @@
 
 function AgregarPaso() {
     var paso = p;
-    alert("aaaaa")
     //Traer el div de pasos
     var divPasos = document.getElementById("pasos")
     //Crear el div que tiene un paso
@@ -17,7 +16,7 @@ function AgregarPaso() {
     var inNoPaso = document.createElement("input");
     inNoPaso.type = "text";
     //inNoPaso.value = p;
-    inNoPaso.value = "";
+    inNoPaso.value = paso;
     p++;
     inNoPaso.name = "Pasos[" + paso + "].NoPaso";
     inNoPaso.class = "form-control";
