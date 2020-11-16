@@ -6,10 +6,12 @@ using Recetario.Areas.Administradores.Servicios;
 using Recetario.Areas.Administradores.Models;
 using Recetario.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace Recetario.Areas.Administradores.Controllers
 {
     [Area("Administradores")]
+    [Authorize(Roles = "Administrador,SuperAdministrador")]
     public class RecetasController : Controller
     {
         private readonly IReceta _serviciosReceta;
@@ -47,6 +49,35 @@ namespace Recetario.Areas.Administradores.Controllers
             //Cantidad de Elementos a mostrar por página
             int pageSize = 4;
             return View(Paginacion<RecetaDTO>.Create(recetas, noPagina ?? 1, pageSize));
+        }
+
+        public IActionResult Eliminar(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var receta = _serviciosReceta.Obtener(id??default(int));
+            // TODO: Confrimar que se puede regresar el null
+            if (receta == null)
+            {
+                return NotFound();
+            }
+            return View(receta);
+        }
+
+        // Se debe especificar el nombre de la acción por que el nombre la firma del anterior método es el mismo
+        [HttpPost, ActionName("Eliminar")]
+        [ValidateAntiForgeryToken]
+        public IActionResult EliminarConfirmado(int? id)
+        {
+            //Comprobar que en la URL se pase un ID
+            if (id == null)
+            {
+                return NotFound();
+            }
+            _serviciosReceta.Eliminar((int)id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

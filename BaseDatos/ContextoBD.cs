@@ -130,7 +130,7 @@ namespace Recetario.BaseDatos
                 entity.HasOne(d => d.Receta)
                     .WithMany(p => p.Lleva)
                     .HasForeignKey(d => new { d.RecetaIdReceta, d.RecetaActorIdActor })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("fk_Receta_has_Ingrediente_Receta1");
             });
 
@@ -166,7 +166,7 @@ namespace Recetario.BaseDatos
                 entity.HasOne(d => d.Receta)
                     .WithMany(p => p.Paso)
                     .HasForeignKey(d => new { d.RecetaIdReceta, d.RecetaActorIdActor })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("fk_Paso_Receta1");
             });
 
@@ -244,7 +244,7 @@ namespace Recetario.BaseDatos
                 entity.HasOne(d => d.Receta)
                     .WithMany(p => p.Usa)
                     .HasForeignKey(d => new { d.RecetaIdReceta, d.RecetaActorIdActor })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("fk_Receta_has_Etiqueta_Receta1");
             });
 
@@ -284,7 +284,7 @@ namespace Recetario.BaseDatos
                 entity.HasOne(d => d.Receta)
                     .WithMany(p => p.Visualizacion)
                     .HasForeignKey(d => new { d.RecetaIdReceta, d.RecetaActorIdActor })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("fk_Actor_has_Receta_Receta1");
             });
 

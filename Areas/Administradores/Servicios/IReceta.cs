@@ -17,7 +17,7 @@ namespace Recetario.Areas.Administradores.Servicios
         /// </summary>
         /// <param name="Id">ID de VReceta</param>
         /// <returns>Clase VReceta</returns>
-        RecetaDTO Obtener(int? Id);
+        RecetaDTO Obtener(int Id);
 
         /// <summary>
         /// Obtiene la lista de VReceta disponibles en un repositorio.

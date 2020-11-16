@@ -50,8 +50,13 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <inheritdoc/>
         public void Eliminar(int Id)
         {
-            //Traer a la receta de la BD
-            var receta = _contextoBD.Receta.Find(Id);
+            //Traer a la receta y sus tablas dependientes de la BD
+            var receta = _contextoBD.Receta
+                .Include(r => r.Usa)
+                .Include(r => r.Lleva)
+                .Include(r=> r.Paso)
+                .FirstOrDefault(r => r.IdReceta == Id)
+                ;
             //Sacarla del contexto
             _contextoBD.Receta.Remove(receta);
             //Aplicar los cambios a la BD
@@ -59,9 +64,9 @@ namespace Recetario.Areas.Administradores.Servicios
         }
 
         /// <inheritdoc/>
-        public RecetaDTO Obtener(int? Id)
+        public RecetaDTO Obtener(int Id)
         {
-            return CasteoVReceta(_contextoBD.Receta.Find(Id));
+            return CasteoVReceta(_contextoBD.Receta.FirstOrDefault(r => r.IdReceta == Id));
         }
 
         /// <inheritdoc/>
