@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 namespace Recetario.Areas.Usuarios.Models
 {
     //TODO: Agregar requireds
-    public class RecetaDTO
+    public class RecetaUDTO
     {
+        public int idUsuario { get; set; }
         public int IdReceta { get; set; }
         [Required]
         public string Nombre { get; set; }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Recetario.Areas.Administradores.Models;
+using Recetario.Areas.Usuarios.Models;
+using Recetario.BaseDatos;
 
 namespace Recetario.Areas.Administradores.Servicios
 {
@@ -12,6 +14,7 @@ namespace Recetario.Areas.Administradores.Servicios
     /// <see cref="RecetaDTO"/>
     public interface IReceta
     {
+        int Agregar(RecetaUDTO receta);
         /// <summary>
         /// Con base a un ID dado, regresa la VReceta correspondiente
         /// </summary>

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Recetario.Areas.Administradores.Servicios;
 using Recetario.Areas.Usuarios.Models;
 using Recetario.BaseDatos;
 
@@ -14,10 +16,13 @@ namespace Recetario.Areas.Usuarios
     public class RecetasController : Controller
     {
         private readonly ContextoBD _context;
-
-        public RecetasController(ContextoBD context)
+        private readonly IReceta _servicioreceta;
+        private UserManager<Actor> _userManager { get; }
+        public RecetasController(ContextoBD context, IReceta serviciosreceta, UserManager<Actor> userManager)
         {
             _context = context;
+            _servicioreceta = serviciosreceta;
+            _userManager = userManager;
         }
 
         // GET: Usuarios/Recetas
@@ -55,12 +60,13 @@ namespace Recetario.Areas.Usuarios
         //TODO: Agregar DragAndDrop a los pasos de las recetas para cambiarlas de posición
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Crear(RecetaDTO receta)
+        public IActionResult Crear(RecetaUDTO receta)
         {
             if (ModelState.IsValid)
             {
-                
-
+                //Agregar el usuario que esta creando la receta a recetaUDTO
+                receta.idUsuario = Convert.ToInt32(_userManager.GetUserId(User));
+                _servicioreceta.Agregar(receta);
             }
             return View(receta);
         }
