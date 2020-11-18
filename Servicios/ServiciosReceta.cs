@@ -95,6 +95,7 @@ namespace Recetario.Areas.Administradores.Servicios
 
         public int Agregar(RecetaUDTO recetadto)
         {
+            /*------Código para Ingredientes y Etiquetas------*/
             //Checar si las etiquetas coinciden con una existente
             //TODO: Agregar NLP
             //TODO: Minusculas, normalizar
@@ -175,6 +176,17 @@ namespace Recetario.Areas.Administradores.Servicios
             {
                 IngredienteIdIngrediente = i
             }));
+
+            /*------Código para Pasos------*/
+            //Prepara el objeto
+            var pasos = new List<Paso>();
+            recetadto.Pasos.ForEach(p => pasos.Add(new Paso
+            {
+                NoPaso = p.NoPaso,
+                Texto = p.Texto,
+                TiempoTemporizador = DeStringASegundos(p.TiempoTemporizador)
+            }));
+
             //Agregar el objeto de receta con las etiquetas e ingredientes
             _contextoBD.Receta.Add(
                 new Receta
@@ -183,12 +195,28 @@ namespace Recetario.Areas.Administradores.Servicios
                     Nombre = recetadto.Nombre,
                     TiempoPrep = recetadto.TiempoPrep,
                     Usa = u,
-                    Lleva = l
+                    Lleva = l,
+                    Paso = pasos
                 }
                 );
             //Regresa el número de objetos que se modificaron en el save
             return _contextoBD.SaveChanges();
         }
 
+        //TODO: Aceptar segundos y convertirlo todo a segundos
+        /// <summary>
+        /// Convierte un tipo de dato cadena con formato "hh:mm" a minutos en int
+        /// </summary>
+        /// <param name="cadena"></param>
+        /// <returns></returns>
+        public int DeStringASegundos(string cadena)
+        {
+            if (cadena != null)
+            {
+                var aux = cadena.Split(':');
+                return (Convert.ToInt32(aux[0]) * (60)) + Convert.ToInt32(aux[1]);
+            }
+            else return 0;
+        }
     }
 }

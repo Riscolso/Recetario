@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Recetario.Areas.Usuarios.Models
 {
     //TODO: Agregar requireds
+    //TODO: Que no se puedan agregar pasos vacíos
     public class RecetaUDTO
     {
         public int idUsuario { get; set; }
