@@ -19,6 +19,7 @@ namespace Recetario.Areas.Usuarios.Models
         public string TiempoPrep { get; set; }
         [Display(Name = "Etiquetas (Separados por espacios)")]
         public String Etiquetas { get; set; }
+        [Display(Name = "Ingredientes (Separados por espacios)")]
         public String Ingredientes { get; set; }
         [DataType(DataType.ImageUrl)]
         public string Imagen { get; set; }

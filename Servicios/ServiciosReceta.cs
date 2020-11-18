@@ -30,7 +30,7 @@ namespace Recetario.Areas.Administradores.Servicios
             var creador = _contextoBD.Actor.FirstOrDefault(a =>
             a.NombreActor.ToLower().Contains(Filtro));
             //Obtener Ids del usuario creador
-            if(creador != null)
+            if (creador != null)
                 idCreador = creador.Id;
 
             //Buscar en la base de datos las recetas que conincidan con el filtro
@@ -56,7 +56,7 @@ namespace Recetario.Areas.Administradores.Servicios
             var receta = _contextoBD.Receta
                 .Include(r => r.Usa)
                 .Include(r => r.Lleva)
-                .Include(r=> r.Paso)
+                .Include(r => r.Paso)
                 .FirstOrDefault(r => r.IdReceta == Id)
                 ;
             //Sacarla del contexto
@@ -79,7 +79,7 @@ namespace Recetario.Areas.Administradores.Servicios
             foreach (Receta receta in recetas) vrecetas.Add(CasteoVReceta(receta));
             return vrecetas;
         }
-        
+
         public RecetaDTO CasteoVReceta(Receta receta)
         {
             return new RecetaDTO
@@ -100,9 +100,14 @@ namespace Recetario.Areas.Administradores.Servicios
             //TODO: Minusculas, normalizar
             //Separar las etiquetas
             var etiquetas = recetadto.Etiquetas.Split(' ');
+            //Separar los ingredientes
+            var ingredientes = recetadto.Ingredientes.Split(' ');
             var tagsID = new List<int>();
-            //Lista de las entidades de la BD
-            List<EntityEntry<Etiqueta>> e = new List<EntityEntry<Etiqueta>>();
+            var ingID = new List<int>();
+            //Lista de las entidades de la BD para tags
+            var eT = new List<EntityEntry<Etiqueta>>();
+            //Lista de las entidades de la BD para ingredientes
+            var eI = new List<EntityEntry<Ingrediente>>();
             foreach (string etiqueta in etiquetas)
             {
                 var aux = _contextoBD.Etiqueta
@@ -111,7 +116,7 @@ namespace Recetario.Areas.Administradores.Servicios
                 if (aux == null)
                 {
                     //Si no existe se agrega a la BD y a una lista de tipo entidad de EF
-                    e.Add(_contextoBD.Etiqueta.Add(new Etiqueta
+                    eT.Add(_contextoBD.Etiqueta.Add(new Etiqueta
                     {
                         Etiqueta1 = etiqueta
                     }));
@@ -122,6 +127,28 @@ namespace Recetario.Areas.Administradores.Servicios
                     tagsID.Add(aux.IdEtiqueta);
                 }
             }
+
+            //Lo mismo, pero para ingredientes xD
+            foreach (string ingrediente in ingredientes)
+            {
+                var aux = _contextoBD.Ingrediente
+                    .FirstOrDefault(ingr => ingr.Nombre == ingrediente);
+                //Checar si existe con una de la BD, si no para agregarla
+                if (aux == null)
+                {
+                    //Si no existe se agrega a la BD y a una lista de tipo entidad de EF
+                    eI.Add(_contextoBD.Ingrediente.Add(new Ingrediente
+                    {
+                        Nombre = ingrediente
+                    }));
+                }
+                else
+                {
+                    //Si existe solo agregar a una lista de etiquetas
+                    ingID.Add(aux.IdIngrediente);
+                }
+            }
+
             /*La mágia ocurre aquí, EF funciona de tal manera, que al momento de salvar los
              cambios, automáticamente las entidades que guardamos en 'e' son rastreadas por EF
             Así que ahora esas entidades tienen sus valores tal cual como en la BD, pero lo que nos interesa
@@ -129,9 +156,13 @@ namespace Recetario.Areas.Administradores.Servicios
             _contextoBD.SaveChanges();
             //Agregar las etiquetas se se sumaron a la BD a nuestra lista de
             //etiquetas para esta receta
-            foreach(EntityEntry<Etiqueta> tag in e)
+            foreach (EntityEntry<Etiqueta> tag in eT)
             {
                 tagsID.Add(tag.Entity.IdEtiqueta);
+            }
+            foreach (EntityEntry<Ingrediente> ingr in eI)
+            {
+                ingID.Add(ingr.Entity.IdIngrediente);
             }
             //Preparar la lista de Usa
             List<Usa> u = new List<Usa>();
@@ -139,18 +170,25 @@ namespace Recetario.Areas.Administradores.Servicios
             {
                 EtiquetaIdEtiqueta = t
             }));
-            //Agregar el objeto de receta con las etiquetas
+            List<Lleva> l = new List<Lleva>();
+            ingID.ForEach(i => l.Add(new Lleva
+            {
+                IngredienteIdIngrediente = i
+            }));
+            //Agregar el objeto de receta con las etiquetas e ingredientes
             _contextoBD.Receta.Add(
                 new Receta
                 {
                     ActorIdActor = recetadto.idUsuario,
                     Nombre = recetadto.Nombre,
                     TiempoPrep = recetadto.TiempoPrep,
-                    Usa = u
+                    Usa = u,
+                    Lleva = l
                 }
                 );
             //Regresa el número de objetos que se modificaron en el save
             return _contextoBD.SaveChanges();
         }
+
     }
 }
