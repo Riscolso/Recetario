@@ -66,9 +66,28 @@ namespace Recetario.Areas.Administradores.Servicios
         }
 
         /// <inheritdoc/>
-        public RecetaDTO Obtener(int Id)
+        public RecetaUDTO Obtener(int Id)
         {
-            return CasteoVReceta(_contextoBD.Receta.FirstOrDefault(r => r.IdReceta == Id));
+            var aux = _contextoBD.Receta
+                .Include(r => r.Paso)
+                .Include(r => r.Usa)
+                    .ThenInclude(u => u.EtiquetaIdEtiquetaNavigation)
+                .Select(r => new RecetaUDTO
+                {
+                    idUsuario = r.ActorIdActorNavigation.Id,
+                    IdReceta = r.IdReceta,
+                    Nombre = r.Nombre,
+                    TiempoPrep = r.TiempoPrep,
+                    //Etiquetas = r.Usa.Select(u => string.Join(" ",
+                        //u.EtiquetaIdEtiquetaNavigation.Etiqueta1)).FirstOrDefault(),
+                    Pasos = r.Paso.Select(p => new PasoDTO
+                    {
+                        NoPaso = p.NoPaso,
+                        Texto = p.Texto,
+                        TiempoTemporizador = DeMinutosAString(p.TiempoTemporizador)
+                    }).ToList()
+                }).FirstOrDefault(r => r.IdReceta == Id);
+            return aux;
         }
 
         /// <inheritdoc/>
@@ -184,7 +203,7 @@ namespace Recetario.Areas.Administradores.Servicios
             {
                 NoPaso = p.NoPaso,
                 Texto = p.Texto,
-                TiempoTemporizador = DeStringASegundos(p.TiempoTemporizador)
+                TiempoTemporizador = DeStringAMinutos(p.TiempoTemporizador)
             }));
 
             //Agregar el objeto de receta con las etiquetas e ingredientes
@@ -209,14 +228,30 @@ namespace Recetario.Areas.Administradores.Servicios
         /// </summary>
         /// <param name="cadena"></param>
         /// <returns></returns>
-        public int DeStringASegundos(string cadena)
+        public static int? DeStringAMinutos(string cadena)
         {
             if (cadena != null)
             {
                 var aux = cadena.Split(':');
                 return (Convert.ToInt32(aux[0]) * (60)) + Convert.ToInt32(aux[1]);
             }
-            else return 0;
+            else return null;
+        }
+        //Se usa static para evitar un desbordamiento de memoria
+        public static string DeMinutosAString(int? minutos)
+        {
+            if (minutos != null)
+            {
+                var hor = ((int) minutos / 60).ToString();
+                var min = (minutos % 60).ToString();
+                return Formatohora(hor) + ":" + Formatohora(min);
+            }
+            else return null;
+        }
+        public static string Formatohora(string v)
+        {
+            if (v.Length == 1) return "0" + v;
+            else return v;
         }
     }
 }

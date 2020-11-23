@@ -26,10 +26,9 @@ namespace Recetario.Areas.Usuarios
         }
 
         // GET: Usuarios/Recetas
-        public async Task<IActionResult> Index()
+        public IActionResult Index(int id)
         {
-            var contextoBD = _context.Receta.Include(r => r.ActorIdActorNavigation);
-            return View(await contextoBD.ToListAsync());
+            return View(_servicioreceta.Obtener(id));
         }
 
         // GET: Usuarios/Recetas/Details/5

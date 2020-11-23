@@ -10,6 +10,8 @@ namespace Recetario.Areas.Administradores.Models
     /// <remarks>El nombre es V de Vista
     /// <para>Para diferenciar la clase de vista con el modelo Receta</para></remarks>
 
+    // TODO: Combinar RecetarioDTO y RecetarioUDTO, usar inputs no visibles
+
     public partial class RecetaDTO
     {
         [Required]
