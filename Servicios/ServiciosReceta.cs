@@ -78,8 +78,10 @@ namespace Recetario.Areas.Administradores.Servicios
                     IdReceta = r.IdReceta,
                     Nombre = r.Nombre,
                     TiempoPrep = r.TiempoPrep,
-                    //Etiquetas = r.Usa.Select(u => string.Join(" ",
-                        //u.EtiquetaIdEtiquetaNavigation.Etiqueta1)).FirstOrDefault(),
+                    //Traer todas las etiquetas de la BD e irlas pegando con un espacio
+                    Etiquetas = string.Join(" ", r.Usa.Select(u => u.EtiquetaIdEtiquetaNavigation.Etiqueta1)),
+                    //Lo mimsmo para los ingredientes
+                    Ingredientes = string.Join(" ", r.Lleva.Select(l => l.IngredienteIdIngredienteNavigation.Nombre)),
                     Pasos = r.Paso.Select(p => new PasoDTO
                     {
                         NoPaso = p.NoPaso,

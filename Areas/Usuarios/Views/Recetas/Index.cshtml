@@ -11,14 +11,13 @@
     <div class="col-md-4">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
-            <label asp-for="TiempoPrep" class="control-label"> </label>
-            @Model.TiempoPrep
+            Tiempo de preparación: @Model.TiempoPrep
         </div>
         <div class="form-group">
-            <label asp-for="Ingredientes" class="control-label"> @Model.Ingredientes</label>
+            Ingredientes @Model.Ingredientes
         </div>
         <div class="form-group">
-            <label asp-for="Etiquetas" class="control-label"> @Model.Etiquetas</label>
+            Etiquetas: @Model.Etiquetas
         </div>
         @foreach(var paso in Model.Pasos)
         {

@@ -28,6 +28,8 @@ namespace Recetario.Areas.Usuarios
         // GET: Usuarios/Recetas
         public IActionResult Index(int id)
         {
+            // TODO: Agregar links a las etiquetas/ingredientes para reedireccionar a búsqueda con dichas 
+            //Caraterísticas
             return View(_servicioreceta.Obtener(id));
         }
 
