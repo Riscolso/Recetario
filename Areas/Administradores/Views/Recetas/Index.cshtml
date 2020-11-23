@@ -1,4 +1,4 @@
-﻿@model Paginacion<Recetario.Areas.Administradores.Models.RecetaDTO>
+﻿@model Paginacion<Recetario.Models.RecetaDTO>
 
 @{
     ViewData["Title"] = "Index";
@@ -27,7 +27,7 @@
                 @Html.DisplayNameFor(model => model.ToList()[0].Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ToList()[0].ActorNombreActor)
+                @Html.DisplayNameFor(model => model.ToList()[0].usuario.NombreActor)
             </th>
             <th></th>
         </tr>
@@ -43,10 +43,10 @@
                     @Html.DisplayFor(modelItem => item.Nombre)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ActorNombreActor)
+                    @Html.DisplayFor(modelItem => item.usuario.NombreActor)
                 </td>
                 <td>
-                    <a asp-action="Detalles" asp-route-id="@item.IdReceta">Ver Receta</a> |
+                    <a asp-area="Usuarios" asp-controller="Recetas" asp-route-id="@item.IdReceta">Ver Receta</a> |
                     <a asp-action="Eliminar" asp-route-id="@item.IdReceta">Eliminar</a>
                 </td>
             </tr>

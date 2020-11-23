@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Recetario.Areas.Usuarios.Models
+namespace Recetario.Models
 {
     //TODO: Agregar requireds
     public class PasoDTO

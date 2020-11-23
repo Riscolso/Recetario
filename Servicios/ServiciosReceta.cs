@@ -1,5 +1,4 @@
-﻿using Recetario.Areas.Administradores.Models;
-using Recetario.Areas.Usuarios.Models;
+﻿using Recetario.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +33,9 @@ namespace Recetario.Areas.Administradores.Servicios
                 idCreador = creador.Id;
 
             //Buscar en la base de datos las recetas que conincidan con el filtro
-            var recetas = _contextoBD.Receta.Where(r =>
+            var recetas = _contextoBD.Receta
+                .Include(r => r.ActorIdActorNavigation)
+                .Where(r =>
             r.Nombre.ToLower().Contains(Filtro) ||
             r.ActorIdActor == idCreador);
             //Se convierte el IQueryable en lista de recetas
@@ -66,15 +67,22 @@ namespace Recetario.Areas.Administradores.Servicios
         }
 
         /// <inheritdoc/>
-        public RecetaUDTO Obtener(int Id)
+        public RecetaDTO Obtener(int Id)
         {
             var aux = _contextoBD.Receta
+                .Include(r => r.ActorIdActorNavigation)
                 .Include(r => r.Paso)
                 .Include(r => r.Usa)
                     .ThenInclude(u => u.EtiquetaIdEtiquetaNavigation)
-                .Select(r => new RecetaUDTO
+                .Select(r => new RecetaDTO
                 {
-                    idUsuario = r.ActorIdActorNavigation.Id,
+                    //LLenar la información del usuario que creó la receta
+                    //No se llenan todos los datos, por que no se usan
+                    usuario = new Models.ActorDTO
+                    {
+                        IdActor = r.ActorIdActor,
+                        NombreActor = r.ActorIdActorNavigation.NombreActor
+                    },
                     IdReceta = r.IdReceta,
                     Nombre = r.Nombre,
                     TiempoPrep = r.TiempoPrep,
@@ -95,7 +103,8 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <inheritdoc/>
         public ICollection<RecetaDTO> Obtener()
         {
-            var recetas = _contextoBD.Receta.ToList();
+            var recetas = _contextoBD.Receta
+                .Include(r => r.ActorIdActorNavigation).ToList();
             List<RecetaDTO> vrecetas = new List<RecetaDTO>();
             foreach (Receta receta in recetas) vrecetas.Add(CasteoVReceta(receta));
             return vrecetas;
@@ -109,12 +118,16 @@ namespace Recetario.Areas.Administradores.Servicios
                 Nombre = receta.Nombre,
                 ProcentajePromedio = receta.ProcentajePromedio,
                 TiempoPrep = receta.TiempoPrep,
-                ActorIdActor = receta.ActorIdActor,
-                ActorNombreActor = _contextoBD.Actor.Find(receta.ActorIdActor).NombreActor
+                usuario = new Models.ActorDTO { 
+                    IdActor = receta.ActorIdActor,
+                    NombreActor = receta.Nombre
+                },
+                //ActorIdActor = receta.ActorIdActor,
+                //ActorNombreActor = _contextoBD.Actor.Find(receta.ActorIdActor).NombreActor
             };
         }
 
-        public int Agregar(RecetaUDTO recetadto)
+        public int Agregar(RecetaDTO recetadto)
         {
             /*------Código para Ingredientes y Etiquetas------*/
             //Checar si las etiquetas coinciden con una existente
@@ -209,19 +222,21 @@ namespace Recetario.Areas.Administradores.Servicios
             }));
 
             //Agregar el objeto de receta con las etiquetas e ingredientes
-            _contextoBD.Receta.Add(
-                new Receta
-                {
-                    ActorIdActor = recetadto.idUsuario,
-                    Nombre = recetadto.Nombre,
-                    TiempoPrep = recetadto.TiempoPrep,
-                    Usa = u,
-                    Lleva = l,
-                    Paso = pasos
-                }
-                );
-            //Regresa el número de objetos que se modificaron en el save
-            return _contextoBD.SaveChanges();
+            var receta = new Receta
+            {
+                ActorIdActor = recetadto.usuario.IdActor,
+                Nombre = recetadto.Nombre,
+                TiempoPrep = recetadto.TiempoPrep,
+                Usa = u,
+                Lleva = l,
+                Paso = pasos
+            };
+            //Agregar en el contexto
+            _contextoBD.Receta.Add(receta);
+            //Reflejar cambios en la BD
+            _contextoBD.SaveChanges();
+            //Regresa el id de la receta
+            return receta.IdReceta;
         }
 
         //TODO: Aceptar segundos y convertirlo todo a segundos

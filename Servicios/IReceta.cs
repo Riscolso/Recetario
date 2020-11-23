@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Recetario.Areas.Administradores.Models;
-using Recetario.Areas.Usuarios.Models;
+using Recetario.Models;
 using Recetario.BaseDatos;
 
 namespace Recetario.Areas.Administradores.Servicios
@@ -14,13 +13,13 @@ namespace Recetario.Areas.Administradores.Servicios
     /// <see cref="RecetaDTO"/>
     public interface IReceta
     {
-        int Agregar(RecetaUDTO receta);
+        int Agregar(RecetaDTO receta);
         /// <summary>
         /// Con base a un ID dado, regresa la VReceta correspondiente
         /// </summary>
         /// <param name="Id">ID de VReceta</param>
         /// <returns>Clase VReceta</returns>
-        RecetaUDTO Obtener(int Id);
+        RecetaDTO Obtener(int Id);
 
         /// <summary>
         /// Obtiene la lista de VReceta disponibles en un repositorio.

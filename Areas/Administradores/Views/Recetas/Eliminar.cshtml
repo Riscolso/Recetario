@@ -1,4 +1,4 @@
-﻿@model Recetario.Areas.Administradores.Models.RecetaDTO
+﻿@model Recetario.Models.RecetaDTO
 @{
     ViewData["Title"] = "Eliminar Administrador";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -30,10 +30,10 @@
                 @Html.DisplayFor(model => model.TiempoPrep)
             </dd>
             <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.ActorNombreActor)
+                @Html.DisplayNameFor(model => model.usuario.NombreActor)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.ActorNombreActor)
+                @Html.DisplayFor(model => model.usuario.NombreActor)
             </dd>
         </dl>
 

@@ -7,8 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Recetario.Areas.Administradores.Servicios;
-using Recetario.Areas.Usuarios.Models;
+using Recetario.Models;
 using Recetario.BaseDatos;
+using Recetario.Areas.Administradores.Models;
 
 namespace Recetario.Areas.Usuarios
 {
@@ -33,26 +34,7 @@ namespace Recetario.Areas.Usuarios
             return View(_servicioreceta.Obtener(id));
         }
 
-        // GET: Usuarios/Recetas/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var receta = await _context.Receta
-                .Include(r => r.ActorIdActorNavigation)
-                .FirstOrDefaultAsync(m => m.IdReceta == id);
-            if (receta == null)
-            {
-                return NotFound();
-            }
-
-            return View(receta);
-        }
-
-        
         public IActionResult Crear()
         {
             return View();
@@ -61,13 +43,17 @@ namespace Recetario.Areas.Usuarios
         //TODO: Agregar DragAndDrop a los pasos de las recetas para cambiarlas de posición
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Crear(RecetaUDTO receta)
+        public IActionResult Crear(RecetaDTO receta)
         {
             if (ModelState.IsValid)
             {
                 //Agregar el usuario que esta creando la receta a recetaUDTO
-                receta.idUsuario = Convert.ToInt32(_userManager.GetUserId(User));
-                _servicioreceta.Agregar(receta);
+                receta.usuario = new ActorDTO
+                {
+                    IdActor = Convert.ToInt32(_userManager.GetUserId(User))
+                };
+                int id = _servicioreceta.Agregar(receta);
+                return RedirectToAction("Index", new { id = id });
             }
             return View(receta);
         }
