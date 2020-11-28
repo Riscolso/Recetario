@@ -270,5 +270,35 @@ namespace Recetario.Areas.Administradores.Servicios
             if (v.Length == 1) return "0" + v;
             else return v;
         }
+
+        public int Editar(RecetaDTO recetadto)
+        {
+            //Buscar el obejto en la BD
+            var receta = _contextoBD.Receta
+                //Traer también las tablas relacionadas
+                .Include(r => r.Paso)
+                .Include(r => r.Lleva)
+                .Include(r => r.Usa)
+                .SingleOrDefault(r => r.IdReceta == recetadto.IdReceta);
+            //Verificar que exista
+            if (receta == null) throw new NotImplementedException("No existe el objeto en la BD");
+            //Realizar los cambios
+            //TODO: Agregar lo de editar etiquetas, hacer lo mismo que en crear
+            receta.Nombre = recetadto.Nombre;
+            receta.ProcentajePromedio = recetadto.ProcentajePromedio;
+            receta.TiempoPrep = recetadto.TiempoPrep;
+            receta.Paso = recetadto.Pasos.Select(p => new Paso
+            {
+                IdPaso = p.IdPaso,
+                NoPaso = p.NoPaso,
+                Texto = p.Texto,
+                TiempoTemporizador = DeStringAMinutos(p.TiempoTemporizador)
+            }
+            ).ToList();
+            //Actualizar los cambios
+            _contextoBD.Update(receta);
+            _contextoBD.SaveChanges();
+            return receta.IdReceta;
+        }
     }
 }

@@ -1,0 +1,58 @@
+﻿@model Recetario.Models.RecetaDTO
+
+@{
+    ViewData["Title"] = "Editar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Editar</h1>
+
+<h4>Receta</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Editar">
+            <input type="hidden" asp-for="IdReceta" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TiempoPrep" class="control-label"></label>
+                <input asp-for="TiempoPrep" class="form-control" />
+                <span asp-validation-for="TiempoPrep" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ingredientes" class="control-label"></label>
+                <input asp-for="Ingredientes" class="form-control" />
+                <span asp-validation-for="Ingredientes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Etiquetas" class="control-label"></label>
+                <input asp-for="Etiquetas" class="form-control" />
+                <span asp-validation-for="Etiquetas" class="text-danger"></span>
+            </div>
+            Pasos <button type='button' onclick="AgregarPaso()">+</button>
+            <div id='pasos'>
+                @for (int i=0; i<Model.Pasos.Count;i++)
+                {
+                    <input type="hidden" asp-for="@Model.Pasos[i].IdPaso" />
+                    @: <input asp-for="@Model.Pasos[i].NoPaso" class="form-control" /><br />
+                    <table>
+                        <tr>
+                            <td><textarea asp-for="@Model.Pasos[i].Texto" class="form-control" ></textarea></td>
+                            <td><input asp-for="@Model.Pasos[i].TiempoTemporizador" class="form-control" /></td>
+                        </tr>
+                    </table>
+                    <input type="hidden" asp-for="IdReceta" />
+                    <br />
+                }
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

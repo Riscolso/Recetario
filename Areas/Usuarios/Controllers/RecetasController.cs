@@ -58,56 +58,40 @@ namespace Recetario.Areas.Usuarios
             return View(receta);
         }
 
-        // GET: Usuarios/Recetas/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Editar(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var receta = await _context.Receta.FindAsync(id);
+            var receta = _servicioreceta.Obtener((int)id);
             if (receta == null)
             {
                 return NotFound();
             }
-            ViewData["ActorIdActor"] = new SelectList(_context.Actor, "Id", "NombreActor", receta.ActorIdActor);
+            //ViewData["ActorIdActor"] = new SelectList(_context.Actor, "Id", "NombreActor", receta.ActorIdActor);
             return View(receta);
         }
 
-        // POST: Usuarios/Recetas/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdReceta,Nombre,ProcentajePromedio,TiempoPrep,ActorIdActor")] Receta receta)
+        public IActionResult Editar(RecetaDTO receta)
         {
-            if (id != receta.IdReceta)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(receta);
-                    await _context.SaveChangesAsync();
+                    _servicioreceta.Editar(receta);
                 }
-                catch (DbUpdateConcurrencyException)
+                //En caso de que no exista la receta
+                catch (NotImplementedException)
                 {
-                    if (!RecetaExists(receta.IdReceta))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new {id = receta.IdReceta });
             }
-            ViewData["ActorIdActor"] = new SelectList(_context.Actor, "Id", "NombreActor", receta.ActorIdActor);
+            //ViewData["ActorIdActor"] = new SelectList(_context.Actor, "Id", "NombreActor", receta.ActorIdActor);
             return View(receta);
         }
 
@@ -139,11 +123,6 @@ namespace Recetario.Areas.Usuarios
             _context.Receta.Remove(receta);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool RecetaExists(int id)
-        {
-            return _context.Receta.Any(e => e.IdReceta == id);
         }
     }
 }

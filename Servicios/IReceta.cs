@@ -40,5 +40,7 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <param name="Filtro">Filtro de búsqueda</param>
         /// <returns>Una lista de recetas que coinciden con el filtro</returns>
         ICollection<RecetaDTO> BuscarFiltro(String Filtro);
+
+        int Editar(RecetaDTO recetadto);
     }
 }
