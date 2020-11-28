@@ -136,17 +136,15 @@ namespace Recetario.BaseDatos
 
             modelBuilder.Entity<Paso>(entity =>
             {
-                entity.HasKey(e => e.IdPaso)
+                entity.HasKey(e => new {e.NoPaso, e.RecetaIdReceta, e.RecetaActorIdActor })
                     .HasName("PRIMARY");
 
                 entity.ToTable("paso");
 
+                entity.Property(e => e.NoPaso).HasColumnType("int(11)");
+
                 entity.HasIndex(e => new { e.RecetaIdReceta, e.RecetaActorIdActor })
                     .HasName("fk_Paso_Receta1_idx");
-
-                entity.Property(e => e.IdPaso).HasColumnType("int(11)");
-
-                entity.Property(e => e.NoPaso).HasColumnType("int(11)");
 
                 entity.Property(e => e.RecetaActorIdActor)
                     .HasColumnName("Receta_Actor_idActor")

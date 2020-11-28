@@ -1,11 +1,23 @@
 ﻿
 @model Recetario.Models.RecetaDTO
+@using Microsoft.AspNetCore.Identity
+@using Recetario.BaseDatos
+@using System.Security.Claims;
+
+@inject SignInManager<Actor> SignInManager
+@inject UserManager<Actor> UserManager
 
 @{
     ViewData["Title"] = Model.Nombre;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <h1>@Model.Nombre</h1>
+@if (UserManager.GetUserId(User).Equals(Model.usuario.IdActor.ToString()))
+{
+    @:
+    <a class="nav-link text-dark" asp-route-id="@Model.IdReceta" asp-area="Usuarios" asp-controller="Recetas" asp-action="Editar" title="Editar Receta">Editar</a>
+    <br />
+}
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -19,9 +31,9 @@
         <div class="form-group">
             Etiquetas: @Model.Etiquetas
         </div>
-        @foreach(var paso in Model.Pasos)
+        @foreach (var paso in Model.Pasos)
         {
-            @:Paso @paso.NoPaso <br/>
+            @:Paso @paso.NoPaso <br />
             <table>
                 <tr>
                     <td>@paso.Texto</td>
@@ -31,7 +43,7 @@
                     }
                 </tr>
             </table>
-            <br/>
+            <br />
         }
     </div>
 </div>

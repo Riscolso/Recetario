@@ -1,16 +1,25 @@
 ﻿@model Recetario.Models.RecetaDTO
 
+
 @{
     ViewData["Title"] = "Editar";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@section Scripts{
+    <script>
+        //La variable p es usada por el script de js para ir agregando los pasos o saber cuantos existen
+        var p = @Model.Pasos.Count
+    </script>
+}
 
+<script src="~/js/Recetas.js"></script>
 <h1>Editar</h1>
 
 <h4>Receta</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
+        
         <form asp-action="Editar">
             <input type="hidden" asp-for="IdReceta" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -36,18 +45,22 @@
             </div>
             Pasos <button type='button' onclick="AgregarPaso()">+</button>
             <div id='pasos'>
-                @for (int i=0; i<Model.Pasos.Count;i++)
+                @for (int i = 0; i < Model.Pasos.Count; i++)
                 {
-                    <input type="hidden" asp-for="@Model.Pasos[i].IdPaso" />
-                    @: <input asp-for="@Model.Pasos[i].NoPaso" class="form-control" /><br />
-                    <table>
-                        <tr>
-                            <td><textarea asp-for="@Model.Pasos[i].Texto" class="form-control" ></textarea></td>
-                            <td><input asp-for="@Model.Pasos[i].TiempoTemporizador" class="form-control" /></td>
-                        </tr>
-                    </table>
-                    <input type="hidden" asp-for="IdReceta" />
-                    <br />
+                    @:
+                    <div id="paso_@i">
+                        <input asp-for="@Model.Pasos[i].NoPaso" class="form-control" /><br />
+                        <table>
+                            <tr>
+                                <td><textarea asp-for="@Model.Pasos[i].Texto" class="form-control"></textarea></td>
+                                <td><input asp-for="@Model.Pasos[i].TiempoTemporizador" class="form-control" /></td>
+                                <td><button type="button" onclick="QuitarElemento('paso_'+@i)">-</button></td>
+
+                            </tr>
+                        </table>
+                        <input type="hidden" asp-for="IdReceta" />
+                        <br />
+                    </div>
                 }
             </div>
             <div class="form-group">

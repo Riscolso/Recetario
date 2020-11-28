@@ -289,7 +289,6 @@ namespace Recetario.Areas.Administradores.Servicios
             receta.TiempoPrep = recetadto.TiempoPrep;
             receta.Paso = recetadto.Pasos.Select(p => new Paso
             {
-                IdPaso = p.IdPaso,
                 NoPaso = p.NoPaso,
                 Texto = p.Texto,
                 TiempoTemporizador = DeStringAMinutos(p.TiempoTemporizador)

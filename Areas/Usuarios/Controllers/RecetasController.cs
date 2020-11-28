@@ -58,20 +58,23 @@ namespace Recetario.Areas.Usuarios
             return View(receta);
         }
 
-        public IActionResult Editar(int? id)
+        public async Task<IActionResult> Editar(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
+            //Checar que este usuario sea el creador (Dios, obviamente)
+            //Obtener el actor logeado
+            var actor = await _userManager.GetUserAsync(User);
             var receta = _servicioreceta.Obtener((int)id);
-            if (receta == null)
+            //En caso de ser el mismo que la creó, dejar hacer lo que quiera con esta
+            if (actor.Id == receta.usuario.IdActor)
             {
-                return NotFound();
+                if (receta == null) return NotFound();
+                return View(receta);
             }
-            //ViewData["ActorIdActor"] = new SelectList(_context.Actor, "Id", "NombreActor", receta.ActorIdActor);
-            return View(receta);
+            else return NotFound();
         }
 
         [HttpPost]
@@ -82,7 +85,9 @@ namespace Recetario.Areas.Usuarios
             {
                 try
                 {
-                    _servicioreceta.Editar(receta);
+                    //Checar que sea el mismo usuario quien creó la receta
+                    if (receta.usuario.IdActor == _userManager.GetUserAsync(User).Result.Id) _servicioreceta.Editar(receta);
+                    else return NotFound();
                 }
                 //En caso de que no exista la receta
                 catch (NotImplementedException)

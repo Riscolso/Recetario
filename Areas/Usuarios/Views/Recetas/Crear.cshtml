@@ -5,7 +5,13 @@
     ViewData["Title"] = "Nueva Receta";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-    <script src="~/js/Recetas.js"></script>
+@section Scripts{
+    <script>
+        //La variable p es usada por el script de js para ir agregando los pasos o saber cuantos existen
+        var p = 0
+    </script>
+}
+<script src="~/js/Recetas.js"></script>
 <h1>Nueva Receta</h1>
 
 <h4>Yomi yomi</h4>

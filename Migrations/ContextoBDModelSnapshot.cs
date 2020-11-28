@@ -289,19 +289,15 @@ namespace Recetario.Migrations
 
             modelBuilder.Entity("Recetario.BaseDatos.Paso", b =>
                 {
-                    b.Property<int>("IdPaso")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int(11)");
-
                     b.Property<int>("NoPaso")
-                        .HasColumnType("int(11)");
-
-                    b.Property<int>("RecetaActorIdActor")
-                        .HasColumnName("Receta_Actor_idActor")
                         .HasColumnType("int(11)");
 
                     b.Property<int>("RecetaIdReceta")
                         .HasColumnName("Receta_idReceta")
+                        .HasColumnType("int(11)");
+
+                    b.Property<int>("RecetaActorIdActor")
+                        .HasColumnName("Receta_Actor_idActor")
                         .HasColumnType("int(11)");
 
                     b.Property<string>("Texto")
@@ -312,7 +308,7 @@ namespace Recetario.Migrations
                     b.Property<int?>("TiempoTemporizador")
                         .HasColumnType("int(11)");
 
-                    b.HasKey("IdPaso")
+                    b.HasKey("NoPaso", "RecetaIdReceta", "RecetaActorIdActor")
                         .HasName("PRIMARY");
 
                     b.HasIndex("RecetaIdReceta", "RecetaActorIdActor")
@@ -477,6 +473,7 @@ namespace Recetario.Migrations
                         .WithMany("Lleva")
                         .HasForeignKey("RecetaIdReceta", "RecetaActorIdActor")
                         .HasConstraintName("fk_Receta_has_Ingrediente_Receta1")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -486,6 +483,7 @@ namespace Recetario.Migrations
                         .WithMany("Paso")
                         .HasForeignKey("RecetaIdReceta", "RecetaActorIdActor")
                         .HasConstraintName("fk_Paso_Receta1")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -510,6 +508,7 @@ namespace Recetario.Migrations
                         .WithMany("Usa")
                         .HasForeignKey("RecetaIdReceta", "RecetaActorIdActor")
                         .HasConstraintName("fk_Receta_has_Etiqueta_Receta1")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -525,6 +524,7 @@ namespace Recetario.Migrations
                         .WithMany("Visualizacion")
                         .HasForeignKey("RecetaIdReceta", "RecetaActorIdActor")
                         .HasConstraintName("fk_Actor_has_Receta_Receta1")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

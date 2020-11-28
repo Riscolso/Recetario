@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Recetario.Migrations
 {
-    public partial class Paso : Migration
+    public partial class CambioPaso : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -238,32 +238,30 @@ namespace Recetario.Migrations
                         columns: x => new { x.Receta_idReceta, x.Receta_Actor_idActor },
                         principalTable: "receta",
                         principalColumns: new[] { "idReceta", "Actor_idActor" },
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "paso",
                 columns: table => new
                 {
-                    IdPaso = table.Column<int>(type: "int(11)", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     NoPaso = table.Column<int>(type: "int(11)", nullable: false),
+                    Receta_idReceta = table.Column<int>(type: "int(11)", nullable: false),
+                    Receta_Actor_idActor = table.Column<int>(type: "int(11)", nullable: false),
                     Texto = table.Column<string>(type: "varchar(600)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8")
                         .Annotation("MySql:Collation", "utf8_general_ci"),
-                    TiempoTemporizador = table.Column<int>(type: "int(11)", nullable: true),
-                    Receta_idReceta = table.Column<int>(type: "int(11)", nullable: false),
-                    Receta_Actor_idActor = table.Column<int>(type: "int(11)", nullable: false)
+                    TiempoTemporizador = table.Column<int>(type: "int(11)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PRIMARY", x => x.IdPaso);
+                    table.PrimaryKey("PRIMARY", x => new { x.NoPaso, x.Receta_idReceta, x.Receta_Actor_idActor });
                     table.ForeignKey(
                         name: "fk_Paso_Receta1",
                         columns: x => new { x.Receta_idReceta, x.Receta_Actor_idActor },
                         principalTable: "receta",
                         principalColumns: new[] { "idReceta", "Actor_idActor" },
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -288,7 +286,7 @@ namespace Recetario.Migrations
                         columns: x => new { x.Receta_idReceta, x.Receta_Actor_idActor },
                         principalTable: "receta",
                         principalColumns: new[] { "idReceta", "Actor_idActor" },
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -315,7 +313,7 @@ namespace Recetario.Migrations
                         columns: x => new { x.Receta_idReceta, x.Receta_Actor_idActor },
                         principalTable: "receta",
                         principalColumns: new[] { "idReceta", "Actor_idActor" },
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
