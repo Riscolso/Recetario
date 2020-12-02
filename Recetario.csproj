@@ -36,7 +36,6 @@
 
   <ItemGroup>
     <Folder Include="Areas\Usuarios\Models\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
 

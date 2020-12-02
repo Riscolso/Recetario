@@ -117,6 +117,13 @@ namespace Recetario.BaseDatos
                     .HasColumnName("Receta_Actor_idActor")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.IngredienteCrudo)
+                    .IsRequired()
+                    .HasColumnName("IngredienteCrudo")
+                    .HasColumnType("varchar(45)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+
                 entity.Property(e => e.IngredienteIdIngrediente)
                     .HasColumnName("Ingrediente_idIngrediente")
                     .HasColumnType("int(11)");

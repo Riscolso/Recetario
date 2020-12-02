@@ -24,9 +24,11 @@ namespace Recetario.Models
         [Required]
         [DataType(DataType.Time)]
         public string TiempoPrep { get; set; }
-        [Display(Name = "Etiquetas (Separados por espacios)")]
+        [Display(Name = "Etiquetas (Separados por comas)")]
         public String Etiquetas { get; set; }
-        [Display(Name = "Ingredientes (Separados por espacios)")]
+        //Esta lista es para cuando se normalice el texto
+        public List<string> IngredientesNormalizados { get; set; }
+        [Display(Name = "Ingredientes (Separados por comas)")]
         public String Ingredientes { get; set; }
         [DataType(DataType.ImageUrl)]
         public string Imagen { get; set; }

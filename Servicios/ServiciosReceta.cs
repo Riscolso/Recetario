@@ -81,15 +81,16 @@ namespace Recetario.Areas.Administradores.Servicios
                     usuario = new Models.ActorDTO
                     {
                         IdActor = r.ActorIdActor,
-                        NombreActor = r.ActorIdActorNavigation.NombreActor
+                        NombreActor = r.ActorIdActorNavigation.NombreActor,
+                        Usuario = r.ActorIdActorNavigation.UserName
                     },
                     IdReceta = r.IdReceta,
                     Nombre = r.Nombre,
                     TiempoPrep = r.TiempoPrep,
                     //Traer todas las etiquetas de la BD e irlas pegando con un espacio
-                    Etiquetas = string.Join(" ", r.Usa.Select(u => u.EtiquetaIdEtiquetaNavigation.Etiqueta1)),
+                    Etiquetas = string.Join(", ", r.Usa.Select(u => u.EtiquetaIdEtiquetaNavigation.Etiqueta1)),
                     //Lo mimsmo para los ingredientes
-                    Ingredientes = string.Join(" ", r.Lleva.Select(l => l.IngredienteIdIngredienteNavigation.Nombre)),
+                    Ingredientes = string.Join(", ", r.Lleva.Select(l => l.IngredienteCrudo)),
                     Pasos = r.Paso.Select(p => new PasoDTO
                     {
                         NoPaso = p.NoPaso,
@@ -134,9 +135,9 @@ namespace Recetario.Areas.Administradores.Servicios
             //TODO: Agregar NLP
             //TODO: Minusculas, normalizar
             //Separar las etiquetas
-            var etiquetas = recetadto.Etiquetas.Split(' ');
+            var etiquetas = recetadto.Etiquetas.Split(',');
             //Separar los ingredientes
-            var ingredientes = recetadto.Ingredientes.Split(' ');
+            var ingredientes = recetadto.Ingredientes.Split(',');
             var tagsID = new List<int>();
             var ingID = new List<int>();
             //Lista de las entidades de la BD para tags
@@ -162,7 +163,7 @@ namespace Recetario.Areas.Administradores.Servicios
                     tagsID.Add(aux.IdEtiqueta);
                 }
             }
-
+            // TODO: Aquí va la etapa de NLP
             //Lo mismo, pero para ingredientes xD
             foreach (string ingrediente in ingredientes)
             {
@@ -195,6 +196,7 @@ namespace Recetario.Areas.Administradores.Servicios
             {
                 tagsID.Add(tag.Entity.IdEtiqueta);
             }
+            //Se agregan también los ingredientes crudos
             foreach (EntityEntry<Ingrediente> ingr in eI)
             {
                 ingID.Add(ingr.Entity.IdIngrediente);
@@ -205,11 +207,19 @@ namespace Recetario.Areas.Administradores.Servicios
             {
                 EtiquetaIdEtiqueta = t
             }));
+
             List<Lleva> l = new List<Lleva>();
-            ingID.ForEach(i => l.Add(new Lleva
+            for (int i = 0; i < eI.Count; i++)
             {
-                IngredienteIdIngrediente = i
-            }));
+                l.Add(new Lleva
+                {
+                    //Se ligan los ingredientes con la receta
+                    IngredienteIdIngrediente = ingID[i],
+                    //Se agregan los ingredientes tal cual el usuario los escribió
+                    //Estos son los que se muestran en la página
+                    IngredienteCrudo = ingredientes[i] + "crudo"
+                });
+            }
 
             /*------Código para Pasos------*/
             //Prepara el objeto
