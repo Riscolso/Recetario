@@ -5,14 +5,6 @@ using Recetario.Areas.Administradores.Models;
 
 namespace Recetario.Models
 {
-    /// <summary>
-    /// Clase que define el modelo de las vistas para la tabla Actor
-    /// </summary>
-    /// <remarks>El nombre es V de Vista
-    /// <para>Para diferenciar la clase de vista con el modelo Receta</para></remarks>
-
-    // TODO: Combinar RecetarioDTO y RecetarioUDTO, usar inputs no visibles
-
     public partial class RecetaDTO
     {
         public int IdReceta { get; set; }
@@ -34,6 +26,13 @@ namespace Recetario.Models
         public string Imagen { get; set; }
         public List<PasoDTO> Pasos { get; set; }
         //Información del usuario que creó la receta
-        public ActorDTO usuario { get; set; }
+        public UsuarioDTO usuario { get; set; }
+    }
+    //Esta clases es solo para la trnaferencia del información 
+    //Del usuario que creo una receta
+    public class UsuarioDTO
+    {
+        public int IdUsuario { get; set; }
+        public string Usuario { get; set; }
     }
 }

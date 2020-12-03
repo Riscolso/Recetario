@@ -78,10 +78,9 @@ namespace Recetario.Areas.Administradores.Servicios
                 {
                     //LLenar la información del usuario que creó la receta
                     //No se llenan todos los datos, por que no se usan
-                    usuario = new Models.ActorDTO
+                    usuario = new UsuarioDTO
                     {
-                        IdActor = r.ActorIdActor,
-                        NombreActor = r.ActorIdActorNavigation.NombreActor,
+                        IdUsuario = r.ActorIdActor,
                         Usuario = r.ActorIdActorNavigation.UserName
                     },
                     IdReceta = r.IdReceta,
@@ -119,9 +118,9 @@ namespace Recetario.Areas.Administradores.Servicios
                 Nombre = receta.Nombre,
                 ProcentajePromedio = receta.ProcentajePromedio,
                 TiempoPrep = receta.TiempoPrep,
-                usuario = new Models.ActorDTO { 
-                    IdActor = receta.ActorIdActor,
-                    NombreActor = receta.Nombre
+                usuario = new UsuarioDTO { 
+                    IdUsuario = receta.ActorIdActor,
+                    Usuario = receta.ActorIdActorNavigation.NombreActor
                 },
                 //ActorIdActor = receta.ActorIdActor,
                 //ActorNombreActor = _contextoBD.Actor.Find(receta.ActorIdActor).NombreActor
@@ -234,7 +233,7 @@ namespace Recetario.Areas.Administradores.Servicios
             //Agregar el objeto de receta con las etiquetas e ingredientes
             var receta = new Receta
             {
-                ActorIdActor = recetadto.usuario.IdActor,
+                ActorIdActor = recetadto.usuario.IdUsuario,
                 Nombre = recetadto.Nombre,
                 TiempoPrep = recetadto.TiempoPrep,
                 Usa = u,

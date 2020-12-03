@@ -48,9 +48,9 @@ namespace Recetario.Areas.Usuarios
             if (ModelState.IsValid)
             {
                 //Agregar el usuario que esta creando la receta a recetaUDTO
-                receta.usuario = new ActorDTO
+                receta.usuario = new UsuarioDTO
                 {
-                    IdActor = Convert.ToInt32(_userManager.GetUserId(User))
+                    IdUsuario = Convert.ToInt32(_userManager.GetUserId(User))
                 };
                 int id = _servicioreceta.Agregar(receta);
                 return RedirectToAction("Index", new { id = id });
@@ -69,7 +69,7 @@ namespace Recetario.Areas.Usuarios
             var actor = await _userManager.GetUserAsync(User);
             var receta = _servicioreceta.Obtener((int)id);
             //En caso de ser el mismo que la creó, dejar hacer lo que quiera con esta
-            if (actor.Id == receta.usuario.IdActor)
+            if (actor.Id == receta.usuario.IdUsuario)
             {
                 if (receta == null) return NotFound();
                 return View(receta);
@@ -86,7 +86,7 @@ namespace Recetario.Areas.Usuarios
                 try
                 {
                     //Checar que sea el mismo usuario quien creó la receta
-                    if (receta.usuario.IdActor == _userManager.GetUserAsync(User).Result.Id) _servicioreceta.Editar(receta);
+                    if (receta.usuario.IdUsuario == _userManager.GetUserAsync(User).Result.Id) _servicioreceta.Editar(receta);
                     else return NotFound();
                 }
                 //En caso de que no exista la receta

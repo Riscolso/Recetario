@@ -27,7 +27,7 @@
                 @Html.DisplayNameFor(model => model.ToList()[0].Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ToList()[0].usuario.NombreActor)
+                @Html.DisplayNameFor(model => model.ToList()[0].usuario.Usuario)
             </th>
             <th></th>
         </tr>
@@ -43,7 +43,7 @@
                     @Html.DisplayFor(modelItem => item.Nombre)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.usuario.NombreActor)
+                    @Html.DisplayFor(modelItem => item.usuario.Usuario)
                 </td>
                 <td>
                     <a asp-area="Usuarios" asp-controller="Recetas" asp-route-id="@item.IdReceta">Ver Receta</a> |

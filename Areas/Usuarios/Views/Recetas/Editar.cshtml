@@ -22,6 +22,8 @@
         
         <form asp-action="Editar">
             <input type="hidden" asp-for="IdReceta" />
+            <input type="hidden" asp-for="usuario.IdUsuario" />
+            <input type="hidden" asp-for="usuario.Usuario" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>

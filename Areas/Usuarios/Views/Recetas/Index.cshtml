@@ -12,7 +12,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <h1>@Model.Nombre</h1>
-@if (UserManager.GetUserId(User).Equals(Model.usuario.IdActor.ToString()))
+@if (UserManager.GetUserId(User).Equals(Model.usuario.IdUsuario.ToString()))
 {
     @:
     <a class="nav-link text-dark" asp-route-id="@Model.IdReceta" asp-area="Usuarios" asp-controller="Recetas" asp-action="Editar" title="Editar Receta">Editar</a>
