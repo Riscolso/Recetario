@@ -101,16 +101,14 @@ namespace Recetario.Areas.Usuarios
         }
 
         // GET: Usuarios/Recetas/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var receta = await _context.Receta
-                .Include(r => r.ActorIdActorNavigation)
-                .FirstOrDefaultAsync(m => m.IdReceta == id);
+            var receta = _servicioreceta.Obtener((int)id);
             if (receta == null)
             {
                 return NotFound();
@@ -122,12 +120,11 @@ namespace Recetario.Areas.Usuarios
         // POST: Usuarios/Recetas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var receta = await _context.Receta.FindAsync(id);
-            _context.Receta.Remove(receta);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            //TODO: Permisos para modificar receta (Si es el usuario que la creó)
+            _servicioreceta.Eliminar(id);
+            return RedirectToAction("Index", "Home", new { area = "" });
         }
     }
 }
