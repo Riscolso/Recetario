@@ -50,6 +50,30 @@ namespace Recetario.Areas.Administradores.Servicios
             return vrecetas;
         }
 
+        public ICollection<RecetaDTO> BuscarFiltro(string Filtro, int IdUsuario)
+        {
+            //Hacer la búsqueda insensible a mayúscular o minúsculas
+            Filtro = Filtro.ToLower();
+
+            //Buscar en la base de datos las recetas que conincidan con el filtro
+            var recetas = _contextoBD.Receta
+                .Include(r => r.ActorIdActorNavigation)
+                .Where(r =>
+            r.Nombre.ToLower().Contains(Filtro) &&
+            r.ActorIdActor == IdUsuario);
+
+            //Se convierte el IQueryable en lista de recetas
+            List<Receta> listaRecetas = recetas.ToList();
+            //Una lista para guardar las vistas que se van a regresar
+            List<RecetaDTO> vrecetas = new List<RecetaDTO>();
+            //Convertir el modelo de datos a modelo de vista
+            foreach (Receta receta in listaRecetas)
+            {
+                vrecetas.Add(CasteoVReceta(receta));
+            }
+            return vrecetas;
+        }
+
         /// <inheritdoc/>
         public void Eliminar(int Id)
         {
@@ -105,6 +129,17 @@ namespace Recetario.Areas.Administradores.Servicios
         {
             var recetas = _contextoBD.Receta
                 .Include(r => r.ActorIdActorNavigation).ToList();
+            List<RecetaDTO> vrecetas = new List<RecetaDTO>();
+            foreach (Receta receta in recetas) vrecetas.Add(CasteoVReceta(receta));
+            return vrecetas;
+        }
+
+        public ICollection<RecetaDTO> ObtenerXUsuario(int IdUsuario)
+        {
+            var recetas = _contextoBD.Receta
+                .Include(r => r.ActorIdActorNavigation)
+                .Where(r => r.ActorIdActor == IdUsuario)
+                .ToList();
             List<RecetaDTO> vrecetas = new List<RecetaDTO>();
             foreach (Receta receta in recetas) vrecetas.Add(CasteoVReceta(receta));
             return vrecetas;

@@ -126,5 +126,34 @@ namespace Recetario.Areas.Usuarios
             _servicioreceta.Eliminar(id);
             return RedirectToAction("Index", "Home", new { area = "" });
         }
+
+        public IActionResult ListaReceta(string cadenaBusqueda, int? noPagina, String filtroActual)
+        {
+            //Se mete el filtro a ViewData para que permanezca aunque se cambie de páginas
+            ViewData["FiltroActual"] = cadenaBusqueda;
+
+            if (cadenaBusqueda != null)
+            {
+                noPagina = 1;
+            }
+            else
+            {
+                cadenaBusqueda = filtroActual;
+            }
+            ICollection<RecetaDTO> recetas;
+            //Si hay cadena de búsqueda
+            //En caso de que no haber ninguna búsqueda, muestro todo, TODO
+            if (!String.IsNullOrEmpty(cadenaBusqueda))
+            {
+                recetas = _servicioreceta.BuscarFiltro(cadenaBusqueda);
+            }
+            else
+            {
+                recetas = _servicioreceta.ObtenerXUsuario(_userManager.GetUserAsync(User).Result.Id);
+            }
+            //Cantidad de Elementos a mostrar por página
+            int pageSize = 4;
+            return View(Paginacion<RecetaDTO>.Create(recetas, noPagina ?? 1, pageSize));
+        }
     }
 }

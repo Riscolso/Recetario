@@ -26,6 +26,7 @@ namespace Recetario.Areas.Administradores.Servicios
         /// </summary>
         /// <returns>Lista de VReceta</returns>
         ICollection<RecetaDTO> Obtener();
+        ICollection<RecetaDTO> ObtenerXUsuario(int IdUsuario);
 
         /// <summary>
         /// Eliminar una receta del repositorio mediante su ID
@@ -40,6 +41,8 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <param name="Filtro">Filtro de búsqueda</param>
         /// <returns>Una lista de recetas que coinciden con el filtro</returns>
         ICollection<RecetaDTO> BuscarFiltro(String Filtro);
+
+        ICollection<RecetaDTO> BuscarFiltro(string Filtro, int IdUsuario);
 
         int Editar(RecetaDTO recetadto);
     }
