@@ -64,9 +64,9 @@ namespace Recetario
 
 
             //services.AddDbContext<ContextoBD>(options =>
-            //options.UseMySql(Configuration.GetConnectionString("ConexionAzure"), x => x.ServerVersion("5.7.19-mysql")));
+            //    options.UseMySql(Configuration.GetConnectionString("ConexionAzure"), x => x.ServerVersion("5.7.19-mysql")));
             services.AddDbContext<ContextoBD>(options =>
-            options.UseMySql(Configuration.GetConnectionString("StringMySQL"), x => x.ServerVersion("5.7.19-mysql")));
+                options.UseMySql(Configuration.GetConnectionString("StringMySQL"), x => x.ServerVersion("5.7.19-mysql")));
 
             //Ligar la clase ServiciosActor a la dependecia
             services.AddScoped<IActor, ServiciosActor>();
