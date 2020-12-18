@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Recetario.Areas.Administradores.Servicios;
 using Recetario.Models;
 using Recetario.BaseDatos;
-using Recetario.Areas.Administradores.Models;
+using Recetario.Servicios;
 
 namespace Recetario.Areas.Usuarios
 {
@@ -18,12 +18,17 @@ namespace Recetario.Areas.Usuarios
     {
         private readonly ContextoBD _context;
         private readonly IReceta _servicioreceta;
+        private readonly IEmail _serviciosemail;
         private UserManager<Actor> _userManager { get; }
-        public RecetasController(ContextoBD context, IReceta serviciosreceta, UserManager<Actor> userManager)
+        public RecetasController(ContextoBD context,
+            IReceta serviciosreceta,
+            UserManager<Actor> userManager,
+            IEmail serviciosemail)
         {
             _context = context;
             _servicioreceta = serviciosreceta;
             _userManager = userManager;
+            _serviciosemail = serviciosemail;
         }
 
         // GET: Usuarios/Recetas
@@ -154,6 +159,19 @@ namespace Recetario.Areas.Usuarios
             //Cantidad de Elementos a mostrar por página
             int pageSize = 4;
             return View(Paginacion<RecetaDTO>.Create(recetas, noPagina ?? 1, pageSize));
+        }
+
+        public IActionResult EnviarIngredientes(int IdReceta)
+        {
+            try
+            {
+                _serviciosemail.EnviarEmailIngredientes(_userManager.GetUserAsync(User).Result.Email, IdReceta);
+            }
+            catch
+            {
+                return NotFound();
+            }
+            return RedirectToAction("Index", new { id = IdReceta });
         }
     }
 }

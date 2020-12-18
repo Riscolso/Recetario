@@ -30,6 +30,9 @@
             Ingredientes @Model.Ingredientes
         </div>
         <div class="form-group">
+            <a class="nav-link text-dark" onclick="alert('Se enviará un email con los ingredientes a @UserManager.FindByNameAsync(UserManager.GetUserName(User)).Result.Email')" asp-route-IdReceta="@Model.IdReceta" asp-area="Usuarios" asp-controller="Recetas" asp-action="EnviarIngredientes" title="Enviar">Enviar Ingredientes a Email</a>
+        </div>
+        <div class="form-group">
             Etiquetas: @Model.Etiquetas
         </div>
         @foreach (var paso in Model.Pasos)

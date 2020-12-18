@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Recetario.Models;
 using Microsoft.AspNetCore.Identity;
+using Recetario.Servicios;
 
 namespace Recetario
 {
@@ -69,8 +70,10 @@ namespace Recetario
                 options.UseMySql(Configuration.GetConnectionString("StringMySQL"), x => x.ServerVersion("5.7.19-mysql")));
 
             //Ligar la clase ServiciosActor a la dependecia
+            //TODO: Cambiar el namespace de los servicios de actor y receta
             services.AddScoped<IActor, ServiciosActor>();
             services.AddScoped<IReceta, ServiciosReceta>();
+            services.AddScoped<IEmail, ServiciosEmail>();
 
             //Servicios para autorización con políticas
             services.AddAuthorization(options =>
