@@ -45,5 +45,6 @@ namespace Recetario.Areas.Administradores.Servicios
         ICollection<RecetaDTO> BuscarFiltro(string Filtro, int IdUsuario);
 
         int Editar(RecetaDTO recetadto);
+        void Calificar(int IdReceta, bool Gustar, int Idusuario);
     }
 }

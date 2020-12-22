@@ -343,5 +343,39 @@ namespace Recetario.Areas.Administradores.Servicios
             _contextoBD.SaveChanges();
             return receta.IdReceta;
         }
+
+        public void Calificar(int IdReceta, bool Gustar, int Idusuario)
+        {
+            //Obtener quién creó la receta
+            int? IdCreador = _contextoBD.Receta
+                .FirstOrDefault(r => r.IdReceta == IdReceta)
+                .ActorIdActor;
+            
+            //Si es IdCreador es null, significa que no existe
+            if (IdCreador == null) throw new NotImplementedException("La Receta o Usuario no existen =(");
+            //Checar si ya hay una calificación de esta receta por este usuario
+            var visu = _contextoBD.Visualizacion
+                .FirstOrDefault(v => v.ActorIdActor == Idusuario && v.RecetaIdReceta == IdReceta && v.RecetaActorIdActor == IdCreador);
+            //Si ya se ha calificado antes 
+            if (visu != null)
+            {
+                visu.Calificacion = Gustar;
+                _contextoBD.Update(visu);
+                
+            }
+            //Nueva calificación
+            else
+            {
+                visu = new Visualizacion
+                {
+                    ActorIdActor = Idusuario,
+                    RecetaIdReceta = IdReceta,
+                    RecetaActorIdActor = (int)IdCreador,
+                    Calificacion = Gustar
+                };
+                _contextoBD.Add(visu);
+            }
+            _contextoBD.SaveChanges();
+        }
     }
 }

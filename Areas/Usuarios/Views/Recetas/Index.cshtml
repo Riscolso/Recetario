@@ -1,5 +1,5 @@
 ﻿
-@model Recetario.Models.RecetaDTO
+@model Recetario.Areas.Usuarios.Models.RecetaModelo
 @using Microsoft.AspNetCore.Identity
 @using Recetario.BaseDatos
 @using System.Security.Claims;
@@ -8,34 +8,64 @@
 @inject UserManager<Actor> UserManager
 
 @{
-    ViewData["Title"] = Model.Nombre;
+    ViewData["Title"] = Model.Receta.Nombre;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>@Model.Nombre</h1>
-@if (UserManager.GetUserId(User).Equals(Model.usuario.IdUsuario.ToString()))
+<h1>@Model.Receta.Nombre</h1>
+@{  bool esCreador = false;
+    if (User.Identity.IsAuthenticated) {
+        esCreador = UserManager.GetUserId(User).Equals(Model.Receta.usuario.IdUsuario.ToString());
+    }
+}
+@if (esCreador)
 {
     @:
-    <a class="nav-link text-dark" asp-route-id="@Model.IdReceta" asp-area="Usuarios" asp-controller="Recetas" asp-action="Editar" title="Editar Receta">Editar</a>
-    <a class="nav-link text-dark" asp-route-id="@Model.IdReceta" asp-area="Usuarios" asp-controller="Recetas" asp-action="Delete" title="Eliminar Receta">Eliminar</a>
+    <a class="nav-link text-dark" asp-route-id="@Model.Receta.IdReceta" asp-area="Usuarios" asp-controller="Recetas" asp-action="Editar" title="Editar Receta">Editar</a>
+    <a class="nav-link text-dark" asp-route-id="@Model.Receta.IdReceta" asp-area="Usuarios" asp-controller="Recetas" asp-action="Delete" title="Eliminar Receta">Eliminar</a>
     <br />
 }
 <hr />
 <div class="row">
     <div class="col-md-4">
+        <div class="form-group">
+            @if (!esCreador) {
+                @: Califica esta receta:
+            <a asp-route-IdReceta="@Model.Receta.IdReceta" asp-route-valor="true" asp-area="Usuarios" asp-controller="Recetas" asp-action="CalificarReceta" title="Calificar">
+                <img src="@Url.Content(Model.ManoArriba)" alt="Image" style="height:50px;width:50px;" />
+            </a>
+            <a asp-route-IdReceta="@Model.Receta.IdReceta" asp-route-valor="false" asp-area="Usuarios" asp-controller="Recetas" asp-action="CalificarReceta" title="Calificar">
+                <img src="@Url.Content(Model.ManoAbajo)" alt="Image" style="height:50px;width:50px;" />
+                </a>
+            }
+        </div>
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
-            Tiempo de preparación: @Model.TiempoPrep
+            Tiempo de preparación: @Model.Receta.TiempoPrep
         </div>
         <div class="form-group">
-            Ingredientes @Model.Ingredientes
+            Ingredientes @Model.Receta.Ingredientes
         </div>
+        @if (!esCreador)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                @:
+                <div class="form-group">
+                    <a class="nav-link text-dark" onclick="alert('Se enviará un email con los ingredientes a @UserManager.FindByNameAsync(UserManager.GetUserName(User)).Result.Email')" asp-route-IdReceta="@Model.Receta.IdReceta" asp-area="Usuarios" asp-controller="Recetas" asp-action="EnviarIngredientes" title="Enviar">Enviar Ingredientes a Email</a>
+                </div>
+            }
+            else
+            {
+                @:
+    <div class="form-group">
+        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Ingresa para Enviar Ingredientes a tu Email</a>
+    </div>
+            }
+        }
         <div class="form-group">
-            <a class="nav-link text-dark" onclick="alert('Se enviará un email con los ingredientes a @UserManager.FindByNameAsync(UserManager.GetUserName(User)).Result.Email')" asp-route-IdReceta="@Model.IdReceta" asp-area="Usuarios" asp-controller="Recetas" asp-action="EnviarIngredientes" title="Enviar">Enviar Ingredientes a Email</a>
+            Etiquetas: @Model.Receta.Etiquetas
         </div>
-        <div class="form-group">
-            Etiquetas: @Model.Etiquetas
-        </div>
-        @foreach (var paso in Model.Pasos)
+        @foreach (var paso in Model.Receta.Pasos)
         {
             @:Paso @paso.NoPaso <br />
             <table>

@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Usuarios\Models\" />
+    <Folder Include="wwwroot\img\" />
   </ItemGroup>
 
 

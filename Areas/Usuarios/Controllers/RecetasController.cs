@@ -10,6 +10,8 @@ using Recetario.Areas.Administradores.Servicios;
 using Recetario.Models;
 using Recetario.BaseDatos;
 using Recetario.Servicios;
+using Recetario.Areas.Usuarios.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Recetario.Areas.Usuarios
 {
@@ -31,12 +33,14 @@ namespace Recetario.Areas.Usuarios
             _serviciosemail = serviciosemail;
         }
 
-        // GET: Usuarios/Recetas
+        [AllowAnonymous]
         public IActionResult Index(int id)
         {
             // TODO: Agregar links a las etiquetas/ingredientes para reedireccionar a búsqueda con dichas 
             //Caraterísticas
-            return View(_servicioreceta.Obtener(id));
+            return View(new RecetaModelo {
+                Receta = _servicioreceta.Obtener(id),
+            });
         }
 
 
@@ -160,11 +164,12 @@ namespace Recetario.Areas.Usuarios
             int pageSize = 4;
             return View(Paginacion<RecetaDTO>.Create(recetas, noPagina ?? 1, pageSize));
         }
-
+        [AllowAnonymous]
         public IActionResult EnviarIngredientes(int IdReceta)
         {
             try
             {
+                //TODO: Verificar que exista el correo a enviar
                 _serviciosemail.EnviarEmailIngredientes(_userManager.GetUserAsync(User).Result.Email, IdReceta);
             }
             catch
@@ -172,6 +177,28 @@ namespace Recetario.Areas.Usuarios
                 return NotFound();
             }
             return RedirectToAction("Index", new { id = IdReceta });
+        }
+        [AllowAnonymous]
+        public IActionResult CalificarReceta(int IdReceta, bool valor)
+        {
+            //Valor: false - No gusta    true - Gusta
+            //Verificar que el usuario haya iniciado sesión
+            if (User.Identity.IsAuthenticated)
+            {
+                try
+                {
+                    _servicioreceta.Calificar(IdReceta, valor, Convert.ToInt32(_userManager.GetUserId(User)));
+                    return RedirectToAction("Index", new { id = IdReceta });
+                }
+                catch
+                {
+                    //En caso de que algo haya salido mal al registrar la calificación
+                    return NotFound();
+                }
+            }
+            //En caso de que no lo esté mandarlo a la página de login
+            else return RedirectToPage("/Account/Login", new { Area = "Identity" });
+            
         }
     }
 }

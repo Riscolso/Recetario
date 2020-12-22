@@ -45,6 +45,7 @@ namespace Recetario.Controllers
         //Acción para reedireccionar deacuerdo al tipo de usuario que esta logeado
         public ActionResult LoginRoute(string returnUrl)  //this method is new
         {
+            //TODO: Usar returnURL para mandar a la página desde la cual se inició el login
             var rol = User.Claims.FirstOrDefault(o => o.Type == ClaimTypes.Role).Value;
             //Bueno, aquí se ve un poco obvio que pasa y así 
             if (rol.Equals("SuperAdministrador"))
