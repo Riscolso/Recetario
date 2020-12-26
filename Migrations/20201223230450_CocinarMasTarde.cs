@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Recetario.Migrations
 {
-    public partial class CambioPaso : Migration
+    public partial class CocinarMasTarde : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -222,7 +222,10 @@ namespace Recetario.Migrations
                 {
                     Receta_idReceta = table.Column<int>(type: "int(11)", nullable: false),
                     Receta_Actor_idActor = table.Column<int>(type: "int(11)", nullable: false),
-                    Ingrediente_idIngrediente = table.Column<int>(type: "int(11)", nullable: false)
+                    Ingrediente_idIngrediente = table.Column<int>(type: "int(11)", nullable: false),
+                    IngredienteCrudo = table.Column<string>(type: "varchar(45)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8")
+                        .Annotation("MySql:Collation", "utf8_general_ci")
                 },
                 constraints: table =>
                 {
@@ -297,7 +300,8 @@ namespace Recetario.Migrations
                     Receta_idReceta = table.Column<int>(type: "int(11)", nullable: false),
                     Receta_Actor_idActor = table.Column<int>(type: "int(11)", nullable: false),
                     ProcentajeCompl = table.Column<int>(type: "int(11)", nullable: true),
-                    Calificacion = table.Column<bool>(nullable: true)
+                    Calificacion = table.Column<bool>(nullable: true),
+                    PorCocinar = table.Column<sbyte>(type: "tinyint(4)", nullable: false)
                 },
                 constraints: table =>
                 {

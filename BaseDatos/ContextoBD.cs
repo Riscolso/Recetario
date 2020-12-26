@@ -274,6 +274,8 @@ namespace Recetario.BaseDatos
                     .HasColumnName("Receta_idReceta")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.PorCocinar).HasColumnType("tinyint(4)");
+
                 entity.Property(e => e.RecetaActorIdActor)
                     .HasColumnName("Receta_Actor_idActor")
                     .HasColumnType("int(11)");

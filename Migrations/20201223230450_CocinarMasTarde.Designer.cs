@@ -9,8 +9,8 @@ using Recetario.BaseDatos;
 namespace Recetario.Migrations
 {
     [DbContext(typeof(ContextoBD))]
-    [Migration("20201201002130_IngredienteCrudo")]
-    partial class IngredienteCrudo
+    [Migration("20201223230450_CocinarMasTarde")]
+    partial class CocinarMasTarde
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -403,6 +403,9 @@ namespace Recetario.Migrations
 
                     b.Property<bool?>("Calificacion")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<sbyte>("PorCocinar")
+                        .HasColumnType("tinyint(4)");
 
                     b.Property<int?>("ProcentajeCompl")
                         .HasColumnType("int(11)");

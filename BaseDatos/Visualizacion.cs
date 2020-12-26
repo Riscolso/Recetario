@@ -10,6 +10,7 @@ namespace Recetario.BaseDatos
         public int RecetaActorIdActor { get; set; }
         public int? ProcentajeCompl { get; set; }
         public bool? Calificacion { get; set; }
+        public bool PorCocinar { get; set; }
 
         public virtual Actor ActorIdActorNavigation { get; set; }
         public virtual Receta Receta { get; set; }

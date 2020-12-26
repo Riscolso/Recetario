@@ -402,6 +402,9 @@ namespace Recetario.Migrations
                     b.Property<bool?>("Calificacion")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<sbyte>("PorCocinar")
+                        .HasColumnType("tinyint(4)");
+
                     b.Property<int?>("ProcentajeCompl")
                         .HasColumnType("int(11)");
 

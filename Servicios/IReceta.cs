@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Recetario.Models;
-using Recetario.BaseDatos;
+using Recetario.Areas.Usuarios.Models;
 
 namespace Recetario.Areas.Administradores.Servicios
 {
@@ -20,6 +20,7 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <param name="Id">ID de VReceta</param>
         /// <returns>Clase VReceta</returns>
         RecetaDTO Obtener(int Id);
+        RecetaModelo Obtener(int IdReceta, int IdUsuario);
 
         /// <summary>
         /// Obtiene la lista de VReceta disponibles en un repositorio.
@@ -46,5 +47,6 @@ namespace Recetario.Areas.Administradores.Servicios
 
         int Editar(RecetaDTO recetadto);
         void Calificar(int IdReceta, bool Gustar, int Idusuario);
+        void ListarCocinarDespues(int IdReceta, bool Estado, int IdUsuario);
     }
 }

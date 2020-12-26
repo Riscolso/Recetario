@@ -36,11 +36,10 @@ namespace Recetario.Areas.Usuarios
         [AllowAnonymous]
         public IActionResult Index(int id)
         {
-            // TODO: Agregar links a las etiquetas/ingredientes para reedireccionar a búsqueda con dichas 
-            //Caraterísticas
-            return View(new RecetaModelo {
-                Receta = _servicioreceta.Obtener(id),
-            });
+            // TODO: Agregar links a las etiquetas/ingredientes para reedireccionar a búsqueda con dichas
+            //Si el usuario esta logeado, regresar una vista con detalles de las interacciones que ha tenido el usuario con la receta
+            //Si no, el Convert enviará un 0 al obtener receta y creará una visualización default
+            return View(_servicioreceta.Obtener(id, Convert.ToInt32(_userManager.GetUserId(User))));
         }
 
 
@@ -187,7 +186,7 @@ namespace Recetario.Areas.Usuarios
             {
                 try
                 {
-                    _servicioreceta.Calificar(IdReceta, valor, Convert.ToInt32(_userManager.GetUserId(User)));
+                    _servicioreceta.ListarCocinarDespues(IdReceta, valor, Convert.ToInt32(_userManager.GetUserId(User)));
                     return RedirectToAction("Index", new { id = IdReceta });
                 }
                 catch
@@ -199,6 +198,27 @@ namespace Recetario.Areas.Usuarios
             //En caso de que no lo esté mandarlo a la página de login
             else return RedirectToPage("/Account/Login", new { Area = "Identity" });
             
+        }
+        public IActionResult CocinarDespues(int IdReceta, bool valor)
+        {
+            //Valor false - No esta agregada en la lista
+            //      true - Esta en la lista
+
+            if (User.Identity.IsAuthenticated)
+            {
+                try
+                {
+                    _servicioreceta.ListarCocinarDespues(IdReceta, valor, Convert.ToInt32(_userManager.GetUserId(User)));
+                    return RedirectToAction("Index", new { id = IdReceta });
+                }
+                catch
+                {
+                    //En caso de que algo haya salido mal al registrar la calificación
+                    return NotFound();
+                }
+            }
+            //En caso de que no lo esté mandarlo a la página de login
+            else return RedirectToPage("/Account/Login", new { Area = "Identity" });
         }
     }
 }

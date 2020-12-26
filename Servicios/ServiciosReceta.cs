@@ -8,6 +8,7 @@ using Recetario.BaseDatos;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Recetario.Areas.Usuarios.Models;
 
 namespace Recetario.Areas.Administradores.Servicios
 {
@@ -376,6 +377,73 @@ namespace Recetario.Areas.Administradores.Servicios
                 _contextoBD.Add(visu);
             }
             _contextoBD.SaveChanges();
+        }
+        public void ListarCocinarDespues(int IdReceta, bool Estado, int IdUsuario)
+        {
+            //Obtener quién creó la receta
+            int? IdCreador = _contextoBD.Receta
+                .FirstOrDefault(r => r.IdReceta == IdReceta)
+                .ActorIdActor;
+
+            //Si es IdCreador es null, significa que no existe
+            if (IdCreador == null) throw new NotImplementedException("La Receta o Usuario no existen =(");
+            //Checar si ya hay una calificación de esta receta por este usuario
+            var visu = _contextoBD.Visualizacion
+                .FirstOrDefault(v => v.ActorIdActor == IdUsuario && v.RecetaIdReceta == IdReceta && v.RecetaActorIdActor == IdCreador);
+            //Si ya se ha calificado antes 
+            if (visu != null)
+            {
+                visu.PorCocinar = Estado;
+                _contextoBD.Update(visu);
+
+            }
+            //Nueva calificación
+            else
+            {
+                visu = new Visualizacion
+                {
+                    ActorIdActor = IdUsuario,
+                    RecetaIdReceta = IdReceta,
+                    RecetaActorIdActor = (int)IdCreador,
+                    PorCocinar = Estado
+                };
+                _contextoBD.Add(visu);
+            }
+            _contextoBD.SaveChanges();
+        }
+
+        public RecetaModelo Obtener(int IdReceta, int IdUsuario)
+        {
+            //Obtener receta 
+            var receta = Obtener(IdReceta);
+            if (receta != null)
+            {
+                Visualizacion visualiza = null;
+                //Si el usuario es 0, significa que es uno anónimo
+                if (IdUsuario != 0)
+                {
+                    //Obtener visualización
+                    visualiza = _contextoBD.Visualizacion
+                    .FirstOrDefault(v => v.ActorIdActor == IdUsuario && v.RecetaIdReceta == IdReceta && v.RecetaActorIdActor == receta.usuario.IdUsuario);
+                }
+                //Si no existe solo se crea una
+                if (visualiza == null)
+                {
+                    visualiza = new Visualizacion()
+                    {
+                        ActorIdActor = (int)IdUsuario,
+                        RecetaIdReceta = receta.IdReceta,
+                        RecetaActorIdActor = receta.usuario.IdUsuario,
+                        PorCocinar = false
+                    };
+                }
+                return new RecetaModelo
+                {
+                    Receta = receta,
+                    Visualizar = visualiza
+                };
+            }
+            else throw new NotImplementedException("La receta no se encuentra en la BD");
         }
     }
 }

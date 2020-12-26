@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Recetario.Models;
+using Recetario.BaseDatos;
 
 namespace Recetario.Areas.Usuarios.Models
 {
@@ -27,5 +28,6 @@ namespace Recetario.Areas.Usuarios.Models
             }
 
         }
+        public Visualizacion Visualizar { get; set; }
     }
 }
