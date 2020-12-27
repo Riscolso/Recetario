@@ -1,15 +1,15 @@
-CREATE DATABASE  IF NOT EXISTS `recetario` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE  IF NOT EXISTS `recetario` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `recetario`;
--- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
 --
 -- Host: localhost    Database: recetario
 -- ------------------------------------------------------
--- Server version	5.7.19-log
+-- Server version	5.7.32-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -23,12 +23,12 @@ USE `recetario`;
 
 DROP TABLE IF EXISTS `__efmigrationshistory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `__efmigrationshistory` (
   `MigrationId` varchar(95) NOT NULL,
   `ProductVersion` varchar(32) NOT NULL,
   PRIMARY KEY (`MigrationId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +37,6 @@ CREATE TABLE `__efmigrationshistory` (
 
 LOCK TABLES `__efmigrationshistory` WRITE;
 /*!40000 ALTER TABLE `__efmigrationshistory` DISABLE KEYS */;
-INSERT INTO `__efmigrationshistory` VALUES ('20201109005253_Paso','3.1.3');
 /*!40000 ALTER TABLE `__efmigrationshistory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -47,7 +46,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `actor`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `actor` (
   `idActor` int(11) NOT NULL AUTO_INCREMENT,
   `UserName` varchar(256) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -64,13 +63,13 @@ CREATE TABLE `actor` (
   `LockoutEnd` datetime(6) DEFAULT NULL,
   `LockoutEnabled` tinyint(1) NOT NULL,
   `AccessFailedCount` int(11) NOT NULL,
-  `NombreActor` varchar(55) NOT NULL,
+  `NombreActor` varchar(55) CHARACTER SET utf8 NOT NULL,
   `FechaNac` date NOT NULL,
   `Tipo` int(11) NOT NULL,
   PRIMARY KEY (`idActor`),
   UNIQUE KEY `UserNameIndex` (`NormalizedUserName`),
   KEY `EmailIndex` (`NormalizedEmail`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -88,7 +87,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `aspnetroleclaims`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `aspnetroleclaims` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `RoleId` int(11) NOT NULL,
@@ -97,7 +96,7 @@ CREATE TABLE `aspnetroleclaims` (
   PRIMARY KEY (`Id`),
   KEY `IX_AspNetRoleClaims_RoleId` (`RoleId`),
   CONSTRAINT `FK_AspNetRoleClaims_AspNetRoles_RoleId` FOREIGN KEY (`RoleId`) REFERENCES `aspnetroles` (`Id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -115,7 +114,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `aspnetroles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `aspnetroles` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(256) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -123,7 +122,7 @@ CREATE TABLE `aspnetroles` (
   `ConcurrencyStamp` longtext CHARACTER SET utf8mb4,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `RoleNameIndex` (`NormalizedName`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -141,7 +140,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `aspnetuserclaims`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `aspnetuserclaims` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `UserId` int(11) NOT NULL,
@@ -150,7 +149,7 @@ CREATE TABLE `aspnetuserclaims` (
   PRIMARY KEY (`Id`),
   KEY `IX_AspNetUserClaims_UserId` (`UserId`),
   CONSTRAINT `FK_AspNetUserClaims_actor_UserId` FOREIGN KEY (`UserId`) REFERENCES `actor` (`idActor`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -168,7 +167,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `aspnetuserlogins`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `aspnetuserlogins` (
   `LoginProvider` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
   `ProviderKey` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
@@ -177,7 +176,7 @@ CREATE TABLE `aspnetuserlogins` (
   PRIMARY KEY (`LoginProvider`,`ProviderKey`),
   KEY `IX_AspNetUserLogins_UserId` (`UserId`),
   CONSTRAINT `FK_AspNetUserLogins_actor_UserId` FOREIGN KEY (`UserId`) REFERENCES `actor` (`idActor`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -195,7 +194,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `aspnetuserroles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `aspnetuserroles` (
   `UserId` int(11) NOT NULL,
   `RoleId` int(11) NOT NULL,
@@ -203,7 +202,7 @@ CREATE TABLE `aspnetuserroles` (
   KEY `IX_AspNetUserRoles_RoleId` (`RoleId`),
   CONSTRAINT `FK_AspNetUserRoles_AspNetRoles_RoleId` FOREIGN KEY (`RoleId`) REFERENCES `aspnetroles` (`Id`) ON DELETE CASCADE,
   CONSTRAINT `FK_AspNetUserRoles_actor_UserId` FOREIGN KEY (`UserId`) REFERENCES `actor` (`idActor`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -221,7 +220,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `aspnetusertokens`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `aspnetusertokens` (
   `UserId` int(11) NOT NULL,
   `LoginProvider` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
@@ -229,7 +228,7 @@ CREATE TABLE `aspnetusertokens` (
   `Value` longtext CHARACTER SET utf8mb4,
   PRIMARY KEY (`UserId`,`LoginProvider`,`Name`),
   CONSTRAINT `FK_AspNetUserTokens_actor_UserId` FOREIGN KEY (`UserId`) REFERENCES `actor` (`idActor`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -247,12 +246,12 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `etiqueta`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `etiqueta` (
   `idEtiqueta` int(11) NOT NULL AUTO_INCREMENT,
-  `Etiqueta` varchar(45) NOT NULL,
+  `Etiqueta` varchar(45) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`idEtiqueta`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -270,12 +269,12 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ingrediente`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ingrediente` (
   `idIngrediente` int(11) NOT NULL AUTO_INCREMENT,
-  `Nombre` varchar(45) NOT NULL,
+  `Nombre` varchar(45) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`idIngrediente`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -293,17 +292,18 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `lleva`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `lleva` (
   `Receta_idReceta` int(11) NOT NULL,
   `Receta_Actor_idActor` int(11) NOT NULL,
   `Ingrediente_idIngrediente` int(11) NOT NULL,
+  `IngredienteCrudo` varchar(45) CHARACTER SET utf8 NOT NULL DEFAULT '',
   PRIMARY KEY (`Receta_idReceta`,`Receta_Actor_idActor`,`Ingrediente_idIngrediente`),
   KEY `fk_Receta_has_Ingrediente_Ingrediente1_idx` (`Ingrediente_idIngrediente`),
   KEY `fk_Receta_has_Ingrediente_Receta1_idx` (`Receta_idReceta`,`Receta_Actor_idActor`),
   CONSTRAINT `fk_Receta_has_Ingrediente_Ingrediente1` FOREIGN KEY (`Ingrediente_idIngrediente`) REFERENCES `ingrediente` (`idIngrediente`),
-  CONSTRAINT `fk_Receta_has_Ingrediente_Receta1` FOREIGN KEY (`Receta_idReceta`, `Receta_Actor_idActor`) REFERENCES `receta` (`idReceta`, `Actor_idActor`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_Receta_has_Ingrediente_Receta1` FOREIGN KEY (`Receta_idReceta`, `Receta_Actor_idActor`) REFERENCES `receta` (`idReceta`, `Actor_idActor`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -321,18 +321,17 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `paso`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `paso` (
-  `IdPaso` int(11) NOT NULL AUTO_INCREMENT,
   `NoPaso` int(11) NOT NULL,
-  `Texto` varchar(600) DEFAULT NULL,
-  `TiempoTemporizador` int(11) DEFAULT NULL,
   `Receta_idReceta` int(11) NOT NULL,
   `Receta_Actor_idActor` int(11) NOT NULL,
-  PRIMARY KEY (`IdPaso`),
+  `Texto` varchar(600) CHARACTER SET utf8 DEFAULT NULL,
+  `TiempoTemporizador` int(11) DEFAULT NULL,
+  PRIMARY KEY (`NoPaso`,`Receta_idReceta`,`Receta_Actor_idActor`),
   KEY `fk_Paso_Receta1_idx` (`Receta_idReceta`,`Receta_Actor_idActor`),
-  CONSTRAINT `fk_Paso_Receta1` FOREIGN KEY (`Receta_idReceta`, `Receta_Actor_idActor`) REFERENCES `receta` (`idReceta`, `Actor_idActor`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_Paso_Receta1` FOREIGN KEY (`Receta_idReceta`, `Receta_Actor_idActor`) REFERENCES `receta` (`idReceta`, `Actor_idActor`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -350,17 +349,17 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `receta`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `receta` (
   `idReceta` int(11) NOT NULL AUTO_INCREMENT,
   `Actor_idActor` int(11) NOT NULL,
-  `Nombre` varchar(45) NOT NULL,
+  `Nombre` varchar(45) CHARACTER SET utf8 NOT NULL,
   `ProcentajePromedio` int(11) NOT NULL,
-  `TiempoPrep` varchar(10) NOT NULL,
+  `TiempoPrep` varchar(10) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`idReceta`,`Actor_idActor`),
   KEY `fk_Receta_Actor1_idx` (`Actor_idActor`),
   CONSTRAINT `fk_Receta_Actor1` FOREIGN KEY (`Actor_idActor`) REFERENCES `actor` (`idActor`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -378,7 +377,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `usa`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `usa` (
   `Receta_idReceta` int(11) NOT NULL,
   `Receta_Actor_idActor` int(11) NOT NULL,
@@ -387,8 +386,8 @@ CREATE TABLE `usa` (
   KEY `fk_Receta_has_Etiqueta_Etiqueta1_idx` (`Etiqueta_idEtiqueta`),
   KEY `fk_Receta_has_Etiqueta_Receta1_idx` (`Receta_idReceta`,`Receta_Actor_idActor`),
   CONSTRAINT `fk_Receta_has_Etiqueta_Etiqueta1` FOREIGN KEY (`Etiqueta_idEtiqueta`) REFERENCES `etiqueta` (`idEtiqueta`),
-  CONSTRAINT `fk_Receta_has_Etiqueta_Receta1` FOREIGN KEY (`Receta_idReceta`, `Receta_Actor_idActor`) REFERENCES `receta` (`idReceta`, `Actor_idActor`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_Receta_has_Etiqueta_Receta1` FOREIGN KEY (`Receta_idReceta`, `Receta_Actor_idActor`) REFERENCES `receta` (`idReceta`, `Actor_idActor`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -406,7 +405,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `visualizacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `visualizacion` (
   `Actor_idActor` int(11) NOT NULL,
   `Receta_idReceta` int(11) NOT NULL,
@@ -417,8 +416,8 @@ CREATE TABLE `visualizacion` (
   KEY `fk_Actor_has_Receta_Actor1_idx` (`Actor_idActor`),
   KEY `fk_Actor_has_Receta_Receta1_idx` (`Receta_idReceta`,`Receta_Actor_idActor`),
   CONSTRAINT `fk_Actor_has_Receta_Actor1` FOREIGN KEY (`Actor_idActor`) REFERENCES `actor` (`idActor`),
-  CONSTRAINT `fk_Actor_has_Receta_Receta1` FOREIGN KEY (`Receta_idReceta`, `Receta_Actor_idActor`) REFERENCES `receta` (`idReceta`, `Actor_idActor`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_Actor_has_Receta_Receta1` FOREIGN KEY (`Receta_idReceta`, `Receta_Actor_idActor`) REFERENCES `receta` (`idReceta`, `Actor_idActor`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -439,4 +438,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-08 18:55:42
+-- Dump completed on 2020-12-16 22:13:31
