@@ -8,35 +8,59 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Recetario.Areas.Administradores.Servicios;
 using Recetario.BaseDatos;
 using Recetario.Models;
 
 namespace Recetario.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<Actor> _userManager;
+        private readonly IReceta _serviciosreceta;
 
         public HomeController(ILogger<HomeController> logger,
-                            UserManager<Actor> userManager)
+                            UserManager<Actor> userManager,
+                            IReceta serviciosRece)
         {
             _logger = logger;
             _userManager = userManager;
+            _serviciosreceta = serviciosRece;
         }
-        //Permite que pueda ser llamado por
-        //un usuario sin autenticar
-        [AllowAnonymous]
-        public IActionResult Index()
+        public IActionResult Index(string cadenaBusqueda, int? noPagina, String filtroActual)
         {
-            return View();
+            //Se mete el filtro a ViewData para que permanezca aunque se cambie de páginas
+            ViewData["FiltroActual"] = cadenaBusqueda;
+
+            if (cadenaBusqueda != null)
+            {
+                noPagina = 1;
+            }
+            else
+            {
+                cadenaBusqueda = filtroActual;
+            }
+            ICollection<RecetaDTO> recetas;
+            //Si hay cadena de búsqueda
+            //En caso de que no haber ninguna búsqueda, muestro todo, TODO
+            if (!String.IsNullOrEmpty(cadenaBusqueda))
+            {
+                recetas = _serviciosreceta.BuscarFiltro(cadenaBusqueda);
+            }
+            else
+            {
+                recetas = _serviciosreceta.Obtener();
+            }
+            //Cantidad de Elementos a mostrar por página
+            int pageSize = 4;
+            return View(Paginacion<RecetaDTO>.Create(recetas, noPagina ?? 1, pageSize));
         }
-        [AllowAnonymous]
         public IActionResult InicioSesion()
         {
             return View();
         }
-        [AllowAnonymous]
         public IActionResult Registro()
         {
             return View();
