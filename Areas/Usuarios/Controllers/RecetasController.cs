@@ -199,6 +199,7 @@ namespace Recetario.Areas.Usuarios
             else return RedirectToPage("/Account/Login", new { Area = "Identity" });
             
         }
+        [AllowAnonymous]
         public IActionResult CocinarDespues(int IdReceta, bool valor)
         {
             //Valor false - No esta agregada en la lista
