@@ -69,7 +69,7 @@ CREATE TABLE `actor` (
   PRIMARY KEY (`idActor`),
   UNIQUE KEY `UserNameIndex` (`NormalizedUserName`),
   KEY `EmailIndex` (`NormalizedEmail`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -149,7 +149,7 @@ CREATE TABLE `aspnetuserclaims` (
   PRIMARY KEY (`Id`),
   KEY `IX_AspNetUserClaims_UserId` (`UserId`),
   CONSTRAINT `FK_AspNetUserClaims_actor_UserId` FOREIGN KEY (`UserId`) REFERENCES `actor` (`idActor`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -251,7 +251,7 @@ CREATE TABLE `etiqueta` (
   `idEtiqueta` int(11) NOT NULL AUTO_INCREMENT,
   `Etiqueta` varchar(45) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`idEtiqueta`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -274,7 +274,7 @@ CREATE TABLE `ingrediente` (
   `idIngrediente` int(11) NOT NULL AUTO_INCREMENT,
   `Nombre` varchar(45) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`idIngrediente`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -297,7 +297,7 @@ CREATE TABLE `lleva` (
   `Receta_idReceta` int(11) NOT NULL,
   `Receta_Actor_idActor` int(11) NOT NULL,
   `Ingrediente_idIngrediente` int(11) NOT NULL,
-  `IngredienteCrudo` varchar(45) CHARACTER SET utf8 NOT NULL DEFAULT '',
+  `IngredienteCrudo` varchar(45) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`Receta_idReceta`,`Receta_Actor_idActor`,`Ingrediente_idIngrediente`),
   KEY `fk_Receta_has_Ingrediente_Ingrediente1_idx` (`Ingrediente_idIngrediente`),
   KEY `fk_Receta_has_Ingrediente_Receta1_idx` (`Receta_idReceta`,`Receta_Actor_idActor`),
@@ -359,7 +359,7 @@ CREATE TABLE `receta` (
   PRIMARY KEY (`idReceta`,`Actor_idActor`),
   KEY `fk_Receta_Actor1_idx` (`Actor_idActor`),
   CONSTRAINT `fk_Receta_Actor1` FOREIGN KEY (`Actor_idActor`) REFERENCES `actor` (`idActor`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -412,6 +412,7 @@ CREATE TABLE `visualizacion` (
   `Receta_Actor_idActor` int(11) NOT NULL,
   `ProcentajeCompl` int(11) DEFAULT NULL,
   `Calificacion` tinyint(1) DEFAULT NULL,
+  `PorCocinar` tinyint(4) NOT NULL,
   PRIMARY KEY (`Actor_idActor`,`Receta_idReceta`,`Receta_Actor_idActor`),
   KEY `fk_Actor_has_Receta_Actor1_idx` (`Actor_idActor`),
   KEY `fk_Actor_has_Receta_Receta1_idx` (`Receta_idReceta`,`Receta_Actor_idActor`),
@@ -438,4 +439,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-16 22:13:31
+-- Dump completed on 2020-12-27 19:26:00
