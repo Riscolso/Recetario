@@ -11,7 +11,7 @@
     ViewData["Title"] = Model.Receta.Nombre;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>@Model.Receta.Nombre</h1>
+<h1>@Model.Receta.Nombre</h1><h6>Compartida Por @Model.Receta.usuario.Usuario</h6>
 @{  bool esCreador = false;
     if (User.Identity.IsAuthenticated) {
         esCreador = UserManager.GetUserId(User).Equals(Model.Receta.usuario.IdUsuario.ToString());

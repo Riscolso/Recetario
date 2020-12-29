@@ -445,5 +445,40 @@ namespace Recetario.Areas.Administradores.Servicios
             }
             else throw new NotImplementedException("La receta no se encuentra en la BD");
         }
+
+        public ICollection<RecetaDTO> ObtenerPendientes(int IdUsuario)
+        {
+            //No se regresan todos los valores de las recetas
+            //Solo los que se van a mostrar en la lista de pentientes
+            return _contextoBD.Visualizacion
+                .Where(v => v.PorCocinar && v.ActorIdActor == IdUsuario)
+                .Include(v => v.Receta)
+                .Select(v => new RecetaDTO
+                {
+                    IdReceta = v.Receta.IdReceta,
+                    Nombre = v.Receta.Nombre,
+                    TiempoPrep = v.Receta.TiempoPrep,
+                }
+                ).ToList();
+            throw new NotImplementedException();
+        }
+        public ICollection<RecetaDTO> ObtenerPendientes(int IdUsuario, string Filtro)
+        {
+            //No se regresan todos los valores de las recetas
+            //Solo los que se van a mostrar en la lista de pentientes
+            return _contextoBD.Visualizacion
+                .Include(v => v.Receta)
+                .Where(v => v.PorCocinar
+                    && v.ActorIdActor == IdUsuario
+                    && v.Receta.Nombre.ToLower().Contains(Filtro.ToLower()))
+                .Select(v => new RecetaDTO
+                {
+                    IdReceta = v.Receta.IdReceta,
+                    Nombre = v.Receta.Nombre,
+                    TiempoPrep = v.Receta.TiempoPrep,
+                }
+                ).ToList();
+            throw new NotImplementedException();
+        }
     }
 }
