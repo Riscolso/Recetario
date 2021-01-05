@@ -236,7 +236,7 @@ def normalizar(entrada: str or List[str], archivo: bool) -> List[List[str]]:
     listaPalabras = [get_clean_tokens(linea) for linea in listaPalabras]
     #print(listaPalabras[:50])
     #Eliminar stopwords
-    listaPalabras = [quitarStopWords(linea) for linea in listaPalabras]
+    #listaPalabras = [quitarStopWords(linea) for linea in listaPalabras]
     listaPalabras = [lematizeYPOSTAG(linea) for linea in listaPalabras]
     if not archivo:
         return listaPalabras[0]
@@ -252,7 +252,7 @@ def obtenerListaRenglones(entrada: str) -> List[List[str]]:
     return renglones
 
 if __name__ == '__main__':
-    ingrediente = "2 tazas de nopal"
+    ingrediente = "2 baka mitai picado en cubos"
 
 
     '''Generar o cargar los diccionarios que se van a usar'''
@@ -268,7 +268,7 @@ if __name__ == '__main__':
 
 
     #Crear diccionario de corpus
-    #CorpusNormalizado = normalizar('Corpus ingredientes.txt', True)
+    #CorpusNormalizado = normalizar('Corpus ingredientes 2.txt', True)
     #Salvar texto normalizado
     #salvarEstructura(CorpusNormalizado, 'LineasNorm')
     CorpusNormalizado = cargarEstructura('LineasNorm')
