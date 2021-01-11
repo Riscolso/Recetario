@@ -98,7 +98,7 @@ namespace Recetario.BaseDatos
 
             modelBuilder.Entity<Lleva>(entity =>
             {
-                entity.HasKey(e => new { e.RecetaIdReceta, e.RecetaActorIdActor, e.IngredienteIdIngrediente })
+                entity.HasKey(e => new { e.RecetaIdReceta, e.RecetaActorIdActor, e.IngredienteIdIngrediente, e.IngredienteCrudo })
                     .HasName("PRIMARY");
 
                 entity.ToTable("lleva");
@@ -120,7 +120,7 @@ namespace Recetario.BaseDatos
                 entity.Property(e => e.IngredienteCrudo)
                     .IsRequired()
                     .HasColumnName("IngredienteCrudo")
-                    .HasColumnType("varchar(45)")
+                    .HasColumnType("varchar(70)")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 

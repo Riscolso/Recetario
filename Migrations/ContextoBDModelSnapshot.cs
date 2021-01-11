@@ -276,13 +276,12 @@ namespace Recetario.Migrations
                         .HasColumnType("int(11)");
 
                     b.Property<string>("IngredienteCrudo")
-                        .IsRequired()
                         .HasColumnName("IngredienteCrudo")
-                        .HasColumnType("varchar(45)")
+                        .HasColumnType("varchar(70)")
                         .HasAnnotation("MySql:CharSet", "utf8")
                         .HasAnnotation("MySql:Collation", "utf8_general_ci");
 
-                    b.HasKey("RecetaIdReceta", "RecetaActorIdActor", "IngredienteIdIngrediente")
+                    b.HasKey("RecetaIdReceta", "RecetaActorIdActor", "IngredienteIdIngrediente", "IngredienteCrudo")
                         .HasName("PRIMARY");
 
                     b.HasIndex("IngredienteIdIngrediente")

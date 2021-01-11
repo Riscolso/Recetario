@@ -12,6 +12,8 @@ using Recetario.BaseDatos;
 using Recetario.Servicios;
 using Recetario.Areas.Usuarios.Models;
 using Microsoft.AspNetCore.Authorization;
+using IronPython.Hosting;
+using System.IO;
 
 namespace Recetario.Areas.Usuarios
 {
@@ -60,7 +62,9 @@ namespace Recetario.Areas.Usuarios
                 {
                     IdUsuario = Convert.ToInt32(_userManager.GetUserId(User))
                 };
-                int id = _servicioreceta.Agregar(receta);
+                //Analizar los ingredientes
+                var ingredientes = _servicioreceta.AnalizarIngredientes(receta.Ingredientes);
+                int id = _servicioreceta.Agregar(receta, ingredientes);
                 return RedirectToAction("Index", new { id = id });
             }
             return View(receta);

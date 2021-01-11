@@ -97,7 +97,7 @@ namespace Recetario
             //Ligar la clase ServiciosActor a la dependecia
             //TODO: Cambiar el namespace de los servicios de actor y receta
             services.AddScoped<IActor, ServiciosActor>();
-            services.AddScoped<IReceta, ServiciosReceta>();
+            services.AddTransient<IReceta, ServiciosReceta>();
             services.AddScoped<IEmail, ServiciosEmail>();
 
             //Servicios para autorización con políticas

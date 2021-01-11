@@ -13,7 +13,8 @@ namespace Recetario.Areas.Administradores.Servicios
     /// <see cref="RecetaDTO"/>
     public interface IReceta
     {
-        int Agregar(RecetaDTO receta);
+        int Agregar(RecetaDTO receta, (string Ingrediente, int Id)[] ingredientesID);
+        public (string Ingrediente, int Id)[] AnalizarIngredientes(string Listaingredientes);
         /// <summary>
         /// Con base a un ID dado, regresa la VReceta correspondiente
         /// </summary>
