@@ -167,7 +167,7 @@ namespace Recetario.Areas.Administradores.Servicios
         {
             //Separar los ingredientes
             var ingredientes = Listaingredientes.Split('.');
-            var entidadesIngre = new EntityEntry<Ingrediente>[ingredientes.Length];
+            var entidadesIngre = new List<EntityEntry<Ingrediente>>();
             //Una lista auxiliar para guardar los ingredientes y sus ID
             (string Ingrediente, int Id)[] ingredientesID = new (string Ingre, int valor)[ingredientes.Length];
             for (int i = 0; i < ingredientes.Length; i++)
@@ -177,14 +177,16 @@ namespace Recetario.Areas.Administradores.Servicios
                 //En caso de ser plural, pasar a singular
                 ingrediente = NLP.Singular(ingrediente);
                 var aux = _contextoBD.Ingrediente.AsNoTracking().FirstOrDefault(ing => ing.Nombre == ingrediente);
+                var aux2 = entidadesIngre.FirstOrDefault(a => a.Entity.Nombre == ingrediente);
                 //Agregar el ingrediente a la lista local
                 // El Id = -1 namás es temporal
                 ingredientesID[i] = (ingrediente, -1);
                 //Checar si existe el ingrediente en la BD
-                if (aux == null)
+                //En caso no estar en la BD y que tampoco exista un ingrediente igual en la receta
+                if (aux == null && aux2 == null)
                 {
                     //Si no existe, se agrega y se guardan los cambios
-                    entidadesIngre[i] = _contextoBD.Ingrediente.Add(new Ingrediente { Nombre = ingrediente });
+                    entidadesIngre.Add(_contextoBD.Ingrediente.Add(new Ingrediente { Nombre = ingrediente }));
                 }
             }
             _contextoBD.SaveChanges();

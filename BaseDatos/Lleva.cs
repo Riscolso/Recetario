@@ -5,6 +5,7 @@ namespace Recetario.BaseDatos
 {
     public partial class Lleva
     {
+        public int IdLleva { get; set; }
         public int RecetaIdReceta { get; set; }
         public int RecetaActorIdActor { get; set; }
         public int IngredienteIdIngrediente { get; set; }

@@ -98,10 +98,14 @@ namespace Recetario.BaseDatos
 
             modelBuilder.Entity<Lleva>(entity =>
             {
-                entity.HasKey(e => new { e.RecetaIdReceta, e.RecetaActorIdActor, e.IngredienteIdIngrediente, e.IngredienteCrudo })
+                entity.HasKey(e => e.IdLleva)
                     .HasName("PRIMARY");
 
                 entity.ToTable("lleva");
+
+                entity.Property(e => e.IdLleva)
+                    .HasColumnName("idLleva")
+                    .HasColumnType("int(11)");
 
                 entity.HasIndex(e => e.IngredienteIdIngrediente)
                     .HasName("fk_Receta_has_Ingrediente_Ingrediente1_idx");
