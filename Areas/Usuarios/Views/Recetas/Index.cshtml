@@ -58,7 +58,7 @@
                 Tiempo de preparación: @Model.Receta.TiempoPrep
             </div>
             <div class="form-group">
-                Ingredientes:<br/> @Model.Receta.Ingredientes
+                Ingredientes:<br/> <label style="white-space: pre-wrap">@Model.Receta.Ingredientes</label>
             </div>
             @if (!esCreador)
             {

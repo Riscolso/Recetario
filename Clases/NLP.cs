@@ -199,9 +199,9 @@ namespace Recetario.Clases
         public static string Singular(string palabra)
         {
             //Minimizar palabra
-            palabra.ToLower();
+            palabra = palabra.ToLower();
             //Limpiar espacios
-            palabra.Trim();
+            palabra = palabra.Trim();
             //En caso de ser singular de palabra terminada con Z
             if (palabra.EndsWith("ces"))
             {

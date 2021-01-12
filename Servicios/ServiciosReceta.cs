@@ -114,7 +114,7 @@ namespace Recetario.Areas.Administradores.Servicios
                     //Traer todas las etiquetas de la BD e irlas pegando con un espacio
                     Etiquetas = string.Join(", ", r.Usa.Select(u => u.EtiquetaIdEtiquetaNavigation.Etiqueta1)),
                     //Lo mimsmo para los ingredientes
-                    Ingredientes = string.Join(", ", r.Lleva.Select(l => l.IngredienteCrudo)),
+                    Ingredientes = "- " + string.Join("\n- ", r.Lleva.Select(l => l.IngredienteCrudo)),
                     Pasos = r.Paso.Select(p => new PasoDTO
                     {
                         NoPaso = p.NoPaso,
@@ -189,6 +189,7 @@ namespace Recetario.Areas.Administradores.Servicios
                     entidadesIngre.Add(_contextoBD.Ingrediente.Add(new Ingrediente { Nombre = ingrediente }));
                 }
             }
+            //Se hace tanta maraña para evitar que se use varias veces SaveChanges y sea más óptimo xD
             _contextoBD.SaveChanges();
             //Obtener los IDs de los ingredientes respecto a la BD
             for (int i = 0; i < ingredientesID.Length; i++)
@@ -205,10 +206,56 @@ namespace Recetario.Areas.Administradores.Servicios
             return ingredientesID;
         }
 
-        public int Agregar(RecetaDTO recetadto, (string Ingrediente, int Id)[] ingredientesID)
+        public (string Etiqueta, int Id)[] AnalizarEtiquetas(string ListaEtiquetas)
         {
-            List<Lleva> l = new List<Lleva>();
+            //Separar las etiquetas
+            var etiquetas = ListaEtiquetas.Split('.');
+            var entidadesIngre = new List<EntityEntry<Etiqueta>>();
+            for (int i = 0; i < etiquetas.Length; i++)
+            {
+                etiquetas[i] = NLP.Singular(etiquetas[i].Trim());
+            }
+            //Evitar etiquetas repetidas
+            etiquetas = etiquetas.Distinct().ToArray();
+            //Una lista auxiliar para guardar los ingredientes y sus ID
+            (string Etiqueta, int Id)[] etiquetasID = new (string Etiqueta, int valor)[etiquetas.Length];
+            for (int i = 0; i < etiquetas.Length; i++)
+            {
+                var etiqueta = etiquetas[i];
+                var aux = _contextoBD.Etiqueta.AsNoTracking().FirstOrDefault(e => e.Etiqueta1 == etiqueta);
+                //Agregar el ingrediente a la lista local
+                // El Id = -1 namás es temporal
+                etiquetasID[i] = (etiqueta, -1);
+                //Checar si existe la etiqueta en la BD
+                if (aux == null)
+                {
+                    //Si no existe, se agrega y se guardan los cambios
+                    entidadesIngre.Add(_contextoBD.Etiqueta.Add(new Etiqueta { Etiqueta1 = etiqueta }));
+                }
+            }
+            _contextoBD.SaveChanges();
+            //Obtener los IDs de las etiquetas respecto a la BD
+            for (int i = 0; i < etiquetasID.Length; i++)
+            {
+                //En caso de que el ingrediente, ya exista en la BD
+                if (etiquetasID[i].Id == -1)
+                {
+                    etiquetasID[i].Id = _contextoBD.Etiqueta
+                    .AsNoTracking().FirstOrDefault(e => e.Etiqueta1 == etiquetasID[i].Etiqueta).IdEtiqueta;
+                }
+                //Si no, cargamos su ID y evitamos consultas extras
+                else
+                    etiquetasID[i].Id = entidadesIngre[i].Entity.IdEtiqueta;
+            }
+            return etiquetasID;
+        }
+
+        public int Agregar(RecetaDTO recetadto)
+        {
+            /*-----------------------INGREDIENTES-----------------*/
             var ingredientes = recetadto.Ingredientes.Split('.');
+            var ingredientesID = AnalizarIngredientes(recetadto.Ingredientes);
+            List<Lleva> l = new List<Lleva>();
             for (int i = 0; i < ingredientesID.Length; i++)
             {
                 l.Add(new Lleva
@@ -221,15 +268,28 @@ namespace Recetario.Areas.Administradores.Servicios
                     RecetaActorIdActor = recetadto.usuario.IdUsuario,
                 });
             }
-            /*------Código para Pasos------*/
-            //Prepara el objeto
+            /*-------------------------ETIQUETAS-------------------*/
+            var etiquetas = recetadto.Etiquetas.Split('.');
+            var etiquetasID = AnalizarEtiquetas(recetadto.Etiquetas.Trim());
+            var u = new List<Usa>();
+            for (int i = 0; i < etiquetasID.Length; i++)
+            {
+                u.Add(new Usa
+                {
+                    EtiquetaIdEtiqueta = etiquetasID[i].Id,
+                    //Creo que esto esta demás, pero me da hueva averiguarlo
+                    //TODO: Te lo encargo Ricardo del futuro
+                    RecetaActorIdActor = recetadto.usuario.IdUsuario,
+                });
+            }
+            /*---------------------------PASOS---------------------*/
             var pasos = new List<Paso>();
-            /*recetadto.Pasos.ForEach(p => pasos.Add(new Paso
+            recetadto.Pasos.ForEach(p => pasos.Add(new Paso
             {
                 NoPaso = p.NoPaso,
-                Texto = p.Texto,
+                Texto = p.Texto.Trim(),
                 TiempoTemporizador = DeStringAMinutos(p.TiempoTemporizador)
-            }));*/
+            }));
 
             //Agregar el objeto de receta con las etiquetas e ingredientes
             var receta = new Receta
@@ -237,7 +297,7 @@ namespace Recetario.Areas.Administradores.Servicios
                 ActorIdActor = recetadto.usuario.IdUsuario,
                 Nombre = recetadto.Nombre.Trim(),
                 TiempoPrep = recetadto.TiempoPrep,
-                Usa = new List<Usa>(),
+                Usa = u,
                 Lleva = l,
                 Paso = pasos
             };

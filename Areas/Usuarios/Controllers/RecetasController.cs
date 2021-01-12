@@ -62,9 +62,7 @@ namespace Recetario.Areas.Usuarios
                 {
                     IdUsuario = Convert.ToInt32(_userManager.GetUserId(User))
                 };
-                //Analizar los ingredientes
-                var ingredientes = _servicioreceta.AnalizarIngredientes(receta.Ingredientes);
-                int id = _servicioreceta.Agregar(receta, ingredientes);
+                int id = _servicioreceta.Agregar(receta);
                 return RedirectToAction("Index", new { id = id });
             }
             return View(receta);
