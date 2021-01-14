@@ -92,7 +92,7 @@ namespace Recetario.Areas.Administradores.Servicios
         }
 
         /// <inheritdoc/>
-        public RecetaDTO Obtener(int Id)
+        public RecetaDTO Obtener(int Id, bool formatoEdicion = false)
         {
             var aux = _contextoBD.Receta
                 .Include(r => r.ActorIdActorNavigation)
@@ -122,6 +122,12 @@ namespace Recetario.Areas.Administradores.Servicios
                         TiempoTemporizador = DeMinutosAString(p.TiempoTemporizador)
                     }).ToList()
                 }).FirstOrDefault(r => r.IdReceta == Id);
+            if (formatoEdicion)
+            {
+                aux.Ingredientes = aux.Ingredientes.Remove(0, 2);
+                aux.Ingredientes = aux.Ingredientes.Replace("\n-", ". ");
+                aux.Etiquetas = aux.Etiquetas.Replace(", ", ". ");
+            }
             return aux;
         }
 
@@ -351,8 +357,40 @@ namespace Recetario.Areas.Administradores.Servicios
                 .SingleOrDefault(r => r.IdReceta == recetadto.IdReceta);
             //Verificar que exista
             if (receta == null) throw new NotImplementedException("No existe el objeto en la BD");
+            //Actualizar la etiquetas
+            
+            var ingredientes = recetadto.Ingredientes.Split('.');
+            var ingredientesID = AnalizarIngredientes(recetadto.Ingredientes);
+            //Solo crea la lista de 0 otra vez
+            //Se puede optimizar, pero está es la forma más rápida y no queda mucho para el Jefe final
+            //TODO: Si se quito una etiqueta o un igrediente en la edición, borrar la relación en la BD
+            List<Lleva> l = new List<Lleva>();
+            for (int i = 0; i < ingredientesID.Length; i++)
+            {
+                l.Add(new Lleva
+                {
+                    IngredienteIdIngrediente = ingredientesID[i].Id,
+                    IngredienteCrudo = ingredientes[i].Trim(),
+                    RecetaActorIdActor = recetadto.usuario.IdUsuario,
+                });
+            }
+            var etiquetas = recetadto.Etiquetas.Split('.');
+            var etiquetasID = AnalizarEtiquetas(recetadto.Etiquetas.Trim());
+            var u = new List<Usa>();
+            for (int i = 0; i < etiquetasID.Length; i++)
+            {
+                u.Add(new Usa
+                {
+                    EtiquetaIdEtiqueta = etiquetasID[i].Id,
+                    //Creo que esto esta demás, pero me da hueva averiguarlo
+                    //TODO: Te lo encargo Ricardo del futuro
+                    RecetaActorIdActor = recetadto.usuario.IdUsuario,
+                });
+            }
+
             //Realizar los cambios
-            //TODO: Agregar lo de editar etiquetas, hacer lo mismo que en crear
+            receta.Lleva = l;
+            receta.Usa = u;
             receta.Nombre = recetadto.Nombre;
             receta.ProcentajePromedio = recetadto.ProcentajePromedio;
             receta.TiempoPrep = recetadto.TiempoPrep;

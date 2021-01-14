@@ -19,7 +19,7 @@ namespace Recetario.Areas.Administradores.Servicios
         /// </summary>
         /// <param name="Id">ID de VReceta</param>
         /// <returns>Clase VReceta</returns>
-        RecetaDTO Obtener(int Id);
+        RecetaDTO Obtener(int Id, bool formatoEdicion = false);
         RecetaModelo Obtener(int IdReceta, int IdUsuario);
 
         /// <summary>

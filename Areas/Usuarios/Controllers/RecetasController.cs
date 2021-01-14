@@ -77,7 +77,7 @@ namespace Recetario.Areas.Usuarios
             //Checar que este usuario sea el creador (Dios, obviamente)
             //Obtener el actor logeado
             var actor = await _userManager.GetUserAsync(User);
-            var receta = _servicioreceta.Obtener((int)id);
+            var receta = _servicioreceta.Obtener((int)id, true);
             //En caso de ser el mismo que la creó, dejar hacer lo que quiera con esta
             if (actor.Id == receta.usuario.IdUsuario)
             {
