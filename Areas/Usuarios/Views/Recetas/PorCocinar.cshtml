@@ -1,0 +1,64 @@
+﻿@model Paginacion<Recetario.Models.RecetaDTO>
+
+@{
+    ViewData["Title"] = "Recetas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Recetas Pendientes</h1>
+
+<form asp-action="PorCocinar" method="get">
+    Buscar: <input type="text" value="@ViewData["FiltroActual"]" name="cadenaBusqueda" />&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="submit" value="Buscar" class="btn btn-primary" />&nbsp;&nbsp;&nbsp;&nbsp;
+    <a asp-action="PorCocinar">Ver todas</a>
+    |
+    <br />
+    <br />
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ToList()[0].Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ToList()[0].TiempoPrep)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TiempoPrep)
+                </td>
+                <td>
+                    <a asp-area="Usuarios" asp-controller="Recetas" asp-action="Index" asp-route-id="@item.IdReceta">Ver Receta</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-noPagina="@(Model.PageIndex - 1)"
+   asp-route-filtroActual="@ViewData["FiltroActual"]"
+   class="btn btn-default @prevDisabled">
+    Anterior
+</a>
+<a asp-action="Index"
+   asp-route-noPagina="@(Model.PageIndex + 1)"
+   asp-route-filtroActual="@ViewData["FiltroActual"]"
+   class="btn btn-default @nextDisabled">
+    Siguiente
+</a>

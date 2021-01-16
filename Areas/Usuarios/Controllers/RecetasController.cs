@@ -12,6 +12,8 @@ using Recetario.BaseDatos;
 using Recetario.Servicios;
 using Recetario.Areas.Usuarios.Models;
 using Microsoft.AspNetCore.Authorization;
+using IronPython.Hosting;
+using System.IO;
 
 namespace Recetario.Areas.Usuarios
 {
@@ -163,6 +165,34 @@ namespace Recetario.Areas.Usuarios
             int pageSize = 4;
             return View(Paginacion<RecetaDTO>.Create(recetas, noPagina ?? 1, pageSize));
         }
+        public IActionResult PorCocinar(string cadenaBusqueda, int? noPagina, String filtroActual)
+        {
+            //Se mete el filtro a ViewData para que permanezca aunque se cambie de páginas
+            ViewData["FiltroActual"] = cadenaBusqueda;
+
+            if (cadenaBusqueda != null)
+            {
+                noPagina = 1;
+            }
+            else
+            {
+                cadenaBusqueda = filtroActual;
+            }
+            ICollection<RecetaDTO> recetas;
+            //Si hay cadena de búsqueda
+            //En caso de que no haber ninguna búsqueda, muestro todo, TODO
+            if (!String.IsNullOrEmpty(cadenaBusqueda))
+            {
+                recetas = _servicioreceta.ObtenerPendientes(Convert.ToInt32(_userManager.GetUserId(User)), cadenaBusqueda);
+            }
+            else
+            {
+                recetas = _servicioreceta.ObtenerPendientes(_userManager.GetUserAsync(User).Result.Id);
+            }
+            //Cantidad de Elementos a mostrar por página
+            int pageSize = 4;
+            return View(Paginacion<RecetaDTO>.Create(recetas, noPagina ?? 1, pageSize));
+        }
         [AllowAnonymous]
         public IActionResult EnviarIngredientes(int IdReceta)
         {
@@ -199,6 +229,7 @@ namespace Recetario.Areas.Usuarios
             else return RedirectToPage("/Account/Login", new { Area = "Identity" });
             
         }
+        [AllowAnonymous]
         public IActionResult CocinarDespues(int IdReceta, bool valor)
         {
             //Valor false - No esta agregada en la lista

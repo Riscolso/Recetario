@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Recetario.Models;
 using Microsoft.AspNetCore.Identity;
 using Recetario.Servicios;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Recetario
 {
@@ -31,6 +34,28 @@ namespace Recetario
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            /*------------------CÓDIGO PARA TOKEN DE JWT----------------*/
+            /*
+            var key = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("SecretKey"));
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+            */
+
             //Para controlar Las Razor page de Identity
             services.AddRazorPages();
             //Agregar todos los servicios relacionados con MVC
@@ -72,7 +97,7 @@ namespace Recetario
             //Ligar la clase ServiciosActor a la dependecia
             //TODO: Cambiar el namespace de los servicios de actor y receta
             services.AddScoped<IActor, ServiciosActor>();
-            services.AddScoped<IReceta, ServiciosReceta>();
+            services.AddTransient<IReceta, ServiciosReceta>();
             services.AddScoped<IEmail, ServiciosEmail>();
 
             //Servicios para autorización con políticas
@@ -85,6 +110,7 @@ namespace Recetario
                 options.AddPolicy("RequireUsuarioRole",
                      policy => policy.RequireRole("Usuario", "Administrador", "SuperAdministrador"));
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -48,5 +48,7 @@ namespace Recetario.Areas.Administradores.Servicios
         int Editar(RecetaDTO recetadto);
         void Calificar(int IdReceta, bool Gustar, int Idusuario);
         void ListarCocinarDespues(int IdReceta, bool Estado, int IdUsuario);
+        ICollection<RecetaDTO> ObtenerPendientes(int IdUsuario);
+        ICollection<RecetaDTO> ObtenerPendientes(int IdUsuario, string Filtro);
     }
 }

@@ -21,6 +21,7 @@ namespace Recetario.Areas.Administradores.Controllers
             _serviciosReceta = serviciosReceta;
         }
         //Autorización para Admin
+
         [Authorize(Roles = "Administrador,SuperAdministrador")]
         public IActionResult Index(string cadenaBusqueda, int? noPagina, String filtroActual)
         {

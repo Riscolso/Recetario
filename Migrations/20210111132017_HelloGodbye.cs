@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Recetario.Migrations
 {
-    public partial class CocinarMasTarde : Migration
+    public partial class HelloGodbye : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -220,16 +220,18 @@ namespace Recetario.Migrations
                 name: "lleva",
                 columns: table => new
                 {
+                    idLleva = table.Column<int>(type: "int(11)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Receta_idReceta = table.Column<int>(type: "int(11)", nullable: false),
                     Receta_Actor_idActor = table.Column<int>(type: "int(11)", nullable: false),
                     Ingrediente_idIngrediente = table.Column<int>(type: "int(11)", nullable: false),
-                    IngredienteCrudo = table.Column<string>(type: "varchar(45)", nullable: false)
+                    IngredienteCrudo = table.Column<string>(type: "varchar(70)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8")
                         .Annotation("MySql:Collation", "utf8_general_ci")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PRIMARY", x => new { x.Receta_idReceta, x.Receta_Actor_idActor, x.Ingrediente_idIngrediente });
+                    table.PrimaryKey("PRIMARY", x => x.idLleva);
                     table.ForeignKey(
                         name: "fk_Receta_has_Ingrediente_Ingrediente1",
                         column: x => x.Ingrediente_idIngrediente,

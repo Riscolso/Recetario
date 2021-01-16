@@ -263,26 +263,31 @@ namespace Recetario.Migrations
 
             modelBuilder.Entity("Recetario.BaseDatos.Lleva", b =>
                 {
-                    b.Property<int>("RecetaIdReceta")
-                        .HasColumnName("Receta_idReceta")
+                    b.Property<int>("IdLleva")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idLleva")
+                        .HasColumnType("int(11)");
+
+                    b.Property<string>("IngredienteCrudo")
+                        .IsRequired()
+                        .HasColumnName("IngredienteCrudo")
+                        .HasColumnType("varchar(70)")
+                        .HasAnnotation("MySql:CharSet", "utf8")
+                        .HasAnnotation("MySql:Collation", "utf8_general_ci");
+
+                    b.Property<int>("IngredienteIdIngrediente")
+                        .HasColumnName("Ingrediente_idIngrediente")
                         .HasColumnType("int(11)");
 
                     b.Property<int>("RecetaActorIdActor")
                         .HasColumnName("Receta_Actor_idActor")
                         .HasColumnType("int(11)");
 
-                    b.Property<int>("IngredienteIdIngrediente")
-                        .HasColumnName("Ingrediente_idIngrediente")
+                    b.Property<int>("RecetaIdReceta")
+                        .HasColumnName("Receta_idReceta")
                         .HasColumnType("int(11)");
 
-                    b.Property<string>("IngredienteCrudo")
-                        .IsRequired()
-                        .HasColumnName("IngredienteCrudo")
-                        .HasColumnType("varchar(45)")
-                        .HasAnnotation("MySql:CharSet", "utf8")
-                        .HasAnnotation("MySql:Collation", "utf8_general_ci");
-
-                    b.HasKey("RecetaIdReceta", "RecetaActorIdActor", "IngredienteIdIngrediente")
+                    b.HasKey("IdLleva")
                         .HasName("PRIMARY");
 
                     b.HasIndex("IngredienteIdIngrediente")

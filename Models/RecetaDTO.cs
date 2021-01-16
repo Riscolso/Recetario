@@ -16,11 +16,11 @@ namespace Recetario.Models
         [Required]
         [DataType(DataType.Time)]
         public string TiempoPrep { get; set; }
-        [Display(Name = "Etiquetas (Separados por comas)")]
+        [Display(Name = "Etiquetas (Separados por puntos)")]
         public String Etiquetas { get; set; }
         //Esta lista es para cuando se normalice el texto
         public List<string> IngredientesNormalizados { get; set; }
-        [Display(Name = "Ingredientes (Separados por comas)")]
+        [Display(Name = "Ingredientes (Separados por puntos)")]
         public String Ingredientes { get; set; }
         [DataType(DataType.ImageUrl)]
         public string Imagen { get; set; }

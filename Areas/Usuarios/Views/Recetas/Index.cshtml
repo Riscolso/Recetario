@@ -11,7 +11,7 @@
     ViewData["Title"] = Model.Receta.Nombre;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>@Model.Receta.Nombre</h1>
+<h1>@Model.Receta.Nombre</h1><h6>Compartida Por @Model.Receta.usuario.Usuario</h6>
 @{  bool esCreador = false;
     if (User.Identity.IsAuthenticated) {
         esCreador = UserManager.GetUserId(User).Equals(Model.Receta.usuario.IdUsuario.ToString());
@@ -32,10 +32,10 @@
             {
                 @: <u>Califica esta receta</u>:
                 <a asp-route-IdReceta="@Model.Receta.IdReceta" asp-route-valor="true" asp-area="Usuarios" asp-controller="Recetas" asp-action="CalificarReceta" title="Calificar">
-                    <img src="@Url.Content(Model.ManoArriba)" alt="Image" style="height:50px;width:50px;" />
+                    <img src='@Url.Content("~/img/arriba.png")' alt="Image" style="height:50px;width:50px;" />
                 </a>
                 <a asp-route-IdReceta="@Model.Receta.IdReceta" asp-route-valor="false" asp-area="Usuarios" asp-controller="Recetas" asp-action="CalificarReceta" title="Calificar">
-                    <img src="@Url.Content(Model.ManoAbajo)" alt="Image" style="height:50px;width:50px;" />
+                    <img src='@Url.Content("~/img/abajo.png")' alt="Image" style="height:50px;width:50px;" />
                 </a>
                 <br/>
                 if (!Model.Visualizar.PorCocinar)
@@ -58,7 +58,7 @@
                 Tiempo de preparación: @Model.Receta.TiempoPrep
             </div>
             <div class="form-group">
-                Ingredientes @Model.Receta.Ingredientes
+                Ingredientes:<br/> <label style="white-space: pre-wrap">@Model.Receta.Ingredientes</label>
             </div>
             @if (!esCreador)
             {
