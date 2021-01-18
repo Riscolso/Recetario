@@ -9,8 +9,8 @@ using Recetario.BaseDatos;
 namespace Recetario.Migrations
 {
     [DbContext(typeof(ContextoBD))]
-    [Migration("20210111132017_HelloGodbye")]
-    partial class HelloGodbye
+    [Migration("20210118145011_HowToGo")]
+    partial class HowToGo
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -341,6 +341,12 @@ namespace Recetario.Migrations
                     b.Property<int>("ActorIdActor")
                         .HasColumnName("Actor_idActor")
                         .HasColumnType("int(11)");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("varchar(200)")
+                        .HasAnnotation("MySql:CharSet", "utf8")
+                        .HasAnnotation("MySql:Collation", "utf8_general_ci");
 
                     b.Property<string>("Nombre")
                         .IsRequired()

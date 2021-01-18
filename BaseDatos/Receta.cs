@@ -16,6 +16,7 @@ namespace Recetario.BaseDatos
         public int IdReceta { get; set; }
         public string Nombre { get; set; }
         public int ProcentajePromedio { get; set; }
+        public string Descripcion { get; set; } 
         public string TiempoPrep { get; set; }
         public int ActorIdActor { get; set; }
 

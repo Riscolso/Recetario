@@ -110,6 +110,7 @@ namespace Recetario.Areas.Administradores.Servicios
                     },
                     IdReceta = r.IdReceta,
                     Nombre = r.Nombre,
+                    Descripcion = r.Descripcion,
                     TiempoPrep = r.TiempoPrep,
                     //Traer todas las etiquetas de la BD e irlas pegando con un espacio
                     Etiquetas = string.Join(", ", r.Usa.Select(u => u.EtiquetaIdEtiquetaNavigation.Etiqueta1)),
@@ -160,6 +161,7 @@ namespace Recetario.Areas.Administradores.Servicios
                 Nombre = receta.Nombre,
                 ProcentajePromedio = receta.ProcentajePromedio,
                 TiempoPrep = receta.TiempoPrep,
+                Descripcion = receta.Descripcion,
                 usuario = new UsuarioDTO { 
                     IdUsuario = receta.ActorIdActor,
                     Usuario = receta.ActorIdActorNavigation.NombreActor
@@ -304,6 +306,7 @@ namespace Recetario.Areas.Administradores.Servicios
                 Nombre = recetadto.Nombre.Trim(),
                 TiempoPrep = recetadto.TiempoPrep,
                 Usa = u,
+                Descripcion = recetadto.Descripcion,
                 Lleva = l,
                 Paso = pasos
             };
@@ -394,6 +397,7 @@ namespace Recetario.Areas.Administradores.Servicios
             receta.Nombre = recetadto.Nombre;
             receta.ProcentajePromedio = recetadto.ProcentajePromedio;
             receta.TiempoPrep = recetadto.TiempoPrep;
+            receta.Descripcion = recetadto.Descripcion;
             receta.Paso = recetadto.Pasos.Select(p => new Paso
             {
                 NoPaso = p.NoPaso,

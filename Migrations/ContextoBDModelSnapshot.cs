@@ -340,6 +340,12 @@ namespace Recetario.Migrations
                         .HasColumnName("Actor_idActor")
                         .HasColumnType("int(11)");
 
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("varchar(200)")
+                        .HasAnnotation("MySql:CharSet", "utf8")
+                        .HasAnnotation("MySql:Collation", "utf8_general_ci");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("varchar(45)")

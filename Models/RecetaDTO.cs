@@ -10,6 +10,7 @@ namespace Recetario.Models
         public int IdReceta { get; set; }
         [Required]
         public string Nombre { get; set; }
+        public string Descripcion { get; set; }
         [Display(Name = "Porcentaje Promedio")]
         public int ProcentajePromedio { get; set; }
         [Display(Name = "Tiempo de preparación (hor:min)")]

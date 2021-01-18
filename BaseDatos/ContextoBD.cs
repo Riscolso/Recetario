@@ -204,6 +204,12 @@ namespace Recetario.BaseDatos
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
+                entity.Property(e => e.Descripcion)
+                    .IsRequired()
+                    .HasColumnType("varchar(200)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+
                 entity.Property(e => e.ProcentajePromedio).HasColumnType("int(11)");
 
                 entity.Property(e => e.TiempoPrep)
