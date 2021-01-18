@@ -92,8 +92,9 @@ namespace Recetario.Areas.Administradores.Servicios
         }
 
         /// <inheritdoc/>
-        public RecetaDTO Obtener(int Id)
+        public RecetaDTO Obtener(int Id, bool formatoEdicion = false)
         {
+            //TODO: Si se editan las recetas Siempre deben editarse las imagenes
             var aux = _contextoBD.Receta
                 .Include(r => r.ActorIdActorNavigation)
                 .Include(r => r.Paso)
@@ -110,6 +111,8 @@ namespace Recetario.Areas.Administradores.Servicios
                     },
                     IdReceta = r.IdReceta,
                     Nombre = r.Nombre,
+                    Descripcion = r.Descripcion,
+                    NombreImagen = r.Imagen,
                     TiempoPrep = r.TiempoPrep,
                     //Traer todas las etiquetas de la BD e irlas pegando con un espacio
                     Etiquetas = string.Join(", ", r.Usa.Select(u => u.EtiquetaIdEtiquetaNavigation.Etiqueta1)),
@@ -119,9 +122,16 @@ namespace Recetario.Areas.Administradores.Servicios
                     {
                         NoPaso = p.NoPaso,
                         Texto = p.Texto,
+                        NombreImagen = p.Imagen,
                         TiempoTemporizador = DeMinutosAString(p.TiempoTemporizador)
                     }).ToList()
                 }).FirstOrDefault(r => r.IdReceta == Id);
+            if (formatoEdicion)
+            {
+                aux.Ingredientes = aux.Ingredientes.Remove(0, 2);
+                aux.Ingredientes = aux.Ingredientes.Replace("\n-", ". ");
+                aux.Etiquetas = aux.Etiquetas.Replace(", ", ". ");
+            }
             return aux;
         }
 
@@ -154,6 +164,8 @@ namespace Recetario.Areas.Administradores.Servicios
                 Nombre = receta.Nombre,
                 ProcentajePromedio = receta.ProcentajePromedio,
                 TiempoPrep = receta.TiempoPrep,
+                Descripcion = receta.Descripcion,
+                NombreImagen = receta.Imagen,
                 usuario = new UsuarioDTO { 
                     IdUsuario = receta.ActorIdActor,
                     Usuario = receta.ActorIdActorNavigation.NombreActor
@@ -288,6 +300,7 @@ namespace Recetario.Areas.Administradores.Servicios
             {
                 NoPaso = p.NoPaso,
                 Texto = p.Texto.Trim(),
+                Imagen = p.NombreImagen,
                 TiempoTemporizador = DeStringAMinutos(p.TiempoTemporizador)
             }));
 
@@ -298,6 +311,8 @@ namespace Recetario.Areas.Administradores.Servicios
                 Nombre = recetadto.Nombre.Trim(),
                 TiempoPrep = recetadto.TiempoPrep,
                 Usa = u,
+                Descripcion = recetadto.Descripcion,
+                Imagen = recetadto.NombreImagen,
                 Lleva = l,
                 Paso = pasos
             };
@@ -351,15 +366,51 @@ namespace Recetario.Areas.Administradores.Servicios
                 .SingleOrDefault(r => r.IdReceta == recetadto.IdReceta);
             //Verificar que exista
             if (receta == null) throw new NotImplementedException("No existe el objeto en la BD");
+            //Actualizar la etiquetas
+            
+            var ingredientes = recetadto.Ingredientes.Split('.');
+            var ingredientesID = AnalizarIngredientes(recetadto.Ingredientes);
+            //Solo crea la lista de 0 otra vez
+            //Se puede optimizar, pero está es la forma más rápida y no queda mucho para el Jefe final
+            //TODO: Si se quito una etiqueta o un igrediente en la edición, borrar la relación en la BD
+            List<Lleva> l = new List<Lleva>();
+            for (int i = 0; i < ingredientesID.Length; i++)
+            {
+                l.Add(new Lleva
+                {
+                    IngredienteIdIngrediente = ingredientesID[i].Id,
+                    IngredienteCrudo = ingredientes[i].Trim(),
+                    RecetaActorIdActor = recetadto.usuario.IdUsuario,
+                });
+            }
+            var etiquetas = recetadto.Etiquetas.Split('.');
+            var etiquetasID = AnalizarEtiquetas(recetadto.Etiquetas.Trim());
+            var u = new List<Usa>();
+            for (int i = 0; i < etiquetasID.Length; i++)
+            {
+                u.Add(new Usa
+                {
+                    EtiquetaIdEtiqueta = etiquetasID[i].Id,
+                    //Creo que esto esta demás, pero me da hueva averiguarlo
+                    //TODO: Te lo encargo Ricardo del futuro
+                    RecetaActorIdActor = recetadto.usuario.IdUsuario,
+                });
+            }
+            //TODO: Modificar imagenes, que ya tengo sueño jajajaja
+
             //Realizar los cambios
-            //TODO: Agregar lo de editar etiquetas, hacer lo mismo que en crear
+            receta.Lleva = l;
+            receta.Usa = u;
             receta.Nombre = recetadto.Nombre;
             receta.ProcentajePromedio = recetadto.ProcentajePromedio;
             receta.TiempoPrep = recetadto.TiempoPrep;
+            receta.Descripcion = recetadto.Descripcion;
+            receta.Imagen = recetadto.NombreImagen;
             receta.Paso = recetadto.Pasos.Select(p => new Paso
             {
                 NoPaso = p.NoPaso,
                 Texto = p.Texto,
+                Imagen = p.NombreImagen,
                 TiempoTemporizador = DeStringAMinutos(p.TiempoTemporizador)
             }
             ).ToList();
@@ -503,6 +554,29 @@ namespace Recetario.Areas.Administradores.Servicios
                 }
                 ).ToList();
             throw new NotImplementedException();
+        }
+
+        public ICollection<string> IngredientesFavoritos(int IdUsuario)
+        {
+            //Obtener los Ids de recetas
+            List<int> recetas = _contextoBD.Visualizacion
+                .Include(v => v.Receta)
+                .Where(r => r.Calificacion == true && r.ActorIdActor == IdUsuario)
+                .Select(r => r.RecetaIdReceta).ToList();
+            var ingredientes = new List<string>();
+            //Obtener los ingredientes de las recetas
+            foreach (var idReceta in recetas)
+            {
+                //Obtener ingrediente de c/u de las recetas
+                var ingreReceta = _contextoBD.Lleva
+                    .Include(l => l.IngredienteIdIngredienteNavigation)
+                .Where(l => l.RecetaIdReceta == idReceta)
+                .Select(l => l.IngredienteIdIngredienteNavigation.Nombre)
+                .ToList();
+                //Agregar a la lista global
+                ingredientes.AddRange(ingreReceta);
+            }
+            return ingredientes;
         }
     }
 }

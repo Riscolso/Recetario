@@ -18,9 +18,7 @@
 <h4>Receta</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        
-        <form asp-action="Editar">
+        <form asp-action="Editar" enctype="multipart/form-data">
             <input type="hidden" asp-for="IdReceta" />
             <input type="hidden" asp-for="usuario.IdUsuario" />
             <input type="hidden" asp-for="usuario.Usuario" />
@@ -29,6 +27,16 @@
                 <label asp-for="Nombre" class="control-label"></label>
                 <input asp-for="Nombre" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Descripcion" class="control-label"></label>
+                <input asp-for="Descripcion" class="form-control" />
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Imagen" class="control-label"></label>
+                <input asp-for="Imagen" class="form-control" />
+                <span asp-validation-for="Imagen" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TiempoPrep" class="control-label"></label>
@@ -56,6 +64,8 @@
                             <tr>
                                 <td><textarea asp-for="@Model.Pasos[i].Texto" class="form-control"></textarea></td>
                                 <td><input asp-for="@Model.Pasos[i].TiempoTemporizador" class="form-control" /></td>
+                                <td><img src='@Url.Content("~/"+ Model.Pasos[i].NombreImagen)' alt="Image" style="height:200px;width:200px;" /></td>
+                                <td><input asp-for="@Model.Pasos[i].Imagen" class="form-control" /></td>
                                 <td><button type="button" onclick="QuitarElemento('paso_'+@i)">-</button></td>
 
                             </tr>
@@ -69,5 +79,4 @@
                 <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
         </form>
-    </div>
 </div>

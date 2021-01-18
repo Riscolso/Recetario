@@ -99,6 +99,7 @@ namespace Recetario
             services.AddScoped<IActor, ServiciosActor>();
             services.AddTransient<IReceta, ServiciosReceta>();
             services.AddScoped<IEmail, ServiciosEmail>();
+            services.AddScoped<IGeneral, ServiciosGenerales>();
 
             //Servicios para autorización con políticas
             services.AddAuthorization(options =>

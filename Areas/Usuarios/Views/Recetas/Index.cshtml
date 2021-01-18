@@ -28,6 +28,10 @@
 <div class="row">
     <div class="col-md-4">
         <div class="form-group">
+            <img src='@Url.Content("~/"+ Model.Receta.NombreImagen)' alt="Image" style="height:200px;width:200px;" />
+            <br/>
+            Descripción:
+            @Model.Receta.Descripcion <br />
             @if (!esCreador)
             {
                 @: <u>Califica esta receta</u>:
@@ -37,7 +41,7 @@
                 <a asp-route-IdReceta="@Model.Receta.IdReceta" asp-route-valor="false" asp-area="Usuarios" asp-controller="Recetas" asp-action="CalificarReceta" title="Calificar">
                     <img src='@Url.Content("~/img/abajo.png")' alt="Image" style="height:50px;width:50px;" />
                 </a>
-                <br/>
+                <br />
                 if (!Model.Visualizar.PorCocinar)
                 {
                     <a asp-route-IdReceta="@Model.Receta.IdReceta" asp-route-valor="true" asp-area="Usuarios" asp-controller="Recetas" asp-action="CocinarDespues" title="Pediente">
@@ -90,6 +94,9 @@
                         {
                             <td>@paso.TiempoTemporizador</td>
                         }
+                        <td>
+                            <img src='@Url.Content("~/"+ paso.NombreImagen)' alt="Image" style="height:200px;width:200px;" />
+                        </td>
                     </tr>
                 </table>
                 <br />

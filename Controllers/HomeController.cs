@@ -31,6 +31,10 @@ namespace Recetario.Controllers
         }
         public IActionResult Index(string cadenaBusqueda, int? noPagina, String filtroActual)
         {
+
+            var aux = _serviciosreceta.IngredientesFavoritos(Convert.ToInt32(_userManager.GetUserId(User)));
+
+
             //Se mete el filtro a ViewData para que permanezca aunque se cambie de páginas
             ViewData["FiltroActual"] = cadenaBusqueda;
 

@@ -9,8 +9,8 @@ using Recetario.BaseDatos;
 namespace Recetario.Migrations
 {
     [DbContext(typeof(ContextoBD))]
-    [Migration("20210111132017_HelloGodbye")]
-    partial class HelloGodbye
+    [Migration("20210118155248_RockAndRoll")]
+    partial class RockAndRoll
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -314,6 +314,11 @@ namespace Recetario.Migrations
                         .HasColumnName("Receta_Actor_idActor")
                         .HasColumnType("int(11)");
 
+                    b.Property<string>("Imagen")
+                        .HasColumnType("varchar(200)")
+                        .HasAnnotation("MySql:CharSet", "utf8")
+                        .HasAnnotation("MySql:Collation", "utf8_general_ci");
+
                     b.Property<string>("Texto")
                         .HasColumnType("varchar(600)")
                         .HasAnnotation("MySql:CharSet", "utf8")
@@ -341,6 +346,17 @@ namespace Recetario.Migrations
                     b.Property<int>("ActorIdActor")
                         .HasColumnName("Actor_idActor")
                         .HasColumnType("int(11)");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("varchar(200)")
+                        .HasAnnotation("MySql:CharSet", "utf8")
+                        .HasAnnotation("MySql:Collation", "utf8_general_ci");
+
+                    b.Property<string>("Imagen")
+                        .HasColumnType("varchar(200)")
+                        .HasAnnotation("MySql:CharSet", "utf8")
+                        .HasAnnotation("MySql:Collation", "utf8_general_ci");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
