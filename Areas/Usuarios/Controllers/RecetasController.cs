@@ -14,6 +14,7 @@ using Recetario.Areas.Usuarios.Models;
 using Microsoft.AspNetCore.Authorization;
 using IronPython.Hosting;
 using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Recetario.Areas.Usuarios
 {
@@ -23,16 +24,19 @@ namespace Recetario.Areas.Usuarios
         private readonly ContextoBD _context;
         private readonly IReceta _servicioreceta;
         private readonly IEmail _serviciosemail;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         private UserManager<Actor> _userManager { get; }
         public RecetasController(ContextoBD context,
             IReceta serviciosreceta,
             UserManager<Actor> userManager,
-            IEmail serviciosemail)
+            IEmail serviciosemail,
+            IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             _servicioreceta = serviciosreceta;
             _userManager = userManager;
             _serviciosemail = serviciosemail;
+            _webHostEnvironment = hostEnvironment;
         }
 
         [AllowAnonymous]
@@ -55,6 +59,7 @@ namespace Recetario.Areas.Usuarios
         [ValidateAntiForgeryToken]
         public IActionResult Crear(RecetaDTO receta)
         {
+            //TODO: Evitar que se creen dos recetas con el mismo nombre
             if (ModelState.IsValid)
             {
                 //Agregar el usuario que esta creando la receta a recetaUDTO
@@ -62,11 +67,57 @@ namespace Recetario.Areas.Usuarios
                 {
                     IdUsuario = Convert.ToInt32(_userManager.GetUserId(User))
                 };
+                
+                //Cargar las imagenes de la receta y pasos
+                receta = UploadedFile(receta);
                 int id = _servicioreceta.Agregar(receta);
                 return RedirectToAction("Index", new { id = id });
             }
             return View(receta);
         }
+
+        private RecetaDTO UploadedFile(RecetaDTO model)
+        {
+            string uniqueFileName = null;
+            string carpeta = null; 
+            if (model.Imagen != null)
+            {
+                carpeta = "Recetas/" + model.usuario.Usuario + "/" + model.Nombre;
+                var path = Path.Combine(_webHostEnvironment.WebRootPath, carpeta);
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                string uploadsFolder = path;
+                //Para la imagen de la receta
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Imagen.FileName;
+                string ruta = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(ruta, FileMode.Create))
+                {
+                    model.Imagen.CopyTo(fileStream);
+                }
+                model.NombreImagen = carpeta + "/" + uniqueFileName;
+
+                //Para las imagenes de los pasos
+                for (int i = 0; i < model.Pasos.Count; i++)
+                {
+                    if (model.Pasos[i].Imagen != null)
+                    {
+                        uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Pasos[i].Imagen.FileName;
+                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            model.Pasos[i].Imagen.CopyTo(fileStream);
+                        }
+                        model.Pasos[i].NombreImagen = carpeta + "/" + uniqueFileName;
+                    }
+                }
+            }
+            return model;
+        }
+
+
 
         public async Task<IActionResult> Editar(int? id)
         {
@@ -96,7 +147,12 @@ namespace Recetario.Areas.Usuarios
                 try
                 {
                     //Checar que sea el mismo usuario quien creó la receta
-                    if (receta.usuario.IdUsuario == _userManager.GetUserAsync(User).Result.Id) _servicioreceta.Editar(receta);
+                    if (receta.usuario.IdUsuario == _userManager.GetUserAsync(User).Result.Id) {
+                        //Cargar las imagenes de la receta
+                        receta = UploadedFile(receta);
+                        _servicioreceta.Editar(receta); 
+                    }
+
                     else return NotFound();
                 }
                 //En caso de que no exista la receta

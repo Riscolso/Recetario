@@ -312,6 +312,11 @@ namespace Recetario.Migrations
                         .HasColumnName("Receta_Actor_idActor")
                         .HasColumnType("int(11)");
 
+                    b.Property<string>("Imagen")
+                        .HasColumnType("varchar(200)")
+                        .HasAnnotation("MySql:CharSet", "utf8")
+                        .HasAnnotation("MySql:Collation", "utf8_general_ci");
+
                     b.Property<string>("Texto")
                         .HasColumnType("varchar(600)")
                         .HasAnnotation("MySql:CharSet", "utf8")
@@ -342,6 +347,11 @@ namespace Recetario.Migrations
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
+                        .HasColumnType("varchar(200)")
+                        .HasAnnotation("MySql:CharSet", "utf8")
+                        .HasAnnotation("MySql:Collation", "utf8_general_ci");
+
+                    b.Property<string>("Imagen")
                         .HasColumnType("varchar(200)")
                         .HasAnnotation("MySql:CharSet", "utf8")
                         .HasAnnotation("MySql:Collation", "utf8_general_ci");

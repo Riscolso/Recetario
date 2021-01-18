@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -15,5 +16,7 @@ namespace Recetario.Models
         [Display(Name = "Tiempo (horas: minutos")]
         [DataType(DataType.Time)]
         public string TiempoTemporizador { get; set; }
+        public IFormFile? Imagen { get; set; }
+        public string? NombreImagen { get; set; }
     }
 }

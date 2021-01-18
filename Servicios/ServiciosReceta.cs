@@ -94,6 +94,7 @@ namespace Recetario.Areas.Administradores.Servicios
         /// <inheritdoc/>
         public RecetaDTO Obtener(int Id, bool formatoEdicion = false)
         {
+            //TODO: Si se editan las recetas Siempre deben editarse las imagenes
             var aux = _contextoBD.Receta
                 .Include(r => r.ActorIdActorNavigation)
                 .Include(r => r.Paso)
@@ -111,6 +112,7 @@ namespace Recetario.Areas.Administradores.Servicios
                     IdReceta = r.IdReceta,
                     Nombre = r.Nombre,
                     Descripcion = r.Descripcion,
+                    NombreImagen = r.Imagen,
                     TiempoPrep = r.TiempoPrep,
                     //Traer todas las etiquetas de la BD e irlas pegando con un espacio
                     Etiquetas = string.Join(", ", r.Usa.Select(u => u.EtiquetaIdEtiquetaNavigation.Etiqueta1)),
@@ -120,6 +122,7 @@ namespace Recetario.Areas.Administradores.Servicios
                     {
                         NoPaso = p.NoPaso,
                         Texto = p.Texto,
+                        NombreImagen = p.Imagen,
                         TiempoTemporizador = DeMinutosAString(p.TiempoTemporizador)
                     }).ToList()
                 }).FirstOrDefault(r => r.IdReceta == Id);
@@ -162,6 +165,7 @@ namespace Recetario.Areas.Administradores.Servicios
                 ProcentajePromedio = receta.ProcentajePromedio,
                 TiempoPrep = receta.TiempoPrep,
                 Descripcion = receta.Descripcion,
+                NombreImagen = receta.Imagen,
                 usuario = new UsuarioDTO { 
                     IdUsuario = receta.ActorIdActor,
                     Usuario = receta.ActorIdActorNavigation.NombreActor
@@ -296,6 +300,7 @@ namespace Recetario.Areas.Administradores.Servicios
             {
                 NoPaso = p.NoPaso,
                 Texto = p.Texto.Trim(),
+                Imagen = p.NombreImagen,
                 TiempoTemporizador = DeStringAMinutos(p.TiempoTemporizador)
             }));
 
@@ -307,6 +312,7 @@ namespace Recetario.Areas.Administradores.Servicios
                 TiempoPrep = recetadto.TiempoPrep,
                 Usa = u,
                 Descripcion = recetadto.Descripcion,
+                Imagen = recetadto.NombreImagen,
                 Lleva = l,
                 Paso = pasos
             };
@@ -390,6 +396,7 @@ namespace Recetario.Areas.Administradores.Servicios
                     RecetaActorIdActor = recetadto.usuario.IdUsuario,
                 });
             }
+            //TODO: Modificar imagenes, que ya tengo sueño jajajaja
 
             //Realizar los cambios
             receta.Lleva = l;
@@ -398,10 +405,12 @@ namespace Recetario.Areas.Administradores.Servicios
             receta.ProcentajePromedio = recetadto.ProcentajePromedio;
             receta.TiempoPrep = recetadto.TiempoPrep;
             receta.Descripcion = recetadto.Descripcion;
+            receta.Imagen = recetadto.NombreImagen;
             receta.Paso = recetadto.Pasos.Select(p => new Paso
             {
                 NoPaso = p.NoPaso,
                 Texto = p.Texto,
+                Imagen = p.NombreImagen,
                 TiempoTemporizador = DeStringAMinutos(p.TiempoTemporizador)
             }
             ).ToList();

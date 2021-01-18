@@ -165,6 +165,11 @@ namespace Recetario.BaseDatos
                     .HasColumnName("Receta_idReceta")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.Imagen)
+                    .HasColumnType("varchar(200)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+
                 entity.Property(e => e.Texto)
                     .HasColumnType("varchar(600)")
                     .HasCharSet("utf8")
@@ -201,6 +206,11 @@ namespace Recetario.BaseDatos
                 entity.Property(e => e.Nombre)
                     .IsRequired()
                     .HasColumnType("varchar(45)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+
+                entity.Property(e => e.Imagen)
+                    .HasColumnType("varchar(200)")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 

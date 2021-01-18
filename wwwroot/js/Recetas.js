@@ -36,6 +36,10 @@ function AgregarPaso() {
     inTiempo.defaultValue = "";
     inTiempo.name = "Pasos[" + paso + "].TiempoTemporizador";
 
+    var img = document.createElement("input");
+    img.type = "file";
+    img.name = "Pasos[" + paso + "].Imagen";
+
     var btnQuitar = document.createElement("button");
     btnQuitar.type = "button";
     //Agregamos la función del eliminar el propio div
@@ -50,12 +54,14 @@ function AgregarPaso() {
     }
     btnQuitar.innerHTML = "-";
 
+
     //Agregamos los elementos al div
     div.appendChild(lb);
     div.appendChild(inNoPaso);
     div.appendChild(inTexto);
     div.appendChild(inTiempo);
     div.appendChild(btnQuitar);
+    div.appendChild(img);
     //Agregamos el div al div de los pasos
     divPasos.appendChild(div);
 }

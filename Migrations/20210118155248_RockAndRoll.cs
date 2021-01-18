@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Recetario.Migrations
 {
-    public partial class HowToGo : Migration
+    public partial class RockAndRoll : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -155,6 +155,9 @@ namespace Recetario.Migrations
                     Nombre = table.Column<string>(type: "varchar(45)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8")
                         .Annotation("MySql:Collation", "utf8_general_ci"),
+                    Imagen = table.Column<string>(type: "varchar(200)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8")
+                        .Annotation("MySql:Collation", "utf8_general_ci"),
                     ProcentajePromedio = table.Column<int>(type: "int(11)", nullable: false),
                     Descripcion = table.Column<string>(type: "varchar(200)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8")
@@ -257,6 +260,9 @@ namespace Recetario.Migrations
                     Receta_idReceta = table.Column<int>(type: "int(11)", nullable: false),
                     Receta_Actor_idActor = table.Column<int>(type: "int(11)", nullable: false),
                     Texto = table.Column<string>(type: "varchar(600)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8")
+                        .Annotation("MySql:Collation", "utf8_general_ci"),
+                    Imagen = table.Column<string>(type: "varchar(200)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8")
                         .Annotation("MySql:Collation", "utf8_general_ci"),
                     TiempoTemporizador = table.Column<int>(type: "int(11)", nullable: true)

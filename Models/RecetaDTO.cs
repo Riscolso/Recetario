@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 using Recetario.Areas.Administradores.Models;
 
 namespace Recetario.Models
@@ -10,6 +11,9 @@ namespace Recetario.Models
         public int IdReceta { get; set; }
         [Required]
         public string Nombre { get; set; }
+        [Display(Name = "Imagen de receta")]
+        public IFormFile Imagen { get; set; }
+        public string NombreImagen { get; set; }
         public string Descripcion { get; set; }
         [Display(Name = "Porcentaje Promedio")]
         public int ProcentajePromedio { get; set; }
@@ -23,8 +27,6 @@ namespace Recetario.Models
         public List<string> IngredientesNormalizados { get; set; }
         [Display(Name = "Ingredientes (Separados por puntos)")]
         public String Ingredientes { get; set; }
-        [DataType(DataType.ImageUrl)]
-        public string Imagen { get; set; }
         public List<PasoDTO> Pasos { get; set; }
         //Información del usuario que creó la receta
         public UsuarioDTO usuario { get; set; }
