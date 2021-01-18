@@ -44,12 +44,12 @@ namespace Recetario
             services.AddRazorPages();
             //Agregar todos los servicios relacionados con MVC
             services.AddMvc(options =>
-            {
-                //Aplica un Filtro general para requerir un usuario autenticado
-                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-                options.Filters.Add(new AuthorizeFilter(policy));
-            }
-                );
+                {
+                    //Aplica un Filtro general para requerir un usuario autenticado
+                    var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                    options.Filters.Add(new AuthorizeFilter(policy));
+                }
+            );
             //registra los servicios de Identity para el login (Identificación)
             services.AddIdentity<Actor, IdentityRole<int>>(options =>
             {

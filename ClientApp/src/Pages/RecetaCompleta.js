@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react';
 
 import {Button, Container, Col, Row} from 'react-bootstrap'
 import NavBar from '../Components/NavBar'
@@ -12,16 +12,29 @@ import paso from '../Images/paso1.jpg'
 import './CSS/RecetaCompleta.css'
 
 
-class RecetaCompleta extends React.Component{
-    render(){
-        return(
+class RecetaCompleta extends Component{
+    constructor(props) {
+        console.log("aqui Estoy");
+        alert("323232");
+        super(props);
+        this.state = {
+            receta: []};
+    }
+
+    componentDidMount() {
+        this.ObtenerServidor();
+    }
+
+    static GenerarDatos(receta) {
+        console.alert("Entro");
+        return (
             <div>
-                <NavBar/>
+                <NavBar />
                 <TitleReceta
-                    title='spaghetti con chile poblano'
-                    likes='88'
-                    tiempo='0:40'
-                    user= 'Carlos'
+                    title={receta.nombre}
+                    likes='30'
+                    tiempo={receta.tiempoPrep}
+                    user={receta.usuario.usuario}
                     descripcion='Este spaghetti preparado en una cremosa y picosita salsa de chile poblano acompañado con elote será la sensación en casa o en cualquier evento donde la prepares. Es una pasta deliciosa que tiene ingredientes muy mexicanos que no puedes dejar de preparar. ¡Inténtalo!'
                 />
                 <Button className='Btn-primary'>Receta guiada</Button>
@@ -41,10 +54,10 @@ class RecetaCompleta extends React.Component{
                             <Button className="Btn-help"> Enviar a mi correo</Button>
                         </Col>
                         <Col>
-                            <img src={mainFoto} className='mainFoto rounded'/>
+                            <img src={mainFoto} className='mainFoto rounded' />
                         </Col>
                     </Row>
-                    <hr/>
+                    <hr />
                     <Row>
                         <Col>
                             <h3>Preparacion</h3>
@@ -53,13 +66,13 @@ class RecetaCompleta extends React.Component{
                     </Row>
                     <Row className='Paso'>
                         <Row className='Paso'>
-                            <Col> 
+                            <Col>
                                 <p className='DescPaso'>
-                                    1. Calentar el agua con la sal con el aceite hasta que hierva, agregar la sopa y cocinar por 15 minutos, ya que este lista escurre. 
+                                    1. Calentar el agua con la sal con el aceite hasta que hierva, agregar la sopa y cocinar por 15 minutos, ya que este lista escurre.
                                 </p>
                             </Col>
                             <Col>
-                                <img src={paso} className='Paso-Foto'/>
+                                <img src={paso} className='Paso-Foto' />
                             </Col>
                         </Row>
                         <Row className='Paso'>
@@ -69,14 +82,14 @@ class RecetaCompleta extends React.Component{
                         </Row>
                         <Row className='Paso'>
                             <Col>
-                                <img src={mainFoto} className='Paso-Foto'/>
+                                <img src={mainFoto} className='Paso-Foto' />
                             </Col>
                             <Col>
-                                <Timer/>
+                                <Timer />
                             </Col>
                         </Row>
                         <Row className='Paso'>
-                            <Col> 
+                            <Col>
                                 <p className='DescPaso'>
                                     3. Lorem Ipsum is simply dummy text of the printing and
                                     typesetting industry. Lorem Ipsum has been the
@@ -86,16 +99,36 @@ class RecetaCompleta extends React.Component{
                                 </p>
                             </Col>
                             <Col>
-                                <img src={mainFoto} className='Paso-Foto'/>
+                                <img src={mainFoto} className='Paso-Foto' />
                             </Col>
                         </Row>
-                    </Row> 
-                    <hr/>
-                    <CardCalifica/>
+                    </Row>
+                    <hr />
+                    <CardCalifica />
                 </Container>
-                <Footer/>
+                <Footer />
             </div>
-        )
+        );
+    }
+
+    render() {
+        let contenido = RecetaCompleta.GenerarDatos(this.state.receta);
+
+        return (
+            <div>
+                <h1 id="tabelLabel" >Weather forecast</h1>
+                <p>This component demonstrates fetching data from the server.</p>
+                {contenido}
+            </div>
+        );
+    }
+
+    async ObtenerServidor() {
+        console.log("Mirame");
+        alert("2");
+        const response = await fetch('api/RecetaSPA/ObtenerReceta/1');
+        const data = await response.json();
+        this.setState({ receta: data });
     }
 }
 
