@@ -216,7 +216,7 @@ namespace Recetario.Areas.Usuarios
             {
                 try
                 {
-                    _servicioreceta.ListarCocinarDespues(IdReceta, valor, Convert.ToInt32(_userManager.GetUserId(User)));
+                    _servicioreceta.Calificar(IdReceta, valor, Convert.ToInt32(_userManager.GetUserId(User)));
                     return RedirectToAction("Index", new { id = IdReceta });
                 }
                 catch
