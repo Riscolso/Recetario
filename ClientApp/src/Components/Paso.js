@@ -2,9 +2,8 @@ import React from 'react'
 
 import {Button, Container, Col, Row} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
-
+import Timer from './Timer' 
 import logo from '../Images/logo.PNG'
-import mainReceta from '../Images/mainReceta.jpg'
 
 import './CSS/Paso.css'
 
@@ -12,23 +11,41 @@ class Paso extends React.Component{
     render(){
         return(
             <Container className='Cont__Paso'>
-            <Row><h3>Prepara los ingredientes</h3></Row>
+            <Row><h3>{this.props.contenido.title}</h3></Row>
             <Row>
-                <Col>
-                    <ul>
-                    <li>2 litros de agua</li>
-                    <li>1 pizca de sal</li>
-                    <li>1 paquete de spaghetti</li>
-                    <li>1 kilo de chile poblano</li>
-                    <li>500 mililitros de crema</li>
-                    <li>1 lata de elotes</li>
-                    <li>500 mililitros de leche de vaca</li>
-                    </ul>
-                    <Button className='btn-Primary'>Enviar a mi correo</Button>
-                </Col>
-                <Col>
-                    <img src={mainReceta} className='ImgPaso'/>
-                </Col>
+                {
+                    this.props.contenido.ings &&
+                        <Col>
+                            <ul>
+                                {this.props.contenido.ings.map(ing => {
+                                    return <li key={ing}>{ing}</li>
+                                })}
+                            </ul>
+                            <Button className='btn-Primary'>Enviar a mi correo</Button>
+                        </Col>
+                }
+                {
+                    this.props.contenido.procedimiento &&
+                    <Col>
+                        <Row>
+                            <p>{this.props.contenido.procedimiento}</p>
+                        </Row>
+                        {
+                            this.props.contenido.cronom &&
+                                <Row>
+                                    <Timer
+                                        duracion={this.props.contenido.cronom.duracion}
+                                        play={this.props.contenido.cronom.play}
+                                    />
+                                </Row> 
+                        }
+                    </Col>
+                }
+                {this.props.contenido.foto &&
+                    <Col>
+                        <img src={this.props.contenido.foto} className='ImgPaso'/>
+                    </Col>
+                }
             </Row>
             </Container>
         )

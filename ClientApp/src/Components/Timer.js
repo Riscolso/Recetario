@@ -31,44 +31,50 @@ const renderTime = ({ remainingTime }) => {
   );
 };
 
-function Timer(){
-  const [play, setPlay] = React.useState(false)
+function Timer(props){
+  const [play, setPlay] = React.useState(props.play)
   const [key, setKey] = React.useState(0)
+
+  React.useEffect(() => {
+    if (props.play !== play) {
+      setPlay(props.play);
+    }
+  }, [props.play]);
 
   return(
     <Container>
       <Col>
         <Row>
-          <CountdownCircleTimer
-            onComplete={() => {
-              setPlay(false)
-              setKey(prevKey => prevKey + 1)
-            }}
-            key={key}
-            isPlaying={play}
-            duration={5}
-            colors={[["#004777", 0.33], ["#F7B801", 0.33], ["#A30000"]]}
-            >
-            {renderTime}
-          </CountdownCircleTimer>
+            <CountdownCircleTimer
+              onComplete={() => {
+                setPlay(false)
+                setKey(prevKey => prevKey + 1)
+              }}
+              key={key}
+              isPlaying={play}
+              duration={props.duracion}
+              colors={[["#004777", 0.33], ["#F7B801", 0.33], ["#A30000"]]}
+              >
+              {renderTime}
+            </CountdownCircleTimer>
         </Row>
-        <Row>
-          <Col>
-            <Button className='BtnControl' onClick={() => setPlay(!play)}><img src={pp}/></Button>
-          </Col>
-          <Col>
-            <Button className='BtnControl' onClick={() => {
-              setPlay(false)
-              setKey(prevKey => prevKey + 1)
-            }}>
-                <img src={stop}/>
-            </Button>
-          </Col>
-          <Col></Col>
-          <Col></Col>
-          <Col></Col>
-          <Col></Col>
-        </Row>
+          <Row>
+            <Col>
+              <Button className='BtnControl' onClick={() => setPlay(!play)}><img src={pp}/></Button>
+            </Col>
+            <Col>
+              <Button className='BtnControl' onClick={() => {
+                setPlay(false)
+                setKey(prevKey => prevKey + 1)
+              }}>
+                  <img src={stop}/>
+              </Button>
+            </Col>
+            <Col></Col>
+            <Col></Col>
+            <Col></Col>
+            <Col></Col>
+          </Row>
       </Col>
     </Container>
   )
