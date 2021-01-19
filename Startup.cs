@@ -19,6 +19,7 @@ using Recetario.Servicios;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 
 namespace Recetario
 {
@@ -34,38 +35,21 @@ namespace Recetario
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            /*------------------CÓDIGO PARA TOKEN DE JWT----------------*/
-            /*
-            var key = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("SecretKey"));
-
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
+            services.AddControllersWithViews();
+            // In production, the React files will be served from this directory
+            services.AddSpaStaticFiles(configuration => {
+                configuration.RootPath = "ClientApp/build";
             });
-            */
-
             //Para controlar Las Razor page de Identity
             services.AddRazorPages();
             //Agregar todos los servicios relacionados con MVC
             services.AddMvc(options =>
-            {
-                //Aplica un Filtro general para requerir un usuario autenticado
-                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-                options.Filters.Add(new AuthorizeFilter(policy));
-            }
-                );
+                {
+                    //Aplica un Filtro general para requerir un usuario autenticado
+                    var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                    options.Filters.Add(new AuthorizeFilter(policy));
+                }
+            );
             //registra los servicios de Identity para el login (Identificación)
             services.AddIdentity<Actor, IdentityRole<int>>(options =>
             {
@@ -128,7 +112,10 @@ namespace Recetario
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+            
             app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+
             app.UseCookiePolicy();
             app.UseRouting();
             //Agregar autenticación
@@ -158,6 +145,14 @@ namespace Recetario
 
                 //Agregar EndPoints para Razor Pages
                 endpoints.MapRazorPages();
+            });
+            
+            app.UseSpa(spa => {
+                spa.Options.SourcePath = "ClientApp";
+                if (env.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
             });
         }
     }

@@ -126,6 +126,7 @@ namespace Recetario.Areas.Administradores.Servicios
                         TiempoTemporizador = DeMinutosAString(p.TiempoTemporizador)
                     }).ToList()
                 }).FirstOrDefault(r => r.IdReceta == Id);
+            if (aux == null) throw new Exception("La receta no existe");
             if (formatoEdicion)
             {
                 aux.Ingredientes = aux.Ingredientes.Remove(0, 2);
